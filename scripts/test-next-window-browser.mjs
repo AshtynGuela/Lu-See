@@ -16,7 +16,7 @@ try {
   // Model fidelity/motion has a separate browser check. Keep this scientific
   // workflow independent of the full original mesh's software-rendering cost.
   await page.route('**/assets/rocky-original-rigged.glb',route=>route.abort());
-  await page.goto('http://127.0.0.1:5173/?session='+encodeURIComponent(encodeSession(state)));
+  await page.goto('http://127.0.0.1:5175/?session='+encodeURIComponent(encodeSession(state)));
   await page.getByRole('button',{name:'Skip introduction'}).click();
   await page.getByRole('button',{name:'Plan landing',exact:true}).click();
   const duration=page.getByRole('spinbutton',{name:/Surface duration/});
@@ -35,7 +35,7 @@ try {
   const packet=await(await nextResponse).json();
   assert.ok(packet.sources.every(s=>s.name==='NASA/JPL Horizons'&&s.sha256.length===64));
   await expect(page.getByRole('heading',{name:'Next matching window found'})).toBeVisible({timeout:180000});
-  const terrain=await(await page.request.get('http://127.0.0.1:5173/api/terrain/apollo11')).json();
+  const terrain=await(await page.request.get('http://127.0.0.1:5175/api/terrain/apollo11')).json();
   const result=landingWindows(packet,nextStart,nextEnd,3,terrain.masks['2'],5,{minSunlitPct:80,maxDarknessHours:12,minEarthDtePct:60});
   const window=result.windows[0];
   assert.ok(window.first.time>first.end);

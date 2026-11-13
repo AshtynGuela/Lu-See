@@ -18,7 +18,7 @@ const response = page.waitForResponse(
   (r) => r.url().includes("/api/ephemeris?") && r.status() === 200,
   { timeout: 150000 },
 );
-await page.goto("http://127.0.0.1:5173");
+await page.goto("http://127.0.0.1:5175");
 await expect(
   page.getByRole("heading", { name: "Lu-See." }),
 ).toBeVisible();
@@ -66,7 +66,7 @@ await page.getByRole("textbox", { name: "Site name" }).fill("Test south point");
 await page.getByRole("spinbutton", { name: /Latitude/ }).fill("-89");
 await page.getByRole("spinbutton", { name: /Longitude/ }).fill("0");
 await page.getByRole("button", { name: "Create site", exact: true }).click();
-const health = await (await page.request.get("http://127.0.0.1:5173/api/health")).json();
+const health = await (await page.request.get("http://127.0.0.1:5175/api/health")).json();
 await expect(page.locator(".quality")).toContainText(
   health.coordinateTerrainReady ? "LOLA terrain" : "Terrain not included",
   { timeout: 150000 },

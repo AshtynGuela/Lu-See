@@ -14,7 +14,7 @@ try {
     reducedMotion: "reduce",
   });
   page.on("pageerror", (e) => errors.push(e.message));
-  await page.goto("http://127.0.0.1:5173/");
+  await page.goto("http://127.0.0.1:5175/");
   await expect(page.locator(".solar-info summary")).toContainText(
     "8/8 loaded",
     { timeout: 180000 },
@@ -64,7 +64,7 @@ try {
     reducedMotion: "reduce",
   });
   mobile.on("pageerror", (e) => errors.push(e.message));
-  await mobile.goto("http://127.0.0.1:5173/");
+  await mobile.goto("http://127.0.0.1:5175/");
   await mobile.getByRole("button", { name: "Skip introduction" }).click();
   await expect(mobile.locator(".solar-info summary")).toContainText(
     "8/8 loaded",

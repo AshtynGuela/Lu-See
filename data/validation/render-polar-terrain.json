@@ -1,0 +1,14 @@
+{
+  "url": "https://lu-see.onrender.com",
+  "site": "custom -89.8,180",
+  "seconds": 266.98,
+  "pendingResponseObserved": true,
+  "maskMatch": true,
+  "tileMatch": true,
+  "heightM": 131.72,
+  "resolutionM": 5,
+  "sourceProducts": [
+    "ldem_80s_20m",
+    "site04"
+  ]
+}

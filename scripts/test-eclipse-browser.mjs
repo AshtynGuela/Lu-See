@@ -39,7 +39,7 @@ const browser = await chromium.launch({
 page.on("pageerror", (e) => errors.push(e.message));
 try {
   await page.goto(
-    "http://127.0.0.1:5173/?session=" +
+    "http://127.0.0.1:5175/?session=" +
       encodeURIComponent(encodeSession(state)),
   );
   await page.getByRole("button", { name: "Skip introduction" }).click();
@@ -192,7 +192,7 @@ try {
   });
   mobile.on("pageerror", (e) => errors.push(e.message));
   await mobile.goto(
-    "http://127.0.0.1:5173/?session=" +
+    "http://127.0.0.1:5175/?session=" +
       encodeURIComponent(encodeSession(state)),
   );
   await mobile.getByRole("button", { name: "Skip introduction" }).click();

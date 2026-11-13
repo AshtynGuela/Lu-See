@@ -1,0 +1,19 @@
+{
+  "website": "https://lu-see.onrender.com",
+  "repository": "https://github.com/AshtynGuela/Lu-See",
+  "deployedCommit": "af398f9958048afb1af6b90f98fcc3bdb9f8d612",
+  "serviceId": "srv-dbrib2bbc2fs73d5s81g",
+  "deployId": "dep-dbrigbe1egvs73ftlgcg",
+  "plan": "free",
+  "region": "singapore",
+  "bodyFont": "D-DIN",
+  "unitTestsPassed": 35,
+  "remoteTerrainTestsPassed": 3,
+  "primaryChatReplyPassed": true,
+  "groqAuthenticationPassed": true,
+  "hostedPolarMasksAndTileMatchOriginal": true,
+  "highestSampledMemoryMiB": 260.2,
+  "memoryLimitMiB": 512,
+  "rawRastersIncluded": false,
+  "keysCommitted": false
+}

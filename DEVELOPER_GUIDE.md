@@ -7,7 +7,7 @@ Requires Node 22+ and npm. Run commands from `lunar-scout`:
 ```sh
 npm install
 npm run dev
-# Open http://127.0.0.1:5173
+# Open http://127.0.0.1:5175
 npm run build
 npm run preview  # production build plus API; use instead of dev
 npm test

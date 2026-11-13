@@ -6,14 +6,14 @@ See [BUILD_STATUS.md](BUILD_STATUS.md) for this build's delivered features, comp
 
 ## Run locally
 
-Requires Node 22+, npm and Python 3.11+ with `pip install -r requirements.txt` for custom terrain. From this directory:
+Requires Node 22+, npm and Python 3.11+ with `pip install -r requirements.txt` for custom terrain. Create `.env` from `.env.example` only if it does not already exist; the fork uses port 5175 to coexist with the original prototype. From this directory:
 
 ```text
 npm install
 npm run dev
 ```
 
-Open http://127.0.0.1:5173. The development server binds to loopback; production binds to Render's assigned port on `0.0.0.0`. `npm run build` checks TypeScript and creates a production build; `npm run preview` serves that build with the API backend.
+Open http://127.0.0.1:5175. The development server binds to loopback; production binds to Render's assigned port on `0.0.0.0`. `npm run build` checks TypeScript and creates a production build; `npm run preview` serves that build with the API backend.
 
 The welcome screen now opens a Sun-centred Solar System map, following the user's JPL Orbit Viewer reference. Select any of the eight planets to focus, drag to orbit, wheel/pinch to zoom, or use WASD/QE to fly. Whole-system and inner-planet views, orbit/label toggles, readable spacing and physical scale are available. The supplied NASA planet models are optimized copies. The Sun uses the supplied `Rocky/Sun_1_1391000.glb` mesh and its emissive texture atlas, with the embedded image compressed for the web. Readable mode compresses radial spacing and enlarges bodies; physical mode uses linear AU spacing and physical radii. Numerical distances always use the unscaled JPL vectors. Model attitude and rendering brightness are visual context, not an attitude or radiometric solution.
 

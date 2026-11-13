@@ -7,7 +7,7 @@ const page=await browser.newPage({viewport:{width:1440,height:1000},reducedMotio
 page.on('pageerror',e=>errors.push(e.message));
 const hash=buffer=>createHash('sha256').update(buffer).digest('hex');
 try {
-  await page.goto('http://127.0.0.1:5173/');
+  await page.goto('http://127.0.0.1:5175/');
   await page.bringToFront();
   await page.getByRole('button',{name:'Skip introduction'}).click();
   const rocky=page.locator('.rocky-character');

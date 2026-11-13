@@ -15,7 +15,7 @@ const desktop = await browser.newPage({
   reducedMotion: "reduce",
 });
 desktop.on("pageerror", (e) => errors.push(e.message));
-await desktop.goto("http://127.0.0.1:5173");
+await desktop.goto("http://127.0.0.1:5175");
 await expect(desktop.locator(".welcome")).toBeVisible();
 await expect(desktop.locator(".solar-info")).toBeVisible({
   timeout: 150000,
@@ -158,7 +158,7 @@ const mobile = await browser.newPage({
   reducedMotion: "reduce",
 });
 mobile.on("pageerror", (e) => errors.push(e.message));
-await mobile.goto("http://127.0.0.1:5173");
+await mobile.goto("http://127.0.0.1:5175");
 await mobile.getByRole("button", { name: "Skip introduction" }).click();
 await mobile.getByRole("button", { name: "Moon", exact: true }).click();
 await expect(mobile.locator(".body-readings")).toBeVisible({ timeout: 150000 });

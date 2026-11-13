@@ -12,7 +12,7 @@ const page=await browser.newPage({viewport:{width:1440,height:1000},reducedMotio
 page.on('pageerror',e=>errors.push(e.message));
 const state={scenarios:[],custom:[],mastM:2,minAntennaEl:5,time:Date.parse('2025-03-14T07:00:00Z'),selected:'apollo11',view:'globe',mode:'plain'};
 try {
-  await page.goto('http://127.0.0.1:5173/?session='+encodeURIComponent(encodeSession(state)));
+  await page.goto('http://127.0.0.1:5175/?session='+encodeURIComponent(encodeSession(state)));
   await page.getByRole('button',{name:'Skip introduction'}).click();
   await expect(page.locator('.condition-readings')).toContainText('Sunlight now',{timeout:150000});
   await expect(page.locator('.sunlight-reading')).toContainText("Earth's shadow");
@@ -33,7 +33,7 @@ try {
   await expect(page.locator('.landing-candidate').first()).toBeVisible({timeout:90000});
   await page.locator('.landing-results').scrollIntoViewIfNeeded();
   await page.screenshot({path:shots+'/results-desktop.png'});
-  const terrain=await(await page.request.get('http://127.0.0.1:5173/api/terrain/apollo11')).json();
+  const terrain=await(await page.request.get('http://127.0.0.1:5175/api/terrain/apollo11')).json();
   const profile={minSunlitPct:80,maxDarknessHours:12,minEarthDtePct:60};
   const {start,end}=arrivalSearch(Date.parse('2025-02-22'),30,DEFAULT_MISSION_PROFILE);
   const result=landingWindows(packet,start,end,3,terrain.masks['2'],5,profile);
