@@ -164,7 +164,7 @@ export default function LandingPlanner({close}: {close: () => void}) {
           <label>Earliest departure (UTC, optional)<input type="date" min="1969-01-01" max="2040-12-31" value={startDate} onChange={e=>setStartDate(e.target.value)}/></label>
           <label>Arrival search span<select value={span} onChange={e=>setSpan(+e.target.value)}><option value={7}>7 days</option><option value={30}>30 days</option><option value={60}>60 days</option><option value={90}>90 days</option></select></label>
         </div>}
-        <p className="data-note">Departure is estimated by subtracting the historical median launch-to-touchdown time, rounded to the nearest hour. It includes time spent in orbit. Launch geometry and vehicle performance require separate trajectory calculations.</p>
+        <p className="data-note">Departure uses the historical median time from launch to touchdown, including time in orbit.</p>
         {timing.missions.length > 1 && <p className="data-note">
           Recorded flight range: {(timing.observedMinHours / 24).toFixed(1)} to {(timing.observedMaxHours / 24).toFixed(1)} days.
         </p>}
@@ -175,24 +175,23 @@ export default function LandingPlanner({close}: {close: () => void}) {
         </li>)}</ul>
       </details>
       <fieldset className="landing-requirements"><legend>What does your mission need?</legend>
-        <p className="data-note">Editable example limits, not NASA mission requirements.</p>
         {Object.entries(profile).map(([key,value])=><label key={key}>{key==='minSunlitPct'?'Minimum time in sunlight (%)':key==='maxDarknessHours'?'Longest allowed darkness (hours)':'Minimum time with Earth contact (%)'}
           <input type="number" min="0" max={key==='maxDarknessHours'?2160:100} value={Number.isNaN(value)?'':value} onChange={e=>setProfile({...profile,[key]:e.target.value===''?NaN:+e.target.value})}/></label>)}
-        <p className="data-note">Contact requires Earth's centre to clear the horizon and your {state.minAntennaEl}° antenna limit. This checks geometry, not radio performance.</p>
+        <p className="data-note">Earth contact starts when Earth’s centre clears the horizon and your {state.minAntennaEl}° antenna limit.</p>
       </fieldset>
       <details className="planner-advanced"><summary>Solar array settings</summary>
         <label>Solar array orientation<select value={arrayMode} onChange={e=>setArrayMode(e.target.value)}>
           <option value="horizontal">Horizontal</option><option value="vertical">Vertical, fixed compass direction</option><option value="single_axis">Single-axis tracking · north–south axis</option><option value="tracking">Ideal Sun-tracking</option>
         </select></label>
         {arrayMode==='vertical' && <label>Array-facing azimuth · degrees clockwise from north<input type="number" min="0" max="360" value={arrayAzimuth} onChange={e=>setArrayAzimuth(+e.target.value)}/></label>}
-        <p className="data-note">Used for the mission power index. Date screening uses sunlight availability, not panel output.</p>
+        <p className="data-note">Array orientation determines the mission power index.</p>
       </details>
       {!manual && <button className="primary full-width" onClick={calculate} disabled={busy && !networkError && !error}>
         {busy && !networkError && !error ? <><LoaderCircle size={16} className="spin"/>Calculating landing dates…</> : 'Find possible landing dates'}
       </button>}
       {!manual && !busy && <>
         <button className="full-width" onClick={findNext}>Find next window</button>
-        <p className="data-note">Search up to one year ahead, stopping at the first matching window. After an empty result, continue beyond the dates already checked. Your mission limits stay unchanged.</p>
+        <p className="data-note">Look up to a year ahead for the first window that meets your mission limits.</p>
       </>}
       {busy && <button className="full-width" onClick={stopSearch}>Stop search</button>}
       {busy && !networkError && !error && <p className="data-note" role="status">
@@ -217,7 +216,7 @@ export default function LandingPlanner({close}: {close: () => void}) {
             <span className="landing-candidate-metrics"><b>{recommended.sunlitPct.toFixed(1)}% sunlight</b><b>{recommended.earthDtePct.toFixed(1)}% contact</b><b>{recommended.longestDarkH.toFixed(1)} h max darkness</b></span>
           </span>
         </label>})}
-        <p className="data-note">NASA/JPL positions + {terrain?'LOLA terrain':'smooth horizon'}. Hourly arrival grid; ten-minute integration including Earth's shadow. Narrower windows can be missed. Best surface conditions favours more sunlight and Earth contact with less darkness. Departure uses historical flight time; fuel-optimal launch trajectories are not calculated. These are screening results, not certified safe landing dates.</p>
+        <p className="data-note">Hourly arrivals · NASA/JPL positions · {terrain ? 'LOLA terrain' : 'Smooth horizon'}</p>
       </section>}
       {manual && !live && Number.isFinite(Date.parse(epoch + 'Z')) && <p className="data-note">
         Estimated departure {dateLabel(Date.parse(epoch + 'Z') - timing.flightHours * HOUR)} UTC.

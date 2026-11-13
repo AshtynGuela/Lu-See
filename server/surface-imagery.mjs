@@ -20,7 +20,7 @@ async function prune(folder, maximum) {
 }
 
 export async function surfaceImagery(root, lat, lon, width) {
-  const folder = path.join(root, ".cache", "surface-imagery-v3");
+  const folder = path.join(root, ".cache", "surface-imagery-v4");
   const patches = path.join(folder, "patches");
   const tiles = path.join(folder, "tiles");
   const id = createHash("sha256").update(JSON.stringify([lat, lon === 180 ? -180 : lon, width])).digest("hex");

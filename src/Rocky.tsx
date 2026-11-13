@@ -300,7 +300,7 @@ export default function Rocky({ snapshot }: { snapshot: () => string }) {
                     )}
                   </div>
                   <small className="data-note">
-                    {answer.model} · Early screening
+                    {answer.model}
                   </small>
                 </div>
               )}

@@ -39,12 +39,21 @@ const date = z
       Date.parse(s) < Date.parse("2041-01-01"),
     "Choose a date from 1969 through 2040",
   );
+const preparedTerrain = new Map();
 async function loadTerrain(id) {
   try {
-    return JSON.parse(
-      await fs.readFile(path.join(root, "public/data", id + ".json"), "utf8"),
-    );
+    const file = path.join(root, "public/data", id + ".json");
+    const { mtimeMs, size } = await fs.stat(file);
+    const cached = preparedTerrain.get(id);
+    if (cached?.mtimeMs === mtimeMs && cached.size === size) return cached.data;
+    const data = fs.readFile(file, "utf8").then(JSON.parse).catch(() => {
+      if (preparedTerrain.get(id)?.data === data) preparedTerrain.delete(id);
+      return null;
+    });
+    preparedTerrain.set(id, { mtimeMs, size, data });
+    return data;
   } catch {
+    preparedTerrain.delete(id);
     return null;
   }
 }
@@ -120,7 +129,8 @@ app.get("/api/surface-imagery", async (req, res, next) => {
   try {
     const { lat, lon } = coords.parse(req.query);
     const width = Number(req.query.width);
-    if (width !== 1280 && width !== 12000) return res.status(400).json({ error: "Invalid surface extent." });
+    if (width !== 512 && width !== 1280 && width !== 12000)
+      return res.status(400).json({ error: "Invalid surface extent." });
     const image = await surfaceImagery(root, lat, lon, width);
     res.set("Cache-Control", "public, max-age=604800").type("jpeg").send(image);
   } catch (error) {

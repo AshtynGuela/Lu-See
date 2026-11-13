@@ -10,6 +10,7 @@
     "test": "node --test tests/*.test.mjs",
     "data:prepare": "python scripts/prepare_data.py",
     "test:live": "node scripts/validate-live.mjs",
+    "test:spice": "node scripts/validate-spice.mjs",
     "test:eclipse": "node scripts/validate-eclipse.mjs",
     "test:eclipse-browser": "node scripts/test-eclipse-browser.mjs",
     "test:solar": "node scripts/validate-solar.mjs",

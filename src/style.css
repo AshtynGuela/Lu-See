@@ -840,15 +840,6 @@ a svg {
   font-size: 11px;
   color: var(--muted);
 }
-.screening-note {
-  position: absolute;
-  left: 82px;
-  bottom: 67px;
-  font-size: 9px;
-  letter-spacing: 0.02em;
-  color: #93a4ac;
-  pointer-events: none;
-}
 .body-label {
   color: #b8c9d1;
   font:
@@ -1811,9 +1802,6 @@ a svg {
   .clockbar-spacer {
     display: none;
   }
-  .screening-note {
-    display: none;
-  }
   .welcome {
     padding: 26px;
     align-items: center;
@@ -2354,9 +2342,6 @@ a svg {
 .sun-label {
   color: #ffcd76;
 }
-.solar-mode .screening-note {
-  display: none;
-}
 @media (max-width: 1100px) {
   .solar-catalog {
     width: 170px;
@@ -2588,6 +2573,13 @@ a svg {
   white-space: nowrap;
 }
 .horizon-imagery { margin: 6px 0 8px; color: var(--muted); font-size: 11px; }
+.horizon-imagery, .surface-imagery-credit { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.horizon-imagery button, .surface-imagery-credit button { padding: 4px 7px; font-size: 11px; }
+.surface-imagery-credit button { pointer-events: auto; }
+.nearby-results { padding: 0; list-style: none; }
+.nearby-results li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid #30414a; }
+.nearby-results p { margin: 3px 0; }
+.ranked-pin { width: 24px; height: 24px; padding: 0; border: 1px solid #d2ec9b; border-radius: 50%; background: #182924; color: #e3f4c9; font-size: 12px; }
 .rocky-map-preview { margin: 8px 0; }
 .rocky-map-preview img { display: block; width: 100%; max-height: 125px; object-fit: contain; border-radius: 5px; background: #080d12; }
 .rocky-map-preview figcaption { margin-top: 4px; font-size: 11px; color: var(--muted); }

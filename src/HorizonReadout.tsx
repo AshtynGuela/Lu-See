@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useId, useMemo } from "react";
 import { Compass, Radio, Sun } from "lucide-react";
 import { conditions, horizonAt } from "../engine/index.mjs";
 import { getMask, packetFor, useScout, type Site } from "./store";
@@ -7,10 +7,12 @@ const cardinals = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
 const compass = (az: number) => cardinals[Math.round(az / 45) % 8];
 const degrees = (angle: number) => `${angle.toFixed(1)}°`;
 
-export default function HorizonReadout({ site, bearing, imagery, pointAt }: {
+export default function HorizonReadout({ site, bearing, imagery, terrainLighting, toggleTerrainLighting, pointAt }: {
   site: Site;
   bearing: number;
   imagery: "loading" | "ready" | "unavailable";
+  terrainLighting: boolean;
+  toggleTerrainLighting: () => void;
   pointAt: (az: number, el: number) => void;
 }) {
   const id = useId();
@@ -20,7 +22,7 @@ export default function HorizonReadout({ site, bearing, imagery, pointAt }: {
   const time = useScout(s => s.time);
   const packet = useScout(s => packetFor(s, site.id));
   const mask = getMask(terrain, mast);
-  const sky = packet ? conditions(packet, time, mask, antenna) : null;
+  const sky = useMemo(() => packet ? conditions(packet, time, mask, antenna) : null, [packet, time, mask, antenna]);
   const obstructions = terrain?.obstructions?.[String(mast)];
   const skyline = mask ? horizonAt(mask, bearing) : null;
   const lookAlongSkyline = (az: number) => pointAt(az, mask ? horizonAt(mask, az) : 0);
@@ -49,10 +51,11 @@ export default function HorizonReadout({ site, bearing, imagery, pointAt }: {
         {skyline === null ? "Local skyline unavailable" : <>Skyline {degrees(skyline)}{distance(bearing) && ` · terrain ${distance(bearing)} away`}</>}
         <span>{mast} m mast</span>
       </p>
-      {terrain && <p className="horizon-imagery" role="status">
-        {imagery === "ready" ? "LOLA terrain · NASA Moon Trek surface imagery"
-          : imagery === "loading" ? "Loading surface imagery…" : "Surface imagery unavailable"}
-      </p>}
+      {terrain && <div className="horizon-imagery">
+        <span role="status">{imagery === "ready" ? "NASA Moon Trek · LOLA terrain"
+          : imagery === "loading" ? "Loading Moon Trek imagery…" : "LOLA terrain"}</span>
+        <button type="button" aria-pressed={!terrainLighting} onClick={toggleTerrainLighting}>Use mission lighting</button>
+      </div>}
       {sky && mask && <div className="horizon-targets">
         {(["sun", "earth"] as const).map(body => {
           const sample = sky[body];

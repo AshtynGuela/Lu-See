@@ -60,16 +60,18 @@ import {
   EventList,
   useMetrics,
 } from "./Charts";
-import Rocky from "./Rocky";
-import DateSlip from "./DateSlip";
-import ScenarioDialog from "./LandingPlanner";
 import { encodeSession, decodeSession } from "./share.mjs";
+import type { NearbyMission, NearbyPoint, RankedSite } from "./NearbySites";
 import {
   createAnalysisReport,
   missionEpoch,
   reportCsv,
 } from "../engine/report.mjs";
 const World = lazy(() => import("./World"));
+const Rocky = lazy(() => import("./Rocky"));
+const DateSlip = lazy(() => import("./DateSlip"));
+const ScenarioDialog = lazy(() => import("./LandingPlanner"));
+const NearbySites = lazy(() => import("./NearbySites"));
 class SceneBoundary extends Component<any, { error: string }> {
   state = { error: "" };
   static getDerivedStateFromError(error) {
@@ -132,19 +134,24 @@ export default function App() {
     [dateDraft, setDateDraft] = useState(""),
     [clockEditing, setClockEditing] = useState(false),
     [intro, setIntro] = useState(false),
+    [rockyStarted, setRockyStarted] = useState(false),
     [help, setHelp] = useState(false),
     [sources, setSources] = useState(false),
+    [nearby, setNearby] = useState<{ center: NearbyPoint; mission: NearbyMission } | null>(null),
+    [ranked, setRanked] = useState<{ center: NearbyPoint; rows: RankedSite[]; mission: NearbyMission } | null>(null),
     snapshot = useRef<() => string>(() => ""),
     menuRef = useRef<HTMLDivElement>(null);
-  const sites = [...state.sites, ...state.custom],
+  const sites = useMemo(() => [...state.sites, ...state.custom], [state.sites, state.custom]);
+  const
     site = sites.find((s) => s.id === state.selected),
     key = packetKey(state.selected, state.mastM),
     packet = packetFor(state, state.selected),
     terrain = state.terrains[state.selected],
-    mask = getMask(terrain, state.mastM),
-    current = packet
-      ? conditions(packet, state.time, mask, state.minAntennaEl)
-      : null;
+    mask = getMask(terrain, state.mastM);
+  const current = useMemo(() => packet
+    ? conditions(packet, state.time, mask, state.minAntennaEl)
+    : null, [packet, state.time, mask, state.minAntennaEl]);
+  const solar = state.view === "solar_system";
   const activeScenario = selectedScenario(state),
     probe = useMemo(
       () => ({
@@ -155,13 +162,16 @@ export default function App() {
       }),
       [state.selected, Math.floor(state.time / DAY)],
     ),
-    analysis = useMetrics(activeScenario || probe),
-    eventAnalysis = useMetrics(probe),
+    analysis = useMetrics(solar ? undefined : activeScenario || probe),
+    probeAnalysis = useMetrics(!solar && activeScenario && (inspector || state.rail === "time") ? probe : undefined),
+    eventAnalysis = activeScenario ? probeAnalysis : analysis,
     m = analysis?.metrics;
-  const solar = state.view === "solar_system";
   const filteredSites = sites.filter((s) =>
     (s.name + " " + s.region).toLowerCase().includes(siteFilter.toLowerCase()),
   );
+  useEffect(() => {
+    if (!state.welcome) setRockyStarted(true);
+  }, [state.welcome]);
   useEffect(() => {
     jsonFetch("/layers/manifest.json")
       .then((l) =>
@@ -195,25 +205,22 @@ export default function App() {
       })
       .catch(() => {});
     const poll = setInterval(() => {
-      jsonFetch("/layers/manifest.json")
-        .then((l) =>
-          state.set({
-            layerManifest: { ...useScout.getState().layerManifest, ...l },
-          }),
-        )
-        .catch(() => {});
+      if (document.hidden) return;
+      const latest = useScout.getState();
+      if (latest.sites.length && latest.sites.every(site => site.terrainReady) &&
+          latest.layerManifest.heightReady && latest.rail !== "settings") return;
       jsonFetch("/api/sites")
-        .then((sites) => state.set({ sites }))
+        .then((sites) => {
+          const current = useScout.getState().sites;
+          if (JSON.stringify(current) !== JSON.stringify(sites)) state.set({ sites });
+        })
         .catch(() => {});
       jsonFetch("/api/health")
         .then((h) => {
-          setHealth(h);
-          state.set({
-            layerManifest: {
-              ...useScout.getState().layerManifest,
-              heightReady: h.heightReady,
-            },
-          });
+          setHealth(previous => JSON.stringify(previous) === JSON.stringify(h) ? previous : h);
+          const manifest = useScout.getState().layerManifest;
+          if (manifest.heightReady !== h.heightReady)
+            state.set({ layerManifest: { ...manifest, heightReady: h.heightReady } });
         })
         .catch(() => {});
     }, 30000);
@@ -448,6 +455,35 @@ export default function App() {
     setCustomDialog(point || {});
     setMenu(null);
   };
+  const openNearby = (point: Pick<NearbyPoint, "id" | "name" | "lat" | "lon">) => {
+    const scenario = state.scenarios.find(s => s.id === state.activeScenarioId && s.siteId === point.id)
+      ?? state.scenarios.find(s => s.siteId === point.id);
+    setNearby({
+      center: { ...point, distanceKm: 0 },
+      mission: { time: scenario && scenario.epoch !== "live" ? Date.parse(scenario.epoch) : state.time,
+        duration: scenario?.durationDays ?? 1, mast: state.mastM,
+        antenna: state.minAntennaEl, profile: scenario?.profile },
+    });
+  };
+  const compareNearbySite = (point: RankedSite, mission: NearbyMission) => {
+    const current = useScout.getState();
+    const id = ["A", "B", "C", "D"].find(id => !current.scenarios.some(s => s.id === id));
+    if (!id) { current.message("Four scenarios are open. Remove one to compare this site."); return; }
+    const existing = sites.find(s => s.id === point.id || (s.lat === point.lat && s.lon === point.lon));
+    const candidate = existing ?? {
+      id: "custom-" + crypto.randomUUID(), name: `Nearby · ${point.name}`, region: "Ranked lunar point",
+      lat: point.lat, lon: point.lon, family: "custom", source: "", description: "Sampled lunar coordinates.",
+    };
+    current.set({
+      custom: existing ? current.custom : [...current.custom, candidate],
+      scenarios: [...current.scenarios, { id, siteId: candidate.id, epoch: new Date(mission.time).toISOString(),
+        durationDays: mission.duration, profile: mission.profile }],
+      activeScenarioId: id, compare: true,
+    });
+    current.fly(candidate.id);
+    setRanked(null);
+    setNearby(null);
+  };
   const menuItems = menu?.siteId
     ? [
         [
@@ -465,6 +501,10 @@ export default function App() {
           },
         ],
         ["Fly to site", () => state.fly(menu.siteId)],
+        ["Find better spots nearby", () => {
+          const center = sites.find(s => s.id === menu.siteId);
+          if (center) openNearby(center);
+        }],
         [
           "Show horizon",
           () => {
@@ -498,6 +538,7 @@ export default function App() {
     : menu
       ? [
           ["Create site here", () => openCustom(menu)],
+          ["Find better spots nearby", () => openNearby({ name: "Map point", lat: menu.lat, lon: menu.lon })],
           [
             "Copy coordinates",
             () =>
@@ -534,6 +575,9 @@ export default function App() {
           }
         >
           <World
+            nearbyPins={ranked?.rows}
+            nearbyCenter={ranked?.center}
+            onNearbyPin={row => { if (ranked) compareNearbySite(row, ranked.mission); }}
             onContext={(point) => {
               if (useScout.getState().pickingSite) {
                 setCustomLat(point.lat.toFixed(5));
@@ -714,10 +758,6 @@ export default function App() {
               <button className="add-site" onClick={() => openCustom(null)}>
                 <Plus size={16} /> Add custom coordinates
               </button>
-              <p className="data-note">
-                Curated coordinates have source citations. A named crater centre
-                is not a recommended landing zone.
-              </p>
             </>
           )}
           {state.rail === "clock" && (
@@ -825,8 +865,8 @@ export default function App() {
                 />
               </label>
               <p className="data-note">
-                Readable mode enlarges body sizes. Numerical distances always
-                come from JPL; the display is not a trajectory solution.
+                Readable scale enlarges the Sun, planets and Moon. Distance
+                readouts use JPL positions.
               </p>
               <h3>NASA precomputed layers</h3>
               <select
@@ -906,22 +946,14 @@ export default function App() {
                 />
               </label>
               <p className="data-note">
-                DTE here means geometric Earth-centre visibility above your
-                elevation limit. It does not guarantee a working radio link.
+                Earth contact requires Earth’s centre to clear the horizon and
+                your antenna’s minimum elevation.
               </p>
               <h3>Rocky connection</h3>
               <p className="connection">
-                {health?.primaryConfigured
-                  ? "Nemotron configured"
-                  : "Nemotron key needed"}
-                <br />
-                {health?.fallbackConfigured
-                  ? "GPT-OSS fallback configured"
-                  : "GPT-OSS fallback key needed"}
-              </p>
-              <p className="data-note">
-                Add keys to lunar-scout/.env on the server. The browser never
-                receives them. Audio is off.
+                {!health ? "Checking connection…" : health.primaryConfigured
+                  ? "Text and map questions"
+                  : health.fallbackConfigured ? "Text questions" : "Chat unavailable"}
               </p>
               <button onClick={() => state.set({ welcome: true })}>
                 Replay welcome
@@ -1055,7 +1087,6 @@ export default function App() {
                       : !current.earth.dte
                         ? `Earth clears the horizon but is below your ${state.minAntennaEl}° antenna limit.`
                         : `Earth clears the horizon and your ${state.minAntennaEl}° antenna limit.`}</p>
-                    <small>{!current.earth.visible ? "Part of Earth's disc may still be visible." : "Geometry only; radio performance is not assessed."}</small>
                     <details className="condition-geometry" open={state.mode === "engineer" ? true : undefined}><summary>Position in the sky</summary><dl><dt>Height above level horizon</dt><dd>{deg(current.earth.el)}</dd>
                       <dt>Compass bearing</dt><dd>{deg(current.earth.az)} ({bearing(current.earth.az)})</dd></dl></details>
                   </section>
@@ -1194,7 +1225,7 @@ export default function App() {
                     {terrain ? (analysis?.rules?.every((r: any) => r.passed)
                       ? "Meets your sunlight, darkness and contact limits."
                       : "Does not meet all your mission limits. Open comparison for details.")
-                      : "Terrain not included; terrain-based viability is unavailable."}
+                      : "Smooth horizon estimate. Add terrain data to check your mission limits."}
                   </p>
                 )}
                 <div className="metrics-grid">
@@ -1227,8 +1258,7 @@ export default function App() {
                 <p className="data-note">
                   Mission-average power index{" "}
                   {activeScenario.arrayMode || "horizontal"} array, relative to
-                  normal solar incidence at 1 AU. Geometric Earth-shadow
-                  screening included; atmospheric light excluded.
+                  normal solar incidence at 1 AU.
                 </p>
                 <p className="data-note">
                   Earth-shadow exposure while the Sun clears terrain:{" "}
@@ -1250,6 +1280,8 @@ export default function App() {
             >
               <Flag size={16} /> Plan landing <ArrowUpRight size={16} />
             </button>
+            <button className="full-width" onClick={() => openNearby(site)}>Find better spots nearby</button>
+            {ranked && <button className="text-button" onClick={() => setRanked(null)}>Clear ranked pins</button>}
             <div className="button-row">
               <button onClick={() => state.set({ timeline: !state.timeline })}>
                 <Clock3 size={14} /> Timeline
@@ -1457,9 +1489,6 @@ export default function App() {
             </a>
           </div>
         )}
-      <div className="screening-note">
-        Early screening · verify for mission use
-      </div>
       {state.travel && (
         <div className="travel-banner">
           <Orbit className="spin" size={18} />
@@ -1486,12 +1515,7 @@ export default function App() {
       )}
       {state.landed && (
         <div className="landing-choice">
-          <span>Surface arrival</span>
-          <h2>See this place from a new perspective.</h2>
-          <p>
-            The view uses the available LOLA terrain. Explore the sky or return
-            to site analysis.
-          </p>
+          <h2>{site ? `Arrived at ${site.name}` : "Surface arrival"}</h2>
           <div className="button-row">
             <button
               className="primary"
@@ -1507,8 +1531,12 @@ export default function App() {
           </div>
         </div>
       )}
-      {slip && <DateSlip close={() => setSlip(false)} />}
-      <Rocky snapshot={() => snapshot.current()} />
+      <Suspense fallback={null}>
+        {slip && <DateSlip close={() => setSlip(false)} />}
+      </Suspense>
+      <Suspense fallback={null}>
+        {rockyStarted && <Rocky snapshot={() => snapshot.current()} />}
+      </Suspense>
       {state.welcome && (
         <div className={"welcome " + (intro ? "departing" : "")}>
           <div className="welcome-content">
@@ -1598,8 +1626,18 @@ export default function App() {
         </div>
       )}
       {state.scenarioDialog && (
-        <ScenarioDialog close={() => state.set({ scenarioDialog: false })} />
+        <Suspense fallback={null}>
+          <ScenarioDialog close={() => state.set({ scenarioDialog: false })} />
+        </Suspense>
       )}
+      {nearby && <Suspense fallback={null}>
+        <NearbySites {...nearby} sites={sites} close={() => setNearby(null)} compare={compareNearbySite}
+          showMap={(rows, mission) => {
+            setRanked({ center: nearby.center, rows, mission });
+            state.set({ view: "globe", markers: true });
+            setNearby(null);
+          }} />
+      </Suspense>}
       {state.pickingSite && (
         <div className="coordinate-picker" role="status">
           <span>Click or tap a point on the Moon. Drag to rotate.</span>
@@ -1770,13 +1808,8 @@ export default function App() {
                 <h3>Terrain</h3>
                 <p>
                   {terrain
-                    ? `${terrain.resolutionM.toFixed(0)} m LOLA elevation grid; 720 azimuth rays out to 150 km, with curvature and ${state.mastM} m mast height.`
-                    : "Official PDS LOLA products are being prepared. Until a mask is ready, terrain-based results are unavailable."}{" "}
-                  Small obstacles, narrow ridges and terrain beyond the analysis
-                  radius may be missed. The globe texture is NASA visual
-                  imagery; it is not a scientific shadow map. The polar base is
-                  a fixed-light cartographic hillshade derived from LOLA, not
-                  current illumination.
+                    ? `The horizon uses a ${terrain.resolutionM.toFixed(0)} m LOLA elevation grid, 720 bearings out to 150 km, lunar curvature and a ${state.mastM} m mast.`
+                    : "The smooth horizon uses the Moon’s curvature and the observer’s height."}
                 </p>
                 <p>
                   Globe imagery uses the LROC WAC mosaic from{" "}
@@ -1788,18 +1821,11 @@ export default function App() {
                 </p>
                 <h3>Events and metrics</h3>
                 <p>
-                  Sunrise/set use terrain-horizon solar-centre crossings,
-                  refined within interpolated samples. They are not eclipse
-                  contact times. Solar disc fractions combine terrain clipping
-                  with geometric Earth occultation. Mission percentages use
-                  10-minute integration. Narrow grazing events may be missed.
-                  Earth visibility uses the centre; DTE also applies the antenna
-                  elevation setting. Eclipse screening uses an opaque circular
-                  apparent Earth disc and a small-angle overlap approximation,
-                  with JPL directions and angular sizes. It excludes atmosphere,
-                  refracted/scattered light, limb darkening and Earth's
-                  ellipsoidal limb. Link budgets, thermal modelling and full
-                  spacecraft power budgets are not included.
+                  Sunrise and sunset mark when the Sun’s centre crosses the
+                  terrain skyline. The visible fraction of the Sun combines
+                  terrain blockage and overlap with Earth’s apparent disc.
+                  Mission percentages use 10-minute samples. Earth contact
+                  applies the antenna elevation setting to Earth’s centre.
                 </p>
                 <p>
                   <a

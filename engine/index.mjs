@@ -13,7 +13,8 @@ const direction = ({ az, el }) => [
 const dot = (a, b) => a.reduce((sum, v, i) => sum + v * b[i], 0);
 const solarSamples = Array.from({ length: 127 }, (_, i) => ({
   r: Math.sqrt((i + 0.5) / 127),
-  a: i * 2.399963229728653,
+  cos: Math.cos(i * 2.399963229728653),
+  sin: Math.sin(i * 2.399963229728653),
 }));
 
 /** Opaque, circular apparent Earth disc. No atmospheric refraction, scattering,
@@ -69,21 +70,20 @@ export function interpolate(rows, t) {
     if (rows[m][0] > t) hi = m;
     else lo = m;
   }
-  const a = rows[lo],
-    b = rows[hi],
-    u = (t - a[0]) / (b[0] - a[0] || 1),
-    rad = Math.PI / 180;
-  const v = (p) => [
-      Math.cos(p[2] * rad) * Math.sin(p[1] * rad),
-      Math.cos(p[2] * rad) * Math.cos(p[1] * rad),
-      Math.sin(p[2] * rad),
-    ],
-    va = v(a),
-    vb = v(b),
-    [x, y, z] = va.map((n, i) => n + (vb[i] - n) * u);
+  return interpolatePair(rows[lo], rows[hi], t);
+}
+function interpolatePair(a, b, t) {
+  const u = (t - a[0]) / (b[0] - a[0] || 1),
+    aAz = a[1] * RAD, bAz = b[1] * RAD,
+    aEl = a[2] * RAD, bEl = b[2] * RAD,
+    aFlat = Math.cos(aEl), bFlat = Math.cos(bEl),
+    ax = aFlat * Math.sin(aAz), ay = aFlat * Math.cos(aAz), az = Math.sin(aEl),
+    x = ax + (bFlat * Math.sin(bAz) - ax) * u,
+    y = ay + (bFlat * Math.cos(bAz) - ay) * u,
+    z = az + (Math.sin(bEl) - az) * u;
   return {
-    az: (Math.atan2(x, y) / rad + 360) % 360,
-    el: Math.atan2(z, Math.hypot(x, y)) / rad,
+    az: (Math.atan2(x, y) / RAD + 360) % 360,
+    el: Math.atan2(z, Math.hypot(x, y)) / RAD,
     radius: (a[3] + (b[3] - a[3]) * u) / 7200,
     distanceKm: a[4] + (b[4] - a[4]) * u,
   };
@@ -106,6 +106,26 @@ export function smoothHorizon(data) {
   ];
 }
 export function discFraction(state, mask, occluder = null) {
+  // Only skip samples when the entire apparent disc clears or lies below all
+  // adjacent horizon vertices. Near a ridge or a pole use the original grid.
+  if (!occluder && state.radius >= 0 && Math.abs(state.el) + state.radius < 90) {
+    const azSpan = Math.asin(Math.sin(state.radius * RAD) / Math.cos(state.el * RAD)) / RAD;
+    let low = 0, high = 0;
+    if (mask?.length) {
+      const scale = mask.length / 360;
+      const first = Math.floor((state.az - azSpan - 1e-8) * scale);
+      const last = Math.ceil((state.az + azSpan + 1e-8) * scale);
+      low = Infinity;
+      high = -Infinity;
+      for (let i = first; i <= last; i++) {
+        const height = mask[((i % mask.length) + mask.length) % mask.length];
+        low = Math.min(low, height);
+        high = Math.max(high, height);
+      }
+    }
+    if (state.el - state.radius > high + 1e-8) return 1;
+    if (state.el + state.radius < low - 1e-8) return 0;
+  }
   // Area-uniform deterministic quadrature on the apparent solar disc, 127 samples.
   let visible = 0;
   const center = direction(state),
@@ -121,14 +141,16 @@ export function discFraction(state, mask, occluder = null) {
     earthLimit = occluder && Math.cos(occluder.radius * RAD);
   for (const sample of solarSamples) {
     const r = sample.r * state.radius * RAD,
-      x = Math.cos(sample.a) * Math.sin(r),
-      y = Math.sin(sample.a) * Math.sin(r),
-      p = center.map((v, i) => v * Math.cos(r) + east[i] * x + up[i] * y),
-      sampleAz = Math.atan2(p[0], p[1]) / RAD,
-      sampleEl = Math.atan2(p[2], Math.hypot(p[0], p[1])) / RAD;
+      sinR = Math.sin(r), cosR = Math.cos(r),
+      x = sample.cos * sinR, y = sample.sin * sinR,
+      px = center[0] * cosR + east[0] * x + up[0] * y,
+      py = center[1] * cosR + east[1] * x + up[1] * y,
+      pz = center[2] * cosR + up[2] * y,
+      sampleAz = Math.atan2(px, py) / RAD,
+      sampleEl = Math.atan2(pz, Math.hypot(px, py)) / RAD;
     if (
       sampleEl >= horizonAt(mask, sampleAz) &&
-      (!earth || dot(p, earth) < earthLimit)
+      (!earth || px * earth[0] + py * earth[1] + pz * earth[2] < earthLimit)
     )
       visible++;
   }
@@ -183,36 +205,33 @@ export function conditions(
     sun.visibleFraction * incidence * (149597870.7 / sun.distanceKm) ** 2;
   return { time: t, sun, earth, powerIndex, terrain: !!mask };
 }
-function clearance(data, body, t, mask, margin) {
-  const p = interpolate(data[body], t);
-  return p.el - horizonAt(mask, p.az) - (body === "earth" ? margin : 0);
-}
 export function findEvents(data, mask = null, margin = 0) {
   mask = mask ?? smoothHorizon(data);
   const out = [];
   for (const body of ["sun", "earth"]) {
-    const rows = data[body];
+    const rows = data[body], offset = body === "earth" ? margin : 0;
+    const clearance = p => p.el - horizonAt(mask, p.az) - offset;
+    if (rows.length < 2) continue;
+    let g = clearance(interpolatePair(rows[0], rows[1], rows[0][0]));
     for (let i = 1; i < rows.length; i++) {
-      let a = rows[i - 1][0],
-        b = rows[i][0],
-        ga = clearance(data, body, a, mask, margin),
-        gb = clearance(data, body, b, mask, margin);
+      const a = rows[i - 1], b = rows[i], step = (b[0] - a[0]) / 4;
       // Solar event convention is centre crossing (~50% disc); this differs from
       // first/last limb contact. Search finer subintervals for azimuth-varying ridges.
-      for (let k = 0; k < 4; k++) {
-        let l = a + ((b - a) * k) / 4,
-          r = a + ((b - a) * (k + 1)) / 4,
-          g = clearance(data, body, l, mask, margin),
-          h = clearance(data, body, r, mask, margin);
-        if (g >= 0 === h >= 0) continue;
-        const rising = h > g;
-        while (r - l > 1000) {
-          const m = (l + r) / 2,
-            v = clearance(data, body, m, mask, margin);
-          if (v >= 0 === g >= 0) l = m;
-          else r = m;
+      for (let k = 1; k <= 4; k++) {
+        let l = a[0] + step * (k - 1), r = a[0] + step * k;
+        const h = clearance(k === 4 && i + 1 < rows.length
+          ? interpolatePair(b, rows[i + 1], r)
+          : interpolatePair(a, b, r));
+        if ((g >= 0) !== (h >= 0)) {
+          const rising = h > g;
+          while (r - l > 1000) {
+            const m = (l + r) / 2, v = clearance(interpolatePair(a, b, m));
+            if ((v >= 0) === (g >= 0)) l = m;
+            else r = m;
+          }
+          out.push({ body, time: (l + r) / 2, kind: rising ? "rise" : "set" });
         }
-        out.push({ body, time: (l + r) / 2, kind: rising ? "rise" : "set" });
+        g = h;
       }
     }
   }

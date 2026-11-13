@@ -1,0 +1,2514 @@
+{
+  "validatedUtc": "2026-11-13T20:00:41.922Z",
+  "toleranceDeg": 0.005,
+  "method": "Independent topocentric SPICE DE440s / MOON_ME / CN+S versus interpolated JPL Horizons DE441 airless observer tables. Both use the same LOLA observer elevation and mast. Terrain horizons and photometry are outside this comparison.",
+  "spiceToolkit": "CSPICE_N0067",
+  "kernels": [
+    {
+      "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp",
+      "sha256": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2"
+    },
+    {
+      "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/moon_pa_de440_200625.bpc",
+      "sha256": "60cd55aa401ea2ea97360636f567554bfe4e37bb829f901b4460a455dfaf783f"
+    },
+    {
+      "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/fk/satellites/moon_de440_250416.tf",
+      "sha256": "a47c71e9c9f33796bdafb2c9d69a7ee447b6016ecad80f71cd6f3e479f9cf768"
+    },
+    {
+      "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/naif0012.tls",
+      "sha256": "678e32bdb5a744117a467cd9601cd6b373f0e9bc9bbde1371d5eee39600a039b"
+    }
+  ],
+  "directions": 216,
+  "maxDirectionErrorDeg": 0.00020212198539066366,
+  "results": [
+    {
+      "id": "apollo11",
+      "body": "sun",
+      "lat": 0.67416,
+      "lon": 23.47314,
+      "elevationM": -1934.901,
+      "mastM": 2,
+      "samples": [
+        {
+          "utc": "1969-07-20T01:03:53.000Z",
+          "horizonsAzDeg": 88.69685670137886,
+          "horizonsElDeg": 0.9053033757006418,
+          "spiceAzDeg": 88.69685964398411,
+          "spiceElDeg": 0.9055054762701975,
+          "directionErrorDeg": 0.00020212198539066366,
+          "rangeDifferenceKm": 0.9321151375770569
+        },
+        {
+          "utc": "1969-07-20T03:03:53.000Z",
+          "horizonsAzDeg": 88.70978857246638,
+          "horizonsElDeg": 1.924510377466565,
+          "spiceAzDeg": 88.7097914349707,
+          "spiceElDeg": 1.9247124407706153,
+          "directionErrorDeg": 0.0002020835558194034,
+          "rangeDifferenceKm": 0.9432869851589203
+        },
+        {
+          "utc": "1969-07-20T05:03:53.000Z",
+          "horizonsAzDeg": 88.72232486181565,
+          "horizonsElDeg": 2.943682167257492,
+          "spiceAzDeg": 88.7223276464773,
+          "spiceElDeg": 2.943884193574263,
+          "directionErrorDeg": 0.00020204545666027468,
+          "rangeDifferenceKm": 0.9541684687137604
+        },
+        {
+          "utc": "1969-07-20T07:03:53.000Z",
+          "horizonsAzDeg": 88.73447302138419,
+          "horizonsElDeg": 3.962818100462085,
+          "spiceAzDeg": 88.73447572983623,
+          "spiceElDeg": 3.9630200890838365,
+          "directionErrorDeg": 0.00020200669293807543,
+          "rangeDifferenceKm": 0.9647558927536011
+        },
+        {
+          "utc": "1969-07-20T09:03:53.000Z",
+          "horizonsAzDeg": 88.74623991335443,
+          "horizonsElDeg": 4.9819175458573195,
+          "spiceAzDeg": 88.74624254593614,
+          "spiceElDeg": 4.982119497437461,
+          "directionErrorDeg": 0.00020196860879927628,
+          "rangeDifferenceKm": 0.9750454425811768
+        },
+        {
+          "utc": "1969-07-20T11:03:53.000Z",
+          "horizonsAzDeg": 88.75763182085205,
+          "horizonsElDeg": 6.0009798904434914,
+          "spiceAzDeg": 88.75763438026752,
+          "spiceElDeg": 6.001181804329966,
+          "directionErrorDeg": 0.0002019299298270882,
+          "rangeDifferenceKm": 0.9850306212902069
+        },
+        {
+          "utc": "1969-07-20T13:03:53.000Z",
+          "horizonsAzDeg": 88.76865446900433,
+          "horizonsElDeg": 7.020004534609205,
+          "spiceAzDeg": 88.76865695582129,
+          "spiceElDeg": 7.020206410694045,
+          "directionErrorDeg": 0.00020189117245030932,
+          "rangeDifferenceKm": 0.9947069585323334
+        },
+        {
+          "utc": "1969-07-20T15:03:53.000Z",
+          "horizonsAzDeg": 88.77931302855171,
+          "horizonsElDeg": 8.038990894131391,
+          "spiceAzDeg": 88.77931544389666,
+          "spiceElDeg": 8.039192732491374,
+          "directionErrorDeg": 0.00020185252872946486,
+          "rangeDifferenceKm": 1.004070669412613
+        },
+        {
+          "utc": "1969-07-20T17:03:53.000Z",
+          "horizonsAzDeg": 88.78961212840119,
+          "horizonsElDeg": 9.057938400398626,
+          "spiceAzDeg": 88.78961447285533,
+          "spiceElDeg": 9.058140200511385,
+          "directionErrorDeg": 0.0002018133933645088,
+          "rangeDifferenceKm": 1.0131181478500366
+        },
+        {
+          "utc": "1969-07-20T19:03:53.000Z",
+          "horizonsAzDeg": 88.79955586007287,
+          "horizonsElDeg": 10.076846498187813,
+          "spiceAzDeg": 88.79955813484646,
+          "spiceElDeg": 10.077048260191646,
+          "directionErrorDeg": 0.000201774434375943,
+          "rangeDifferenceKm": 1.0218431949615479
+        },
+        {
+          "utc": "1969-07-20T21:03:53.000Z",
+          "horizonsAzDeg": 88.80914778486499,
+          "horizonsElDeg": 11.095714646887505,
+          "spiceAzDeg": 88.80914999051184,
+          "spiceElDeg": 11.095916371458786,
+          "directionErrorDeg": 0.00020173618256429996,
+          "rangeDifferenceKm": 1.0302412509918213
+        },
+        {
+          "utc": "1969-07-20T23:03:53.000Z",
+          "horizonsAzDeg": 88.81839093430062,
+          "horizonsElDeg": 12.114542322497917,
+          "spiceAzDeg": 88.81839307166624,
+          "spiceElDeg": 12.114744008588113,
+          "directionErrorDeg": 0.0002016969164383416,
+          "rangeDifferenceKm": 1.0383094549179077
+        }
+      ],
+      "maxDirectionErrorDeg": 0.00020212198539066366
+    },
+    {
+      "id": "apollo11",
+      "body": "earth",
+      "lat": 0.67416,
+      "lon": 23.47314,
+      "elevationM": -1934.901,
+      "mastM": 2,
+      "samples": [
+        {
+          "utc": "1969-07-20T01:03:53.000Z",
+          "horizonsAzDeg": 269.9135989774445,
+          "horizonsElDeg": 59.718807270469576,
+          "spiceAzDeg": 269.9136468889046,
+          "spiceElDeg": 59.718794259981735,
+          "directionErrorDeg": 0.000027439641768734122,
+          "rangeDifferenceKm": -0.06727587943896651
+        },
+        {
+          "utc": "1969-07-20T03:03:53.000Z",
+          "horizonsAzDeg": 270.1549718624517,
+          "horizonsElDeg": 59.66082484404347,
+          "spiceAzDeg": 270.15501965183915,
+          "spiceElDeg": 59.6608120729749,
+          "directionErrorDeg": 0.00002730942832747248,
+          "rangeDifferenceKm": -0.0682076719822362
+        },
+        {
+          "utc": "1969-07-20T05:03:53.000Z",
+          "horizonsAzDeg": 270.3954913667238,
+          "horizonsElDeg": 59.604248774252675,
+          "spiceAzDeg": 270.3955390273182,
+          "spiceElDeg": 59.60423624960974,
+          "directionErrorDeg": 0.00002717336040949341,
+          "rangeDifferenceKm": -0.06913797237211838
+        },
+        {
+          "utc": "1969-07-20T07:03:53.000Z",
+          "horizonsAzDeg": 270.6351208380264,
+          "horizonsElDeg": 59.549124217574516,
+          "spiceAzDeg": 270.6351683618759,
+          "spiceElDeg": 59.549111949237314,
+          "directionErrorDeg": 0.000027029658246500152,
+          "rangeDifferenceKm": -0.07005633518565446
+        },
+        {
+          "utc": "1969-07-20T09:03:53.000Z",
+          "horizonsAzDeg": 270.87382406096117,
+          "horizonsElDeg": 59.495496827767866,
+          "spiceAzDeg": 270.87387144213557,
+          "spiceElDeg": 59.49548482424055,
+          "directionErrorDeg": 0.000026879995188999562,
+          "rangeDifferenceKm": -0.07096861099125817
+        },
+        {
+          "utc": "1969-07-20T11:03:53.000Z",
+          "horizonsAzDeg": 271.1115652373532,
+          "horizonsElDeg": 59.443412716814976,
+          "spiceAzDeg": 271.11161246757564,
+          "spiceElDeg": 59.44340098578604,
+          "directionErrorDeg": 0.000026723794599234536,
+          "rangeDifferenceKm": -0.07187628472456709
+        },
+        {
+          "utc": "1969-07-20T13:03:53.000Z",
+          "horizonsAzDeg": 271.34830894925096,
+          "horizonsElDeg": 59.3929184180864,
+          "spiceAzDeg": 271.3483560218409,
+          "spiceElDeg": 59.39290696921316,
+          "directionErrorDeg": 0.000026561051367793383,
+          "rangeDifferenceKm": -0.0727683745790273
+        },
+        {
+          "utc": "1969-07-20T15:03:53.000Z",
+          "horizonsAzDeg": 271.5840201339276,
+          "horizonsElDeg": 59.34406085306934,
+          "spiceAzDeg": 271.5840670427769,
+          "spiceElDeg": 59.3440496953905,
+          "directionErrorDeg": 0.000026392472569269057,
+          "rangeDifferenceKm": -0.07365289877634495
+        },
+        {
+          "utc": "1969-07-20T17:03:53.000Z",
+          "horizonsAzDeg": 271.81866405371426,
+          "horizonsElDeg": 59.29688729163925,
+          "spiceAzDeg": 271.81871079120555,
+          "spiceElDeg": 59.29687643383748,
+          "directionErrorDeg": 0.000026217688443363064,
+          "rangeDifferenceKm": -0.07452798174927011
+        },
+        {
+          "utc": "1969-07-20T19:03:53.000Z",
+          "horizonsAzDeg": 272.0522062585543,
+          "horizonsElDeg": 59.25144531189489,
+          "spiceAzDeg": 272.05225281841354,
+          "spiceElDeg": 59.25143476334885,
+          "directionErrorDeg": 0.000026037221795956013,
+          "rangeDifferenceKm": -0.07539192127296701
+        },
+        {
+          "utc": "1969-07-20T21:03:53.000Z",
+          "horizonsAzDeg": 272.2846125570033,
+          "horizonsElDeg": 59.20778276221679,
+          "spiceAzDeg": 272.28465893244794,
+          "spiceElDeg": 59.207772531693884,
+          "directionErrorDeg": 0.000025851297083768915,
+          "rangeDifferenceKm": -0.07624556450173259
+        },
+        {
+          "utc": "1969-07-20T23:03:53.000Z",
+          "horizonsAzDeg": 272.5158489788988,
+          "horizonsElDeg": 59.1659477169852,
+          "spiceAzDeg": 272.51589516327766,
+          "spiceElDeg": 59.16593781415854,
+          "directionErrorDeg": 0.00002565984363841603,
+          "rangeDifferenceKm": -0.07708505203481764
+        }
+      ],
+      "maxDirectionErrorDeg": 0.000027439641768734122
+    },
+    {
+      "id": "apollo15",
+      "body": "sun",
+      "lat": 26.13239,
+      "lon": 3.6333,
+      "elevationM": -1925.189,
+      "mastM": 2,
+      "samples": [
+        {
+          "utc": "1971-07-30T01:03:53.000Z",
+          "horizonsAzDeg": 90.8653904740778,
+          "horizonsElDeg": 2.355462380067083,
+          "spiceAzDeg": 90.86535984006007,
+          "spiceElDeg": 2.3554001322216043,
+          "directionErrorDeg": 0.00006936607385278238,
+          "rangeDifferenceKm": -0.3357735574245453
+        },
+        {
+          "utc": "1971-07-30T03:03:53.000Z",
+          "horizonsAzDeg": 91.31629483548625,
+          "horizonsElDeg": 3.2689829645840573,
+          "spiceAzDeg": 91.31626414541444,
+          "spiceElDeg": 3.2689207019449227,
+          "directionErrorDeg": 0.00006939347301066615,
+          "rangeDifferenceKm": -0.3347803056240082
+        },
+        {
+          "utc": "1971-07-30T05:03:53.000Z",
+          "horizonsAzDeg": 91.76793615706941,
+          "horizonsElDeg": 4.18229514377551,
+          "spiceAzDeg": 91.7679053946492,
+          "spiceElDeg": 4.182232870041288,
+          "directionErrorDeg": 0.0000694212592550901,
+          "rangeDifferenceKm": -0.33366715908050537
+        },
+        {
+          "utc": "1971-07-30T07:03:53.000Z",
+          "horizonsAzDeg": 92.22054709974088,
+          "horizonsElDeg": 5.095341344532743,
+          "spiceAzDeg": 92.22051624951283,
+          "spiceElDeg": 5.095279064407236,
+          "directionErrorDeg": 0.00006944813593179191,
+          "rangeDifferenceKm": -0.33243390917778015
+        },
+        {
+          "utc": "1971-07-30T09:03:53.000Z",
+          "horizonsAzDeg": 92.67436211461296,
+          "horizonsElDeg": 6.008063539865198,
+          "spiceAzDeg": 92.67433115945997,
+          "spiceElDeg": 6.008001256588851,
+          "directionErrorDeg": 0.0000694761134611933,
+          "rangeDifferenceKm": -0.33107855916023254
+        },
+        {
+          "utc": "1971-07-30T11:03:53.000Z",
+          "horizonsAzDeg": 93.12961786316026,
+          "horizonsElDeg": 6.920403127677537,
+          "spiceAzDeg": 93.1295867877289,
+          "spiceElDeg": 6.92034084520844,
+          "directionErrorDeg": 0.00006950373235768978,
+          "rangeDifferenceKm": -0.32960245013237
+        },
+        {
+          "utc": "1971-07-30T13:03:53.000Z",
+          "horizonsAzDeg": 93.58655365721887,
+          "horizonsElDeg": 7.832300814605003,
+          "spiceAzDeg": 93.58652244440457,
+          "spiceElDeg": 7.832238536989696,
+          "directionErrorDeg": 0.00006953164060270621,
+          "rangeDifferenceKm": -0.32800331711769104
+        },
+        {
+          "utc": "1971-07-30T15:03:53.000Z",
+          "horizonsAzDeg": 94.04541189459673,
+          "horizonsElDeg": 8.743696493402137,
+          "spiceAzDeg": 94.04538052794427,
+          "spiceElDeg": 8.743634225146144,
+          "directionErrorDeg": 0.0000695590907726177,
+          "rangeDifferenceKm": -0.32628101110458374
+        },
+        {
+          "utc": "1971-07-30T17:03:53.000Z",
+          "horizonsAzDeg": 94.50643851446091,
+          "horizonsElDeg": 9.65452911894315,
+          "spiceAzDeg": 94.50640697652253,
+          "spiceElDeg": 9.654466864578543,
+          "directionErrorDeg": 0.00006958644050744815,
+          "rangeDifferenceKm": -0.32443559169769287
+        },
+        {
+          "utc": "1971-07-30T19:03:53.000Z",
+          "horizonsAzDeg": 94.96988345666614,
+          "horizonsElDeg": 10.564736580057497,
+          "spiceAzDeg": 94.96985173062647,
+          "spiceElDeg": 10.564674343392074,
+          "directionErrorDeg": 0.00006961399661944023,
+          "rangeDifferenceKm": -0.3224666714668274
+        },
+        {
+          "utc": "1971-07-30T21:03:53.000Z",
+          "horizonsAzDeg": 95.43600114003561,
+          "horizonsElDeg": 11.474255564471774,
+          "spiceAzDeg": 95.43596920834298,
+          "spiceElDeg": 11.474193350166276,
+          "directionErrorDeg": 0.00006964125145690257,
+          "rangeDifferenceKm": -0.32037293910980225
+        },
+        {
+          "utc": "1971-07-30T23:03:53.000Z",
+          "horizonsAzDeg": 95.90505095107773,
+          "horizonsElDeg": 12.383021424091996,
+          "spiceAzDeg": 95.90501879493594,
+          "spiceElDeg": 12.382959236614784,
+          "directionErrorDeg": 0.00006966884961134002,
+          "rangeDifferenceKm": -0.31815433502197266
+        }
+      ],
+      "maxDirectionErrorDeg": 0.00006966884961134002
+    },
+    {
+      "id": "apollo15",
+      "body": "earth",
+      "lat": 26.13239,
+      "lon": 3.6333,
+      "elevationM": -1925.189,
+      "mastM": 2,
+      "samples": [
+        {
+          "utc": "1971-07-30T01:03:53.000Z",
+          "horizonsAzDeg": 200.20488673868863,
+          "horizonsElDeg": 69.33795441210235,
+          "spiceAzDeg": 200.20487111848774,
+          "spiceElDeg": 69.33795599109202,
+          "directionErrorDeg": 0.000005733383417203199,
+          "rangeDifferenceKm": 0.02041280665434897
+        },
+        {
+          "utc": "1971-07-30T03:03:53.000Z",
+          "horizonsAzDeg": 200.48680220293778,
+          "horizonsElDeg": 69.33226286452152,
+          "spiceAzDeg": 200.48678703055526,
+          "spiceElDeg": 69.33226457230164,
+          "directionErrorDeg": 0.000005620783552132573,
+          "rangeDifferenceKm": 0.02096426789648831
+        },
+        {
+          "utc": "1971-07-30T05:03:53.000Z",
+          "horizonsAzDeg": 200.76377798009253,
+          "horizonsElDeg": 69.32458028238493,
+          "spiceAzDeg": 200.76376326758066,
+          "spiceElDeg": 69.32458211730687,
+          "directionErrorDeg": 0.000005509154671958895,
+          "rangeDifferenceKm": 0.021508230653125793
+        },
+        {
+          "utc": "1971-07-30T07:03:53.000Z",
+          "horizonsAzDeg": 201.03562908715773,
+          "horizonsElDeg": 69.31493055069657,
+          "spiceAzDeg": 201.03561484605495,
+          "spiceElDeg": 69.3149325106984,
+          "directionErrorDeg": 0.00000539875248090666,
+          "rangeDifferenceKm": 0.02204588649328798
+        },
+        {
+          "utc": "1971-07-30T09:03:53.000Z",
+          "horizonsAzDeg": 201.3021748414188,
+          "horizonsElDeg": 69.30333816713087,
+          "spiceAzDeg": 201.30216108315233,
+          "spiceElDeg": 69.30334025107601,
+          "directionErrorDeg": 0.0000052902038852362606,
+          "rangeDifferenceKm": 0.0225739250308834
+        },
+        {
+          "utc": "1971-07-30T11:03:53.000Z",
+          "horizonsAzDeg": 201.56323903416018,
+          "horizonsElDeg": 69.28982818503292,
+          "spiceAzDeg": 201.5632257694034,
+          "spiceElDeg": 69.28983038995683,
+          "directionErrorDeg": 0.000005183319306376944,
+          "rangeDifferenceKm": 0.023094007221516222
+        },
+        {
+          "utc": "1971-07-30T13:03:53.000Z",
+          "horizonsAzDeg": 201.8186500903921,
+          "horizonsElDeg": 69.27442614535948,
+          "spiceAzDeg": 201.8186373292238,
+          "spiceElDeg": 69.27442847007778,
+          "directionErrorDeg": 0.000005079300067459454,
+          "rangeDifferenceKm": 0.02361059031682089
+        },
+        {
+          "utc": "1971-07-30T15:03:53.000Z",
+          "horizonsAzDeg": 202.0682412175131,
+          "horizonsElDeg": 69.25715802118461,
+          "spiceAzDeg": 202.0682289696275,
+          "spiceElDeg": 69.25716046374471,
+          "directionErrorDeg": 0.0000049782874181251535,
+          "rangeDifferenceKm": 0.02411300578387454
+        },
+        {
+          "utc": "1971-07-30T17:03:53.000Z",
+          "horizonsAzDeg": 202.31185054087098,
+          "horizonsElDeg": 69.2380501518055,
+          "spiceAzDeg": 202.31183881608806,
+          "spiceElDeg": 69.23805271044696,
+          "directionErrorDeg": 0.000004880701018211041,
+          "rangeDifferenceKm": 0.0246113104512915
+        },
+        {
+          "utc": "1971-07-30T19:03:53.000Z",
+          "horizonsAzDeg": 202.54932122925885,
+          "horizonsElDeg": 69.21712918318951,
+          "spiceAzDeg": 202.54931003696544,
+          "spiceElDeg": 69.21713185521608,
+          "directionErrorDeg": 0.0000047865656887504476,
+          "rangeDifferenceKm": 0.025096255470998585
+        },
+        {
+          "utc": "1971-07-30T21:03:53.000Z",
+          "horizonsAzDeg": 202.7805016074198,
+          "horizonsElDeg": 69.19442200258555,
+          "spiceAzDeg": 202.78049095596148,
+          "spiceElDeg": 69.19442478647302,
+          "directionErrorDeg": 0.000004697229442893565,
+          "rangeDifferenceKm": 0.02557756780879572
+        },
+        {
+          "utc": "1971-07-30T23:03:53.000Z",
+          "horizonsAzDeg": 203.0052452553758,
+          "horizonsElDeg": 69.16995568085397,
+          "spiceAzDeg": 203.00523515286412,
+          "spiceElDeg": 69.16995857511954,
+          "directionErrorDeg": 0.000004613272296970029,
+          "rangeDifferenceKm": 0.02604470611549914
+        }
+      ],
+      "maxDirectionErrorDeg": 0.000005733383417203199
+    },
+    {
+      "id": "change4",
+      "body": "sun",
+      "lat": -45.4561,
+      "lon": 177.5885,
+      "elevationM": -5930.431,
+      "mastM": 2,
+      "samples": [
+        {
+          "utc": "2019-01-03T01:03:53.000Z",
+          "horizonsAzDeg": 51.387753422689286,
+          "horizonsElDeg": 31.116351633222415,
+          "spiceAzDeg": 51.38775350326203,
+          "spiceElDeg": 31.116351708023,
+          "directionErrorDeg": 1.0175144269511579e-7,
+          "rangeDifferenceKm": -0.07980614900588989
+        },
+        {
+          "utc": "2019-01-03T03:03:53.000Z",
+          "horizonsAzDeg": 50.39124873061155,
+          "horizonsElDeg": 31.670565319794388,
+          "spiceAzDeg": 50.39124880985329,
+          "spiceElDeg": 31.670565394933288,
+          "directionErrorDeg": 1.0096614023690533e-7,
+          "rangeDifferenceKm": -0.08055776357650757
+        },
+        {
+          "utc": "2019-01-03T05:03:53.000Z",
+          "horizonsAzDeg": 49.38276337381609,
+          "horizonsElDeg": 32.216853245841975,
+          "spiceAzDeg": 49.38276345234471,
+          "spiceElDeg": 32.216853321552186,
+          "directionErrorDeg": 1.0072762012923305e-7,
+          "rangeDifferenceKm": -0.08128589391708374
+        },
+        {
+          "utc": "2019-01-03T07:03:53.000Z",
+          "horizonsAzDeg": 48.3620774199336,
+          "horizonsElDeg": 32.754949240260416,
+          "spiceAzDeg": 48.3620774970928,
+          "spiceElDeg": 32.75494931613293,
+          "directionErrorDeg": 9.983681285295097e-8,
+          "rangeDifferenceKm": -0.08199116587638855
+        },
+        {
+          "utc": "2019-01-03T09:03:53.000Z",
+          "horizonsAzDeg": 47.32898119953239,
+          "horizonsElDeg": 33.28458183724942,
+          "spiceAzDeg": 47.32898127533214,
+          "spiceElDeg": 33.284581913268134,
+          "directionErrorDeg": 9.896459586613482e-8,
+          "rangeDifferenceKm": -0.08267226815223694
+        },
+        {
+          "utc": "2019-01-03T11:03:53.000Z",
+          "horizonsAzDeg": 46.28327656906123,
+          "horizonsElDeg": 33.80547439825289,
+          "spiceAzDeg": 46.283276643600075,
+          "spiceElDeg": 33.80547447484654,
+          "directionErrorDeg": 9.85024742718875e-8,
+          "rangeDifferenceKm": -0.0833301842212677
+        },
+        {
+          "utc": "2019-01-03T13:03:53.000Z",
+          "horizonsAzDeg": 45.224778242405534,
+          "horizonsElDeg": 34.31734526689878,
+          "spiceAzDeg": 45.2247783158194,
+          "spiceElDeg": 34.317345344399875,
+          "directionErrorDeg": 9.840207006245011e-8,
+          "rangeDifferenceKm": -0.08396431803703308
+        },
+        {
+          "utc": "2019-01-03T15:03:53.000Z",
+          "horizonsAzDeg": 44.153315192936645,
+          "horizonsElDeg": 34.819907959995675,
+          "spiceAzDeg": 44.153315264869086,
+          "spiceElDeg": 34.819908037416674,
+          "directionErrorDeg": 9.737180663776491e-8,
+          "rangeDifferenceKm": -0.08457490801811218
+        },
+        {
+          "utc": "2019-01-03T17:03:53.000Z",
+          "horizonsAzDeg": 43.06873212018792,
+          "horizonsElDeg": 35.312871392250955,
+          "spiceAzDeg": 43.06873219055509,
+          "spiceElDeg": 35.31287147013514,
+          "directionErrorDeg": 9.676270617043872e-8,
+          "rangeDifferenceKm": -0.08516272902488708
+        },
+        {
+          "utc": "2019-01-03T19:03:53.000Z",
+          "horizonsAzDeg": 41.97089098006984,
+          "horizonsElDeg": 35.79594015149013,
+          "spiceAzDeg": 41.97089104920317,
+          "spiceElDeg": 35.79594022952735,
+          "directionErrorDeg": 9.609447112932499e-8,
+          "rangeDifferenceKm": -0.08572715520858765
+        },
+        {
+          "utc": "2019-01-03T21:03:53.000Z",
+          "horizonsAzDeg": 40.859672570937846,
+          "horizonsElDeg": 36.26881480831656,
+          "spiceAzDeg": 40.859672638830524,
+          "spiceElDeg": 36.26881488705894,
+          "directionErrorDeg": 9.589924676074076e-8,
+          "rangeDifferenceKm": -0.08626747131347656
+        },
+        {
+          "utc": "2019-01-03T23:03:53.000Z",
+          "horizonsAzDeg": 39.73497816786755,
+          "horizonsElDeg": 36.73119227938987,
+          "spiceAzDeg": 39.73497823371482,
+          "spiceElDeg": 36.73119235814411,
+          "directionErrorDeg": 9.480111355018292e-8,
+          "rangeDifferenceKm": -0.08678466081619263
+        }
+      ],
+      "maxDirectionErrorDeg": 1.0175144269511579e-7
+    },
+    {
+      "id": "change4",
+      "body": "earth",
+      "lat": -45.4561,
+      "lon": 177.5885,
+      "elevationM": -5930.431,
+      "mastM": 2,
+      "samples": [
+        {
+          "utc": "2019-01-03T01:03:53.000Z",
+          "horizonsAzDeg": 190.374762717399,
+          "horizonsElDeg": -39.128205565377925,
+          "spiceAzDeg": 190.37476363847637,
+          "spiceElDeg": -39.12820413563709,
+          "directionErrorDeg": 0.0000015983389185554041,
+          "rangeDifferenceKm": 0.002075899683404714
+        },
+        {
+          "utc": "2019-01-03T03:03:53.000Z",
+          "horizonsAzDeg": 190.31894655510948,
+          "horizonsElDeg": -39.21715813974814,
+          "spiceAzDeg": 190.31894747104747,
+          "spiceElDeg": -39.217156737679936,
+          "directionErrorDeg": 0.0000015714218922653774,
+          "rangeDifferenceKm": 0.0020772642455995083
+        },
+        {
+          "utc": "2019-01-03T05:03:53.000Z",
+          "horizonsAzDeg": 190.26128259567415,
+          "horizonsElDeg": -39.30782130534489,
+          "spiceAzDeg": 190.2612835073304,
+          "spiceElDeg": -39.30781993196992,
+          "directionErrorDeg": 0.0000015439379410413045,
+          "rangeDifferenceKm": 0.002080060832668096
+        },
+        {
+          "utc": "2019-01-03T07:03:53.000Z",
+          "horizonsAzDeg": 190.2017710929832,
+          "horizonsElDeg": -39.40015749707163,
+          "spiceAzDeg": 190.20177199942717,
+          "spiceElDeg": -39.400156151801134,
+          "directionErrorDeg": 0.0000015166958446398722,
+          "rangeDifferenceKm": 0.002083697181660682
+        },
+        {
+          "utc": "2019-01-03T09:03:53.000Z",
+          "horizonsAzDeg": 190.14041222348007,
+          "horizonsElDeg": -39.49412881905516,
+          "spiceAzDeg": 190.14041312647961,
+          "spiceElDeg": -39.49412750229946,
+          "directionErrorDeg": 0.0000014897735742998776,
+          "rangeDifferenceKm": 0.0020862200180999935
+        },
+        {
+          "utc": "2019-01-03T11:03:53.000Z",
+          "horizonsAzDeg": 190.07720611183154,
+          "horizonsElDeg": -39.58969705997557,
+          "spiceAzDeg": 190.07720700954224,
+          "spiceElDeg": -39.58969577219266,
+          "directionErrorDeg": 0.0000014618389986970322,
+          "rangeDifferenceKm": 0.0020897671347483993
+        },
+        {
+          "utc": "2019-01-03T13:03:53.000Z",
+          "horizonsAzDeg": 190.0121528354223,
+          "horizonsElDeg": -39.68682370434793,
+          "spiceAzDeg": 190.01215372935624,
+          "spiceElDeg": -39.68682244536169,
+          "directionErrorDeg": 0.0000014346725445222061,
+          "rangeDifferenceKm": 0.0020932381157763302
+        },
+        {
+          "utc": "2019-01-03T15:03:53.000Z",
+          "horizonsAzDeg": 189.94525245491886,
+          "horizonsElDeg": -39.785469941852355,
+          "spiceAzDeg": 189.94525334378696,
+          "spiceElDeg": -39.785468712436455,
+          "directionErrorDeg": 0.0000014064198031277372,
+          "rangeDifferenceKm": 0.002097784890793264
+        },
+        {
+          "utc": "2019-01-03T17:03:53.000Z",
+          "horizonsAzDeg": 189.8765050214824,
+          "horizonsElDeg": -39.88559668294554,
+          "spiceAzDeg": 189.87650590608868,
+          "spiceElDeg": -39.885595482458406,
+          "directionErrorDeg": 0.0000013790989803972197,
+          "rangeDifferenceKm": 0.002103583363350481
+        },
+        {
+          "utc": "2019-01-03T19:03:53.000Z",
+          "horizonsAzDeg": 189.805910603274,
+          "horizonsElDeg": -39.98716456547248,
+          "spiceAzDeg": 189.80591148332545,
+          "spiceElDeg": -39.987163394536466,
+          "directionErrorDeg": 0.0000013512038142213146,
+          "rangeDifferenceKm": 0.0021099765435792506
+        },
+        {
+          "utc": "2019-01-03T21:03:53.000Z",
+          "horizonsAzDeg": 189.73346929967792,
+          "horizonsElDeg": -40.090133971113204,
+          "spiceAzDeg": 189.7334701757142,
+          "spiceElDeg": -40.090132829562464,
+          "directionErrorDeg": 0.0000013237449996092697,
+          "rangeDifferenceKm": 0.0021159295574761927
+        },
+        {
+          "utc": "2019-01-03T23:03:53.000Z",
+          "horizonsAzDeg": 189.65918126340827,
+          "horizonsElDeg": -40.194465033266,
+          "spiceAzDeg": 189.6591821352714,
+          "spiceElDeg": -40.19446392203694,
+          "directionErrorDeg": 0.0000012955150938212594,
+          "rangeDifferenceKm": 0.0021220018970780075
+        }
+      ],
+      "maxDirectionErrorDeg": 0.0000015983389185554041
+    },
+    {
+      "id": "chandrayaan3",
+      "body": "sun",
+      "lat": -69.3741,
+      "lon": 32.32,
+      "elevationM": 529.988,
+      "mastM": 2,
+      "samples": [
+        {
+          "utc": "2023-08-23T01:03:53.000Z",
+          "horizonsAzDeg": 67.63856270691633,
+          "horizonsElDeg": 6.740218858732312,
+          "spiceAzDeg": 67.63856278909047,
+          "spiceElDeg": 6.740219193263406,
+          "directionErrorDeg": 3.443408512668158e-7,
+          "rangeDifferenceKm": -0.02646574378013611
+        },
+        {
+          "utc": "2023-08-23T03:03:53.000Z",
+          "horizonsAzDeg": 66.66918563405545,
+          "horizonsElDeg": 7.072175253675325,
+          "spiceAzDeg": 66.66918571494092,
+          "spiceElDeg": 7.072175587736627,
+          "directionErrorDeg": 3.435698478153872e-7,
+          "rangeDifferenceKm": -0.025007039308547974
+        },
+        {
+          "utc": "2023-08-23T05:03:53.000Z",
+          "horizonsAzDeg": 65.69832768699945,
+          "horizonsElDeg": 7.401717246541789,
+          "spiceAzDeg": 65.69832776675246,
+          "spiceElDeg": 7.40171758061773,
+          "directionErrorDeg": 3.433099433627141e-7,
+          "rangeDifferenceKm": -0.023530572652816772
+        },
+        {
+          "utc": "2023-08-23T07:03:53.000Z",
+          "horizonsAzDeg": 64.72593341478802,
+          "horizonsElDeg": 7.728746925814412,
+          "spiceAzDeg": 64.72593349356244,
+          "spiceElDeg": 7.728747260192873,
+          "directionErrorDeg": 3.433688037689986e-7,
+          "rangeDifferenceKm": -0.022035598754882812
+        },
+        {
+          "utc": "2023-08-23T09:03:53.000Z",
+          "horizonsAzDeg": 63.75194897134395,
+          "horizonsElDeg": 8.053166536304467,
+          "spiceAzDeg": 63.75194904832574,
+          "spiceElDeg": 8.053166870034591,
+          "directionErrorDeg": 3.423239480987041e-7,
+          "rangeDifferenceKm": -0.020523488521575928
+        },
+        {
+          "utc": "2023-08-23T11:03:53.000Z",
+          "horizonsAzDeg": 62.77632217836663,
+          "horizonsElDeg": 8.374878491822114,
+          "spiceAzDeg": 62.776322254749275,
+          "spiceElDeg": 8.374878826094667,
+          "directionErrorDeg": 3.4270786784068213e-7,
+          "rangeDifferenceKm": -0.01899319887161255
+        },
+        {
+          "utc": "2023-08-23T13:03:53.000Z",
+          "horizonsAzDeg": 61.79900260049686,
+          "horizonsElDeg": 8.693785400952919,
+          "spiceAzDeg": 61.79900267498473,
+          "spiceElDeg": 8.693785735123864,
+          "directionErrorDeg": 3.421869299427846e-7,
+          "rangeDifferenceKm": -0.017444610595703125
+        },
+        {
+          "utc": "2023-08-23T15:03:53.000Z",
+          "horizonsAzDeg": 60.819941603258656,
+          "horizonsElDeg": 9.009790081280878,
+          "spiceAzDeg": 60.81994167678017,
+          "spiceElDeg": 9.009790414900005,
+          "directionErrorDeg": 3.4143018206579575e-7,
+          "rangeDifferenceKm": -0.015879809856414795
+        },
+        {
+          "utc": "2023-08-23T17:03:53.000Z",
+          "horizonsAzDeg": 59.83909242895288,
+          "horizonsElDeg": 9.322795582330462,
+          "spiceAzDeg": 59.839092501040874,
+          "spiceElDeg": 9.322795915959812,
+          "directionErrorDeg": 3.411287827708481e-7,
+          "rangeDifferenceKm": -0.014297276735305786
+        },
+        {
+          "utc": "2023-08-23T19:03:53.000Z",
+          "horizonsAzDeg": 58.85641025821042,
+          "horizonsElDeg": 9.632705211236404,
+          "spiceAzDeg": 58.856410329192876,
+          "spiceElDeg": 9.632705545039181,
+          "directionErrorDeg": 3.410597109304019e-7,
+          "rangeDifferenceKm": -0.01269790530204773
+        },
+        {
+          "utc": "2023-08-23T21:03:53.000Z",
+          "horizonsAzDeg": 57.871852281380825,
+          "horizonsElDeg": 9.939422556461919,
+          "spiceAzDeg": 57.87185235066999,
+          "spiceElDeg": 9.939422890120412,
+          "directionErrorDeg": 3.405670856962111e-7,
+          "rangeDifferenceKm": -0.011081278324127197
+        },
+        {
+          "utc": "2023-08-23T23:03:53.000Z",
+          "horizonsAzDeg": 56.88537776197853,
+          "horizonsElDeg": 10.242851513915591,
+          "spiceAzDeg": 56.88537782983465,
+          "spiceElDeg": 10.24285184729793,
+          "directionErrorDeg": 3.400038878125639e-7,
+          "rangeDifferenceKm": -0.009448081254959106
+        }
+      ],
+      "maxDirectionErrorDeg": 3.443408512668158e-7
+    },
+    {
+      "id": "chandrayaan3",
+      "body": "earth",
+      "lat": -69.3741,
+      "lon": 32.32,
+      "elevationM": 529.988,
+      "mastM": 2,
+      "samples": [
+        {
+          "utc": "2023-08-23T01:03:53.000Z",
+          "horizonsAzDeg": 319.0729907229536,
+          "horizonsElDeg": 13.702284392453121,
+          "spiceAzDeg": 319.07298867851705,
+          "spiceElDeg": 13.702283630240505,
+          "directionErrorDeg": 0.000002127477832476048,
+          "rangeDifferenceKm": 0.004026089853141457
+        },
+        {
+          "utc": "2023-08-23T03:03:53.000Z",
+          "horizonsAzDeg": 319.0542689161714,
+          "horizonsElDeg": 13.576899546612381,
+          "spiceAzDeg": 319.0542668384131,
+          "spiceElDeg": 13.57689874205096,
+          "directionErrorDeg": 0.0000021740502099342847,
+          "rangeDifferenceKm": 0.00395525834755972
+        },
+        {
+          "utc": "2023-08-23T05:03:53.000Z",
+          "horizonsAzDeg": 319.0377854954163,
+          "horizonsElDeg": 13.452470629416945,
+          "spiceAzDeg": 319.0377833844063,
+          "spiceElDeg": 13.45246978292464,
+          "directionErrorDeg": 0.0000022207500648097653,
+          "rangeDifferenceKm": 0.0038807873497717083
+        },
+        {
+          "utc": "2023-08-23T07:03:53.000Z",
+          "horizonsAzDeg": 319.02357250325866,
+          "horizonsElDeg": 13.32904815679915,
+          "spiceAzDeg": 319.02357035923774,
+          "spiceElDeg": 13.329047267998568,
+          "directionErrorDeg": 0.000002267701604415406,
+          "rangeDifferenceKm": 0.0038007182301953435
+        },
+        {
+          "utc": "2023-08-23T09:03:53.000Z",
+          "horizonsAzDeg": 319.01166161726906,
+          "horizonsElDeg": 13.206682922914615,
+          "spiceAzDeg": 319.0116594401808,
+          "spiceElDeg": 13.206681991328304,
+          "directionErrorDeg": 0.0000023152045971323594,
+          "rangeDifferenceKm": 0.0037177842459641397
+        },
+        {
+          "utc": "2023-08-23T11:03:53.000Z",
+          "horizonsAzDeg": 319.00208410901797,
+          "horizonsElDeg": 13.08542598847225,
+          "spiceAzDeg": 319.0020818997624,
+          "spiceElDeg": 13.08542501397621,
+          "directionErrorDeg": 0.0000023622593818810906,
+          "rangeDifferenceKm": 0.0036299872444942594
+        },
+        {
+          "utc": "2023-08-23T13:03:53.000Z",
+          "horizonsAzDeg": 318.9948708081927,
+          "horizonsElDeg": 12.965328669074252,
+          "spiceAzDeg": 318.994868566848,
+          "spiceElDeg": 12.965327651631126,
+          "directionErrorDeg": 0.000002409551159714416,
+          "rangeDifferenceKm": 0.003536167729180306
+        },
+        {
+          "utc": "2023-08-23T15:03:53.000Z",
+          "horizonsAzDeg": 318.99005205886886,
+          "horizonsElDeg": 12.846442521876103,
+          "spiceAzDeg": 318.9900497854393,
+          "spiceElDeg": 12.84644146089916,
+          "directionErrorDeg": 0.000002457366987284257,
+          "rangeDifferenceKm": 0.0034442636533640325
+        },
+        {
+          "utc": "2023-08-23T17:03:53.000Z",
+          "horizonsAzDeg": 318.98765767756896,
+          "horizonsElDeg": 12.728819329644917,
+          "spiceAzDeg": 318.9876553732924,
+          "spiceElDeg": 12.728818224827696,
+          "directionErrorDeg": 0.0000025045029225561798,
+          "rangeDifferenceKm": 0.0033449928159825504
+        },
+        {
+          "utc": "2023-08-23T19:03:53.000Z",
+          "horizonsAzDeg": 318.9877169144854,
+          "horizonsElDeg": 12.612511085817745,
+          "spiceAzDeg": 318.9877145794322,
+          "spiceElDeg": 12.612509937426662,
+          "directionErrorDeg": 0.0000025517257877144995,
+          "rangeDifferenceKm": 0.003236972726881504
+        },
+        {
+          "utc": "2023-08-23T21:03:53.000Z",
+          "horizonsAzDeg": 318.99025840681077,
+          "horizonsElDeg": 12.497569979996594,
+          "spiceAzDeg": 318.99025604118646,
+          "spiceElDeg": 12.497568787247657,
+          "directionErrorDeg": 0.000002599378698555114,
+          "rangeDifferenceKm": 0.0031303635332733393
+        },
+        {
+          "utc": "2023-08-23T23:03:53.000Z",
+          "horizonsAzDeg": 318.99531013501934,
+          "horizonsElDeg": 12.384048376618424,
+          "spiceAzDeg": 318.99530773947913,
+          "spiceElDeg": 12.384047139516419,
+          "directionErrorDeg": 0.0000026467129637760547,
+          "rangeDifferenceKm": 0.003017643466591835
+        }
+      ],
+      "maxDirectionErrorDeg": 0.0000026467129637760547
+    },
+    {
+      "id": "im1",
+      "body": "sun",
+      "lat": -80.13,
+      "lon": 1.44,
+      "elevationM": 2594.43,
+      "mastM": 2,
+      "samples": [
+        {
+          "utc": "2024-02-22T01:03:53.000Z",
+          "horizonsAzDeg": 30.052248520155672,
+          "horizonsElDeg": 9.691615848567572,
+          "spiceAzDeg": 30.05224848211483,
+          "spiceElDeg": 9.69161557362579,
+          "directionErrorDeg": 2.774870774169691e-7,
+          "rangeDifferenceKm": 0.07406362891197205
+        },
+        {
+          "utc": "2024-02-22T03:03:53.000Z",
+          "horizonsAzDeg": 29.02920993755572,
+          "horizonsElDeg": 9.775820523557282,
+          "spiceAzDeg": 29.029209900478435,
+          "spiceElDeg": 9.77582024929591,
+          "directionErrorDeg": 2.766846420101042e-7,
+          "rangeDifferenceKm": 0.07463651895523071
+        },
+        {
+          "utc": "2024-02-22T05:03:53.000Z",
+          "horizonsAzDeg": 28.00570298617646,
+          "horizonsElDeg": 9.857301484525637,
+          "spiceAzDeg": 28.00570294961893,
+          "spiceElDeg": 9.85730121092111,
+          "directionErrorDeg": 2.759650739292451e-7,
+          "rangeDifferenceKm": 0.07519087195396423
+        },
+        {
+          "utc": "2024-02-22T07:03:53.000Z",
+          "horizonsAzDeg": 26.981738534221904,
+          "horizonsElDeg": 9.936031093809696,
+          "spiceAzDeg": 26.98173849920245,
+          "spiceElDeg": 9.93603082008809,
+          "directionErrorDeg": 2.758865126319561e-7,
+          "rangeDifferenceKm": 0.07572656869888306
+        },
+        {
+          "utc": "2024-02-22T09:03:53.000Z",
+          "horizonsAzDeg": 25.957328052343314,
+          "horizonsElDeg": 10.011982583358613,
+          "spiceAzDeg": 25.957328018162126,
+          "spiceElDeg": 10.011982310399063,
+          "directionErrorDeg": 2.7502719109769797e-7,
+          "rangeDifferenceKm": 0.07624226808547974
+        },
+        {
+          "utc": "2024-02-22T11:03:53.000Z",
+          "horizonsAzDeg": 24.932483594581186,
+          "horizonsElDeg": 10.08513007328666,
+          "spiceAzDeg": 24.932483561279607,
+          "spiceElDeg": 10.0851298005616,
+          "directionErrorDeg": 2.746888194194666e-7,
+          "rangeDifferenceKm": 0.07673841714859009
+        },
+        {
+          "utc": "2024-02-22T13:03:53.000Z",
+          "horizonsAzDeg": 23.90721778758848,
+          "horizonsElDeg": 10.155448579096705,
+          "spiceAzDeg": 23.907217755065144,
+          "spiceElDeg": 10.15544830715387,
+          "directionErrorDeg": 2.738207231466353e-7,
+          "rangeDifferenceKm": 0.07721579074859619
+        },
+        {
+          "utc": "2024-02-22T15:03:53.000Z",
+          "horizonsAzDeg": 22.881543814465374,
+          "horizonsElDeg": 10.222914029292072,
+          "spiceAzDeg": 22.881543782655665,
+          "spiceElDeg": 10.22291375706959,
+          "directionErrorDeg": 2.7401654257829953e-7,
+          "rangeDifferenceKm": 0.07767364382743835
+        },
+        {
+          "utc": "2024-02-22T17:03:53.000Z",
+          "horizonsAzDeg": 21.85547539808948,
+          "horizonsElDeg": 10.287503270764512,
+          "spiceAzDeg": 21.85547536766479,
+          "spiceElDeg": 10.28750299962856,
+          "directionErrorDeg": 2.7278351360786046e-7,
+          "rangeDifferenceKm": 0.07811248302459717
+        },
+        {
+          "utc": "2024-02-22T19:03:53.000Z",
+          "horizonsAzDeg": 20.829026787397424,
+          "horizonsElDeg": 10.349194089182987,
+          "spiceAzDeg": 20.82902675734105,
+          "spiceElDeg": 10.349193818310408,
+          "directionErrorDeg": 2.724815313468476e-7,
+          "rangeDifferenceKm": 0.07853201031684875
+        },
+        {
+          "utc": "2024-02-22T21:03:53.000Z",
+          "horizonsAzDeg": 19.802212734103136,
+          "horizonsElDeg": 10.407965212828236,
+          "spiceAzDeg": 19.802212705151682,
+          "spiceElDeg": 10.407964942091576,
+          "directionErrorDeg": 2.722299980883454e-7,
+          "rangeDifferenceKm": 0.0789330005645752
+        },
+        {
+          "utc": "2024-02-22T23:03:53.000Z",
+          "horizonsAzDeg": 18.775048479979546,
+          "horizonsElDeg": 10.46379632653489,
+          "spiceAzDeg": 18.775048452075303,
+          "spiceElDeg": 10.463796056413642,
+          "directionErrorDeg": 2.715114225391975e-7,
+          "rangeDifferenceKm": 0.0793139636516571
+        }
+      ],
+      "maxDirectionErrorDeg": 2.774870774169691e-7
+    },
+    {
+      "id": "im1",
+      "body": "earth",
+      "lat": -80.13,
+      "lon": 1.44,
+      "elevationM": 2594.43,
+      "mastM": 2,
+      "samples": [
+        {
+          "utc": "2024-02-22T01:03:53.000Z",
+          "horizonsAzDeg": 2.6458818040018173,
+          "horizonsElDeg": 15.965986648925249,
+          "spiceAzDeg": 2.645882201923136,
+          "spiceElDeg": 15.965988247856371,
+          "directionErrorDeg": 0.0000016440625737601159,
+          "rangeDifferenceKm": 0.0035615431261248887
+        },
+        {
+          "utc": "2024-02-22T03:03:53.000Z",
+          "horizonsAzDeg": 2.553807587863332,
+          "horizonsElDeg": 15.92782894008795,
+          "spiceAzDeg": 2.553807977217422,
+          "spiceElDeg": 15.927830526571439,
+          "directionErrorDeg": 0.0000016300643442011935,
+          "rangeDifferenceKm": 0.0035497581120580435
+        },
+        {
+          "utc": "2024-02-22T05:03:53.000Z",
+          "horizonsAzDeg": 2.460784558421153,
+          "horizonsElDeg": 15.887721422859576,
+          "spiceAzDeg": 2.4607849396185033,
+          "spiceElDeg": 15.887722997027751,
+          "directionErrorDeg": 0.0000016163004403036776,
+          "rangeDifferenceKm": 0.003537326934747398
+        },
+        {
+          "utc": "2024-02-22T07:03:53.000Z",
+          "horizonsAzDeg": 2.3668288155707273,
+          "horizonsElDeg": 15.845679712831348,
+          "spiceAzDeg": 2.3668291893122815,
+          "spiceElDeg": 15.845681273404681,
+          "directionErrorDeg": 0.0000016014549171360243,
+          "rangeDifferenceKm": 0.0035247955820523202
+        },
+        {
+          "utc": "2024-02-22T09:03:53.000Z",
+          "horizonsAzDeg": 2.2719563805958956,
+          "horizonsElDeg": 15.801719847982817,
+          "spiceAzDeg": 2.271956746366225,
+          "spiceElDeg": 15.801721395502085,
+          "directionErrorDeg": 0.0000015870359600579676,
+          "rangeDifferenceKm": 0.003513067204039544
+        },
+        {
+          "utc": "2024-02-22T11:03:53.000Z",
+          "horizonsAzDeg": 2.1761832043337677,
+          "horizonsElDeg": 15.75585829051686,
+          "spiceAzDeg": 2.176183562210616,
+          "spiceElDeg": 15.755859824485311,
+          "directionErrorDeg": 0.0000015721614384352064,
+          "rangeDifferenceKm": 0.003501539002172649
+        },
+        {
+          "utc": "2024-02-22T13:03:53.000Z",
+          "horizonsAzDeg": 2.0795251834564397,
+          "horizonsElDeg": 15.708111919024736,
+          "spiceAzDeg": 2.079525533771166,
+          "spiceElDeg": 15.708113438577604,
+          "directionErrorDeg": 0.0000015565237274486306,
+          "rangeDifferenceKm": 0.0034907229128293693
+        },
+        {
+          "utc": "2024-02-22T15:03:53.000Z",
+          "horizonsAzDeg": 1.9819981725777893,
+          "horizonsElDeg": 15.658498023709335,
+          "spiceAzDeg": 1.981998516368041,
+          "spiceElDeg": 15.658499528594469,
+          "directionErrorDeg": 0.0000015408637261073433,
+          "rangeDifferenceKm": 0.003479770792182535
+        },
+        {
+          "utc": "2024-02-22T17:03:53.000Z",
+          "horizonsAzDeg": 1.883617999146452,
+          "horizonsElDeg": 15.607034303161905,
+          "spiceAzDeg": 1.8836183353091176,
+          "spiceElDeg": 15.607035793375863,
+          "directionErrorDeg": 0.0000015249798300059819,
+          "rangeDifferenceKm": 0.003470117400866002
+        },
+        {
+          "utc": "2024-02-22T19:03:53.000Z",
+          "horizonsAzDeg": 1.7844004745527968,
+          "horizonsElDeg": 15.553738860197031,
+          "spiceAzDeg": 1.7844008033670269,
+          "spiceElDeg": 15.553740335143143,
+          "directionErrorDeg": 0.000001508579154885763,
+          "rangeDifferenceKm": 0.0034620166406966746
+        },
+        {
+          "utc": "2024-02-22T21:03:53.000Z",
+          "horizonsAzDeg": 1.6843614084105525,
+          "horizonsElDeg": 15.498630195240978,
+          "spiceAzDeg": 1.6843617300152398,
+          "spiceElDeg": 15.498631654654366,
+          "directionErrorDeg": 0.0000014919556706008163,
+          "rangeDifferenceKm": 0.0034539378248155117
+        },
+        {
+          "utc": "2024-02-22T23:03:53.000Z",
+          "horizonsAzDeg": 1.5835166228865774,
+          "horizonsElDeg": 15.441727202719996,
+          "spiceAzDeg": 1.5835169372537945,
+          "spiceElDeg": 15.441728646310557,
+          "directionErrorDeg": 0.0000014750506032109325,
+          "rangeDifferenceKm": 0.003446662740316242
+        }
+      ],
+      "maxDirectionErrorDeg": 0.0000016440625737601159
+    },
+    {
+      "id": "change6",
+      "body": "sun",
+      "lat": -41.6385,
+      "lon": -153.9852,
+      "elevationM": -5253.258,
+      "mastM": 2,
+      "samples": [
+        {
+          "utc": "2024-06-01T01:03:53.000Z",
+          "horizonsAzDeg": 56.10299861631529,
+          "horizonsElDeg": 30.441894461824766,
+          "spiceAzDeg": 56.102998895043626,
+          "spiceElDeg": 30.44189470840639,
+          "directionErrorDeg": 3.4430860639019866e-7,
+          "rangeDifferenceKm": -0.026644766330718994
+        },
+        {
+          "utc": "2024-06-01T03:03:53.000Z",
+          "horizonsAzDeg": 55.1693718230693,
+          "horizonsElDeg": 31.0694922393122,
+          "spiceAzDeg": 55.16937210105524,
+          "spiceElDeg": 31.06949248845176,
+          "directionErrorDeg": 3.446234011483428e-7,
+          "rangeDifferenceKm": -0.028659075498580933
+        },
+        {
+          "utc": "2024-06-01T05:03:53.000Z",
+          "horizonsAzDeg": 54.22306577856847,
+          "horizonsElDeg": 31.689975037439776,
+          "spiceAzDeg": 54.22306605590827,
+          "spiceElDeg": 31.68997528932575,
+          "directionErrorDeg": 3.451629832206166e-7,
+          "rangeDifferenceKm": -0.030663400888442993
+        },
+        {
+          "utc": "2024-06-01T07:03:53.000Z",
+          "horizonsAzDeg": 53.26375327321381,
+          "horizonsElDeg": 32.30307363996496,
+          "spiceAzDeg": 53.2637535494357,
+          "spiceElDeg": 32.30307389410894,
+          "directionErrorDeg": 3.451062063422703e-7,
+          "rangeDifferenceKm": -0.03265678882598877
+        },
+        {
+          "utc": "2024-06-01T09:03:53.000Z",
+          "horizonsAzDeg": 52.29111126121012,
+          "horizonsElDeg": 32.908511318684354,
+          "spiceAzDeg": 52.29111153660024,
+          "spiceElDeg": 32.90851157568118,
+          "directionErrorDeg": 3.456894201531296e-7,
+          "rangeDifferenceKm": -0.034638017416000366
+        },
+        {
+          "utc": "2024-06-01T11:03:53.000Z",
+          "horizonsAzDeg": 51.304822041891896,
+          "horizonsElDeg": 33.506003768208224,
+          "spiceAzDeg": 51.3048223160637,
+          "spiceElDeg": 33.50600402796897,
+          "directionErrorDeg": 3.4603345146108514e-7,
+          "rangeDifferenceKm": -0.03660663962364197
+        },
+        {
+          "utc": "2024-06-01T13:03:53.000Z",
+          "horizonsAzDeg": 50.30457454837875,
+          "horizonsElDeg": 34.09525906118057,
+          "spiceAzDeg": 50.30457482113843,
+          "spiceElDeg": 34.09525932361765,
+          "directionErrorDeg": 3.462547255552972e-7,
+          "rangeDifferenceKm": -0.03856015205383301
+        },
+        {
+          "utc": "2024-06-01T15:03:53.000Z",
+          "horizonsAzDeg": 49.29006575567951,
+          "horizonsElDeg": 34.67597763682978,
+          "spiceAzDeg": 49.290066027144256,
+          "spiceElDeg": 34.67597790174359,
+          "directionErrorDeg": 3.4643751558046915e-7,
+          "rangeDifferenceKm": -0.0404987633228302
+        },
+        {
+          "utc": "2024-06-01T17:03:53.000Z",
+          "horizonsAzDeg": 48.26100220951571,
+          "horizonsElDeg": 35.247852320847905,
+          "spiceAzDeg": 48.261002479568546,
+          "spiceElDeg": 35.247852589036356,
+          "directionErrorDeg": 3.4722314270734533e-7,
+          "rangeDifferenceKm": -0.042421549558639526
+        },
+        {
+          "utc": "2024-06-01T19:03:53.000Z",
+          "horizonsAzDeg": 47.21710167687195,
+          "horizonsElDeg": 35.81056838828163,
+          "spiceAzDeg": 47.2171019448574,
+          "spiceElDeg": 35.81056865870656,
+          "directionErrorDeg": 3.469287087079537e-7,
+          "rangeDifferenceKm": -0.04432639479637146
+        },
+        {
+          "utc": "2024-06-01T21:03:53.000Z",
+          "horizonsAzDeg": 46.15809492004536,
+          "horizonsElDeg": 36.36380365757672,
+          "spiceAzDeg": 46.15809518626591,
+          "spiceElDeg": 36.363803930989725,
+          "directionErrorDeg": 3.474378224555745e-7,
+          "rangeDifferenceKm": -0.04621422290802002
+        },
+        {
+          "utc": "2024-06-01T23:03:53.000Z",
+          "horizonsAzDeg": 45.08372760130459,
+          "horizonsElDeg": 36.90722864340904,
+          "spiceAzDeg": 45.083727865369795,
+          "spiceElDeg": 36.90722891944902,
+          "directionErrorDeg": 3.4753693680354596e-7,
+          "rangeDifferenceKm": -0.04808118939399719
+        }
+      ],
+      "maxDirectionErrorDeg": 3.4753693680354596e-7
+    },
+    {
+      "id": "change6",
+      "body": "earth",
+      "lat": -41.6385,
+      "lon": -153.9852,
+      "elevationM": -5253.258,
+      "mastM": 2,
+      "samples": [
+        {
+          "utc": "2024-06-01T01:03:53.000Z",
+          "horizonsAzDeg": 141.61843254336532,
+          "horizonsElDeg": -43.56125282369046,
+          "spiceAzDeg": 141.6184311530123,
+          "spiceElDeg": -43.56125307684953,
+          "directionErrorDeg": 0.0000010388220521546516,
+          "rangeDifferenceKm": -0.0035789828980341554
+        },
+        {
+          "utc": "2024-06-01T03:03:53.000Z",
+          "horizonsAzDeg": 141.80639652564378,
+          "horizonsElDeg": -43.482244905119586,
+          "spiceAzDeg": 141.8063951751546,
+          "spiceElDeg": -43.482245120979094,
+          "directionErrorDeg": 0.0000010033922224435759,
+          "rangeDifferenceKm": -0.003651221690233797
+        },
+        {
+          "utc": "2024-06-01T05:03:53.000Z",
+          "horizonsAzDeg": 141.99484758992548,
+          "horizonsElDeg": -43.402464797649735,
+          "spiceAzDeg": 141.99484627896774,
+          "spiceElDeg": -43.402464975591094,
+          "directionErrorDeg": 9.68948973037722e-7,
+          "rangeDifferenceKm": -0.0037239250959828496
+        },
+        {
+          "utc": "2024-06-01T07:03:53.000Z",
+          "horizonsAzDeg": 142.18372604632162,
+          "horizonsElDeg": -43.32195635247276,
+          "spiceAzDeg": 142.1837247761708,
+          "spiceElDeg": -43.32195649236629,
+          "directionErrorDeg": 9.345766884949194e-7,
+          "rangeDifferenceKm": -0.0037979569751769304
+        },
+        {
+          "utc": "2024-06-01T09:03:53.000Z",
+          "horizonsAzDeg": 142.37297212188594,
+          "horizonsElDeg": -43.240764014450825,
+          "spiceAzDeg": 142.37297089319634,
+          "spiceElDeg": -43.24076411631709,
+          "directionErrorDeg": 9.008554581044035e-7,
+          "rangeDifferenceKm": -0.0038696055416949093
+        },
+        {
+          "utc": "2024-06-01T11:03:53.000Z",
+          "horizonsAzDeg": 142.56252595511955,
+          "horizonsElDeg": -43.15893278883447,
+          "spiceAzDeg": 142.56252476813128,
+          "spiceElDeg": -43.15893285196524,
+          "directionErrorDeg": 8.681578117061158e-7,
+          "rangeDifferenceKm": -0.003944828291423619
+        },
+        {
+          "utc": "2024-06-01T13:03:53.000Z",
+          "horizonsAzDeg": 142.7523275899125,
+          "horizonsElDeg": -43.076508203544414,
+          "spiceAzDeg": 142.75232644574436,
+          "spiceElDeg": -43.07650822819414,
+          "directionErrorDeg": 8.361123124609754e-7,
+          "rangeDifferenceKm": -0.004021519445814192
+        },
+        {
+          "utc": "2024-06-01T15:03:53.000Z",
+          "horizonsAzDeg": 142.94231697493228,
+          "horizonsElDeg": -42.9935362771133,
+          "spiceAzDeg": 142.94231587372428,
+          "spiceElDeg": -42.99353626291034,
+          "directionErrorDeg": 8.0558248441313e-7,
+          "rangeDifferenceKm": -0.004094025760423392
+        },
+        {
+          "utc": "2024-06-01T17:03:53.000Z",
+          "horizonsAzDeg": 143.13243395690574,
+          "horizonsElDeg": -42.91006348074375,
+          "spiceAzDeg": 143.13243290045327,
+          "spiceElDeg": -42.91006342770314,
+          "directionErrorDeg": 7.755862309846004e-7,
+          "rangeDifferenceKm": -0.004170254396740347
+        },
+        {
+          "utc": "2024-06-01T19:03:53.000Z",
+          "horizonsAzDeg": 143.3226182807249,
+          "horizonsElDeg": -42.82613670180369,
+          "spiceAzDeg": 143.32261726899762,
+          "spiceElDeg": -42.82613661038605,
+          "directionErrorDeg": 7.476310398849256e-7,
+          "rangeDifferenceKm": -0.004244965384714305
+        },
+        {
+          "utc": "2024-06-01T21:03:53.000Z",
+          "horizonsAzDeg": 143.51280958189454,
+          "horizonsElDeg": -42.74180320916618,
+          "spiceAzDeg": 143.51280861492617,
+          "spiceElDeg": -42.7418030783306,
+          "directionErrorDeg": 7.221121525701701e-7,
+          "rangeDifferenceKm": -0.004316578910220414
+        },
+        {
+          "utc": "2024-06-01T23:03:53.000Z",
+          "horizonsAzDeg": 143.70294738430857,
+          "horizonsElDeg": -42.65711061092778,
+          "spiceAzDeg": 143.7029464638867,
+          "spiceElDeg": -42.65711044107566,
+          "directionErrorDeg": 6.978834979309487e-7,
+          "rangeDifferenceKm": -0.004388787900097668
+        }
+      ],
+      "maxDirectionErrorDeg": 0.0000010388220521546516
+    },
+    {
+      "id": "blueghost1",
+      "body": "sun",
+      "lat": 18.562,
+      "lon": 61.81,
+      "elevationM": -3650.296,
+      "mastM": 2,
+      "samples": [
+        {
+          "utc": "2025-03-02T01:03:53.000Z",
+          "horizonsAzDeg": 90.41167287010751,
+          "horizonsElDeg": -0.19277321095707925,
+          "spiceAzDeg": 90.41167276398552,
+          "spiceElDeg": -0.19277316133743116,
+          "directionErrorDeg": 1.1714886566670106e-7,
+          "rangeDifferenceKm": -0.10166880488395691
+        },
+        {
+          "utc": "2025-03-02T03:03:53.000Z",
+          "horizonsAzDeg": 90.7330936736405,
+          "horizonsElDeg": 0.7718802098016336,
+          "spiceAzDeg": 90.73309356794762,
+          "spiceElDeg": 0.7718802598533134,
+          "directionErrorDeg": 1.1693642152428731e-7,
+          "rangeDifferenceKm": -0.10061898827552795
+        },
+        {
+          "utc": "2025-03-02T05:03:53.000Z",
+          "horizonsAzDeg": 91.05478657408617,
+          "horizonsElDeg": 1.736444211859818,
+          "spiceAzDeg": 91.05478646895287,
+          "spiceElDeg": 1.7364442622652263,
+          "directionErrorDeg": 1.1654855906765968e-7,
+          "rangeDifferenceKm": -0.09952202439308167
+        },
+        {
+          "utc": "2025-03-02T07:03:53.000Z",
+          "horizonsAzDeg": 91.3769334217045,
+          "horizonsElDeg": 2.7008876536134467,
+          "spiceAzDeg": 91.37693331726547,
+          "spiceElDeg": 2.7008877040359183,
+          "directionErrorDeg": 1.15869399435407e-7,
+          "rangeDifferenceKm": -0.09837990999221802
+        },
+        {
+          "utc": "2025-03-02T09:03:53.000Z",
+          "horizonsAzDeg": 91.69971690317965,
+          "horizonsElDeg": 3.6651792272940633,
+          "spiceAzDeg": 91.6997167999291,
+          "spiceElDeg": 3.665179278597369,
+          "directionErrorDeg": 1.1510489819257245e-7,
+          "rangeDifferenceKm": -0.09719288349151611
+        },
+        {
+          "utc": "2025-03-02T11:03:53.000Z",
+          "horizonsAzDeg": 92.02332093639478,
+          "horizonsElDeg": 4.629287395250722,
+          "spiceAzDeg": 92.02332083320589,
+          "spiceElDeg": 4.629287446859554,
+          "directionErrorDeg": 1.1507415609355548e-7,
+          "rangeDifferenceKm": -0.09596249461174011
+        },
+        {
+          "utc": "2025-03-02T13:03:53.000Z",
+          "horizonsAzDeg": 92.34793106220786,
+          "horizonsElDeg": 5.593180316221932,
+          "spiceAzDeg": 92.347930959955,
+          "spiceElDeg": 5.5931803684868395,
+          "directionErrorDeg": 1.1440257525680141e-7,
+          "rangeDifferenceKm": -0.09468948841094971
+        },
+        {
+          "utc": "2025-03-02T15:03:53.000Z",
+          "horizonsAzDeg": 92.6737348557316,
+          "horizonsElDeg": 6.556825778899214,
+          "spiceAzDeg": 92.67373475348765,
+          "spiceElDeg": 6.556825831463838,
+          "directionErrorDeg": 1.1437025777114588e-7,
+          "rangeDifferenceKm": -0.09337446093559265
+        },
+        {
+          "utc": "2025-03-02T17:03:53.000Z",
+          "horizonsAzDeg": 93.0009223312154,
+          "horizonsElDeg": 7.52019112719911,
+          "spiceAzDeg": 93.00092222986264,
+          "spiceElDeg": 7.520191180273403,
+          "directionErrorDeg": 1.1363676258162942e-7,
+          "rangeDifferenceKm": -0.0920199453830719
+        },
+        {
+          "utc": "2025-03-02T19:03:53.000Z",
+          "horizonsAzDeg": 93.32968637132552,
+          "horizonsElDeg": 8.4832431889334,
+          "spiceAzDeg": 93.32968627032716,
+          "spiceElDeg": 8.48324324207567,
+          "directionErrorDeg": 1.1314937377600129e-7,
+          "rangeDifferenceKm": -0.09062477946281433
+        },
+        {
+          "utc": "2025-03-02T21:03:53.000Z",
+          "horizonsAzDeg": 93.66022315563822,
+          "horizonsElDeg": 9.445948196362856,
+          "spiceAzDeg": 93.66022305556454,
+          "spiceElDeg": 9.44594824995095,
+          "directionErrorDeg": 1.1232400556938767e-7,
+          "rangeDifferenceKm": -0.08919215202331543
+        },
+        {
+          "utc": "2025-03-02T23:03:53.000Z",
+          "horizonsAzDeg": 93.99273261430847,
+          "horizonsElDeg": 10.408271710090784,
+          "spiceAzDeg": 93.99273251416848,
+          "spiceElDeg": 10.408271764226072,
+          "directionErrorDeg": 1.1238927243347897e-7,
+          "rangeDifferenceKm": -0.08772218227386475
+        }
+      ],
+      "maxDirectionErrorDeg": 1.1714886566670106e-7
+    },
+    {
+      "id": "blueghost1",
+      "body": "earth",
+      "lat": 18.562,
+      "lon": 61.81,
+      "elevationM": -3650.296,
+      "mastM": 2,
+      "samples": [
+        {
+          "utc": "2025-03-02T01:03:53.000Z",
+          "horizonsAzDeg": 259.06056539677724,
+          "horizonsElDeg": 25.45927318614501,
+          "spiceAzDeg": 259.06056493290384,
+          "spiceElDeg": 25.45927287278357,
+          "directionErrorDeg": 5.23078910901091e-7,
+          "rangeDifferenceKm": -0.008766407147049904
+        },
+        {
+          "utc": "2025-03-02T03:03:53.000Z",
+          "horizonsAzDeg": 258.8580955748831,
+          "horizonsElDeg": 25.530387773623925,
+          "spiceAzDeg": 258.8580950251504,
+          "spiceElDeg": 25.53038748864411,
+          "directionErrorDeg": 5.720875221293076e-7,
+          "rangeDifferenceKm": -0.00869503041030839
+        },
+        {
+          "utc": "2025-03-02T05:03:53.000Z",
+          "horizonsAzDeg": 258.65622987765516,
+          "horizonsElDeg": 25.601301105031062,
+          "spiceAzDeg": 258.65622924340414,
+          "spiceElDeg": 25.601300847417935,
+          "directionErrorDeg": 6.273180069674276e-7,
+          "rangeDifferenceKm": -0.008614013262558728
+        },
+        {
+          "utc": "2025-03-02T07:03:53.000Z",
+          "horizonsAzDeg": 258.4550708380685,
+          "horizonsElDeg": 25.67198491576521,
+          "spiceAzDeg": 258.45507012025416,
+          "spiceElDeg": 25.671984683994005,
+          "directionErrorDeg": 6.872209781368473e-7,
+          "rangeDifferenceKm": -0.008531362749636173
+        },
+        {
+          "utc": "2025-03-02T09:03:53.000Z",
+          "horizonsAzDeg": 258.2547203725445,
+          "horizonsElDeg": 25.742411918342327,
+          "spiceAzDeg": 258.2547195712909,
+          "spiceElDeg": 25.742411712782157,
+          "directionErrorDeg": 7.504363439084411e-7,
+          "rangeDifferenceKm": -0.008439444471150637
+        },
+        {
+          "utc": "2025-03-02T11:03:53.000Z",
+          "horizonsAzDeg": 258.05527968223396,
+          "horizonsElDeg": 25.81255581293904,
+          "spiceAzDeg": 258.0552787992874,
+          "spiceElDeg": 25.81255563214601,
+          "directionErrorDeg": 8.151510640080764e-7,
+          "rangeDifferenceKm": -0.008342429413460195
+        },
+        {
+          "utc": "2025-03-02T13:03:53.000Z",
+          "horizonsAzDeg": 257.8568491601808,
+          "horizonsElDeg": 25.88239129223758,
+          "spiceAzDeg": 257.8568481960573,
+          "spiceElDeg": 25.882391135650032,
+          "directionErrorDeg": 8.814346589523553e-7,
+          "rangeDifferenceKm": -0.008240962226409465
+        },
+        {
+          "utc": "2025-03-02T15:03:53.000Z",
+          "horizonsAzDeg": 257.65952829393467,
+          "horizonsElDeg": 25.951894046250796,
+          "spiceAzDeg": 257.6595272499334,
+          "spiceElDeg": 25.951893913075878,
+          "directionErrorDeg": 9.48125626430105e-7,
+          "rangeDifferenceKm": -0.008132801274769008
+        },
+        {
+          "utc": "2025-03-02T17:03:53.000Z",
+          "horizonsAzDeg": 257.46341557688027,
+          "horizonsElDeg": 26.021040763438627,
+          "spiceAzDeg": 257.46341445383865,
+          "spiceElDeg": 26.02104065291544,
+          "directionErrorDeg": 0.0000010152361966366846,
+          "rangeDifferenceKm": -0.008020763576496392
+        },
+        {
+          "utc": "2025-03-02T19:03:53.000Z",
+          "horizonsAzDeg": 257.26860841751954,
+          "horizonsElDeg": 26.089809129591657,
+          "spiceAzDeg": 257.2686072165895,
+          "spiceElDeg": 26.089809040762756,
+          "directionErrorDeg": 0.0000010822140058141753,
+          "rangeDifferenceKm": -0.007903459831140935
+        },
+        {
+          "utc": "2025-03-02T21:03:53.000Z",
+          "horizonsAzDeg": 257.075203053471,
+          "horizonsElDeg": 26.158177824394375,
+          "spiceAzDeg": 257.07520177646654,
+          "spiceElDeg": 26.158177756323525,
+          "directionErrorDeg": 0.000001148233679871886,
+          "rangeDifferenceKm": -0.007782802160363644
+        },
+        {
+          "utc": "2025-03-02T23:03:53.000Z",
+          "horizonsAzDeg": 256.8832944705771,
+          "horizonsElDeg": 26.226126514473336,
+          "spiceAzDeg": 256.8832931181517,
+          "spiceElDeg": 26.226126467037908,
+          "directionErrorDeg": 0.0000012141295872683405,
+          "rangeDifferenceKm": -0.00765592185780406
+        }
+      ],
+      "maxDirectionErrorDeg": 0.0000012141295872683405
+    },
+    {
+      "id": "im2",
+      "body": "sun",
+      "lat": -84.7906,
+      "lon": 29.1957,
+      "elevationM": 5321.88,
+      "mastM": 2,
+      "samples": [
+        {
+          "utc": "2025-03-06T01:03:53.000Z",
+          "horizonsAzDeg": 73.98754046501523,
+          "horizonsElDeg": 1.7752454455317965,
+          "spiceAzDeg": 73.98754042934699,
+          "spiceElDeg": 1.775245362133394,
+          "directionErrorDeg": 9.069893076564774e-8,
+          "rangeDifferenceKm": -0.018236875534057617
+        },
+        {
+          "utc": "2025-03-06T03:03:53.000Z",
+          "horizonsAzDeg": 72.97563561682068,
+          "horizonsElDeg": 1.8611726547679115,
+          "spiceAzDeg": 72.97563558116468,
+          "spiceElDeg": 1.8611725718860597,
+          "directionErrorDeg": 9.021868304082792e-8,
+          "rangeDifferenceKm": -0.01625192165374756
+        },
+        {
+          "utc": "2025-03-06T05:03:53.000Z",
+          "horizonsAzDeg": 71.9636848335631,
+          "horizonsElDeg": 1.9466190192708832,
+          "spiceAzDeg": 71.96368479790293,
+          "spiceElDeg": 1.9466189370157747,
+          "directionErrorDeg": 8.964420094133967e-8,
+          "rangeDifferenceKm": -0.014274299144744873
+        },
+        {
+          "utc": "2025-03-06T07:03:53.000Z",
+          "horizonsAzDeg": 70.95168404350994,
+          "horizonsElDeg": 2.0315570684705713,
+          "spiceAzDeg": 70.95168400786449,
+          "spiceElDeg": 2.0315569873949397,
+          "directionErrorDeg": 8.855653659086074e-8,
+          "rangeDifferenceKm": -0.01230400800704956
+        },
+        {
+          "utc": "2025-03-06T09:03:53.000Z",
+          "horizonsAzDeg": 69.93962926698703,
+          "horizonsElDeg": 2.1159594894085907,
+          "spiceAzDeg": 69.93962923156197,
+          "spiceElDeg": 2.115959408416811,
+          "directionErrorDeg": 8.839056513585098e-8,
+          "rangeDifferenceKm": -0.010343164205551147
+        },
+        {
+          "utc": "2025-03-06T11:03:53.000Z",
+          "horizonsAzDeg": 68.92751662248543,
+          "horizonsElDeg": 2.1997991291265424,
+          "spiceAzDeg": 68.92751658761316,
+          "spiceElDeg": 2.1997990492465047,
+          "directionErrorDeg": 8.714989507568799e-8,
+          "rangeDifferenceKm": -0.00839155912399292
+        },
+        {
+          "utc": "2025-03-06T13:03:53.000Z",
+          "horizonsAzDeg": 67.91534233249615,
+          "horizonsElDeg": 2.2830490104427312,
+          "spiceAzDeg": 67.91534229749522,
+          "spiceElDeg": 2.2830489311264515,
+          "directionErrorDeg": 8.668444980983263e-8,
+          "rangeDifferenceKm": -0.006449311971664429
+        },
+        {
+          "utc": "2025-03-06T15:03:53.000Z",
+          "horizonsAzDeg": 66.90310272612214,
+          "horizonsElDeg": 2.365682334563833,
+          "spiceAzDeg": 66.90310269102943,
+          "spiceElDeg": 2.3656822555740926,
+          "directionErrorDeg": 8.642210078865729e-8,
+          "rangeDifferenceKm": -0.004518061876296997
+        },
+        {
+          "utc": "2025-03-06T17:03:53.000Z",
+          "horizonsAzDeg": 65.89079424563141,
+          "horizonsElDeg": 2.4476724906965175,
+          "spiceAzDeg": 65.89079421091529,
+          "spiceElDeg": 2.4476724126120426,
+          "directionErrorDeg": 8.544118578412888e-8,
+          "rangeDifferenceKm": -0.0025975406169891357
+        },
+        {
+          "utc": "2025-03-06T19:03:53.000Z",
+          "horizonsAzDeg": 64.87841345251542,
+          "horizonsElDeg": 2.5289930664358518,
+          "spiceAzDeg": 64.87841341772769,
+          "spiceElDeg": 2.528992988909052,
+          "directionErrorDeg": 8.496019632058877e-8,
+          "rangeDifferenceKm": -0.0006901919841766357
+        },
+        {
+          "utc": "2025-03-06T21:03:53.000Z",
+          "horizonsAzDeg": 63.86595702904242,
+          "horizonsElDeg": 2.6096178529885723,
+          "spiceAzDeg": 63.865956994552285,
+          "spiceElDeg": 2.609617775899398,
+          "directionErrorDeg": 8.443840517419686e-8,
+          "rangeDifferenceKm": 0.001204848289489746
+        },
+        {
+          "utc": "2025-03-06T23:03:53.000Z",
+          "horizonsAzDeg": 62.85342178548086,
+          "horizonsElDeg": 2.6895208537264534,
+          "spiceAzDeg": 62.85342175136696,
+          "spiceElDeg": 2.6895207778682084,
+          "directionErrorDeg": 8.31605039674892e-8,
+          "rangeDifferenceKm": 0.0030862092971801758
+        }
+      ],
+      "maxDirectionErrorDeg": 9.069893076564774e-8
+    },
+    {
+      "id": "im2",
+      "body": "earth",
+      "lat": -84.7906,
+      "lon": 29.1957,
+      "elevationM": 5321.88,
+      "mastM": 2,
+      "samples": [
+        {
+          "utc": "2025-03-06T01:03:53.000Z",
+          "horizonsAzDeg": 335.3234849644473,
+          "horizonsElDeg": 10.868945424213177,
+          "spiceAzDeg": 335.32348620391167,
+          "spiceElDeg": 10.868947691678018,
+          "directionErrorDeg": 0.000002573527731492012,
+          "rangeDifferenceKm": -0.0019075371092185378
+        },
+        {
+          "utc": "2025-03-06T03:03:53.000Z",
+          "horizonsAzDeg": 335.3940486842529,
+          "horizonsElDeg": 10.918570028930464,
+          "spiceAzDeg": 335.3940499282046,
+          "spiceElDeg": 10.918572301902248,
+          "directionErrorDeg": 0.0000025803679991951614,
+          "rangeDifferenceKm": -0.0017693877452984452
+        },
+        {
+          "utc": "2025-03-06T05:03:53.000Z",
+          "horizonsAzDeg": 335.4627258672152,
+          "horizonsElDeg": 10.965363141251318,
+          "spiceAzDeg": 335.4627271146844,
+          "spiceElDeg": 10.965365418179505,
+          "directionErrorDeg": 0.000002585396619537359,
+          "rangeDifferenceKm": -0.0016330679645761847
+        },
+        {
+          "utc": "2025-03-06T07:03:53.000Z",
+          "horizonsAzDeg": 335.52950442384434,
+          "horizonsElDeg": 11.00932091683549,
+          "spiceAzDeg": 335.52950567405657,
+          "spiceElDeg": 11.009323196791117,
+          "directionErrorDeg": 0.0000025892520233407597,
+          "rangeDifferenceKm": -0.0014959622058086097
+        },
+        {
+          "utc": "2025-03-06T09:03:53.000Z",
+          "horizonsAzDeg": 335.5943731840386,
+          "horizonsElDeg": 11.050440871177665,
+          "spiceAzDeg": 335.5943744365723,
+          "spiceElDeg": 11.050443153329295,
+          "directionErrorDeg": 0.0000025921843734893228,
+          "rangeDifferenceKm": -0.0013666155282408
+        },
+        {
+          "utc": "2025-03-06T11:03:53.000Z",
+          "horizonsAzDeg": 335.65732188192004,
+          "horizonsElDeg": 11.08872185160749,
+          "spiceAzDeg": 335.6573231362304,
+          "spiceElDeg": 11.088724134479142,
+          "directionErrorDeg": 0.0000025935691059079444,
+          "rangeDifferenceKm": -0.0012358445674180984
+        },
+        {
+          "utc": "2025-03-06T13:03:53.000Z",
+          "horizonsAzDeg": 335.71834113844574,
+          "horizonsElDeg": 11.124164007066208,
+          "spiceAzDeg": 335.71834239387124,
+          "spiceElDeg": 11.124166289682746,
+          "directionErrorDeg": 0.000002593793085445475,
+          "rangeDifferenceKm": -0.0011107096215710044
+        },
+        {
+          "utc": "2025-03-06T15:03:53.000Z",
+          "horizonsAzDeg": 335.77742244557317,
+          "horizonsElDeg": 11.156768760330008,
+          "spiceAzDeg": 335.7774237006176,
+          "spiceElDeg": 11.156771042456917,
+          "directionErrorDeg": 0.0000025931191008080987,
+          "rangeDifferenceKm": -0.000987084349617362
+        },
+        {
+          "utc": "2025-03-06T17:03:53.000Z",
+          "horizonsAzDeg": 335.8345581452598,
+          "horizonsElDeg": 11.186538782010022,
+          "spiceAzDeg": 335.83455940029023,
+          "spiceElDeg": 11.186541061947576,
+          "directionErrorDeg": 0.0000025911259642845796,
+          "rangeDifferenceKm": -0.0008684671483933926
+        },
+        {
+          "utc": "2025-03-06T19:03:53.000Z",
+          "horizonsAzDeg": 335.88974141813344,
+          "horizonsElDeg": 11.213477957717306,
+          "spiceAzDeg": 335.8897426719492,
+          "spiceElDeg": 11.213480234529557,
+          "directionErrorDeg": 0.0000025877554033935736,
+          "rangeDifferenceKm": -0.0007496835314668715
+        },
+        {
+          "utc": "2025-03-06T21:03:53.000Z",
+          "horizonsAzDeg": 335.9429662599871,
+          "horizonsElDeg": 11.23759136234454,
+          "spiceAzDeg": 335.9429675121165,
+          "spiceElDeg": 11.237593635267684,
+          "directionErrorDeg": 0.0000025834987463587225,
+          "rangeDifferenceKm": -0.0006371166673488915
+        },
+        {
+          "utc": "2025-03-06T23:03:53.000Z",
+          "horizonsAzDeg": 335.99422746644893,
+          "horizonsElDeg": 11.258885231949316,
+          "spiceAzDeg": 335.99422871665564,
+          "spiceElDeg": 11.25888749968894,
+          "directionErrorDeg": 0.0000025779988944968337,
+          "rangeDifferenceKm": -0.0005271434201858938
+        }
+      ],
+      "maxDirectionErrorDeg": 0.000002593793085445475
+    },
+    {
+      "id": "shackleton",
+      "body": "sun",
+      "lat": -89.67,
+      "lon": 129.78,
+      "elevationM": -2788.691,
+      "mastM": 2,
+      "samples": [
+        {
+          "utc": "2039-11-01T01:03:53.000Z",
+          "horizonsAzDeg": 233.01544918764296,
+          "horizonsElDeg": -1.113163757398825,
+          "spiceAzDeg": 233.01544919897424,
+          "spiceElDeg": -1.1131635670731743,
+          "directionErrorDeg": 1.9066253621041506e-7,
+          "rangeDifferenceKm": 0.08737173676490784
+        },
+        {
+          "utc": "2039-11-01T03:03:53.000Z",
+          "horizonsAzDeg": 232.00307754446345,
+          "horizonsElDeg": -1.115933637581769,
+          "spiceAzDeg": 232.00307756290383,
+          "spiceElDeg": -1.1159334391675775,
+          "directionErrorDeg": 1.992689405964771e-7,
+          "rangeDifferenceKm": 0.08726459741592407
+        },
+        {
+          "utc": "2039-11-01T05:03:53.000Z",
+          "horizonsAzDeg": 230.99070510892452,
+          "horizonsElDeg": -1.1186351014774847,
+          "spiceAzDeg": 230.99070513009997,
+          "spiceElDeg": -1.118634894701459,
+          "directionErrorDeg": 2.0785704710710921e-7,
+          "rangeDifferenceKm": 0.08713537454605103
+        },
+        {
+          "utc": "2039-11-01T07:03:53.000Z",
+          "horizonsAzDeg": 229.97833123619128,
+          "horizonsElDeg": -1.1212668114156086,
+          "spiceAzDeg": 229.97833125723406,
+          "spiceElDeg": -1.1212665985541763,
+          "directionErrorDeg": 2.1389861875489428e-7,
+          "rangeDifferenceKm": 0.08698403835296631
+        },
+        {
+          "utc": "2039-11-01T09:03:53.000Z",
+          "horizonsAzDeg": 228.96595528609865,
+          "horizonsElDeg": -1.1238274550074938,
+          "spiceAzDeg": 228.96595530543794,
+          "spiceElDeg": -1.1238272377673757,
+          "directionErrorDeg": 2.1809890753440413e-7,
+          "rangeDifferenceKm": 0.08681091666221619
+        },
+        {
+          "utc": "2039-11-01T11:03:53.000Z",
+          "horizonsAzDeg": 227.95357662220005,
+          "horizonsElDeg": -1.1263157420294503,
+          "spiceAzDeg": 227.95357664033864,
+          "spiceElDeg": -1.1263155218339898,
+          "directionErrorDeg": 2.2094099333238824e-7,
+          "rangeDifferenceKm": 0.08661720156669617
+        },
+        {
+          "utc": "2039-11-01T13:03:53.000Z",
+          "horizonsAzDeg": 226.9411946153304,
+          "horizonsElDeg": -1.1287304046461741,
+          "spiceAzDeg": 226.94119463212044,
+          "spiceElDeg": -1.128730182980809,
+          "directionErrorDeg": 2.2230009078329312e-7,
+          "rangeDifferenceKm": 0.08640193939208984
+        },
+        {
+          "utc": "2039-11-01T15:03:53.000Z",
+          "horizonsAzDeg": 225.9288086406548,
+          "horizonsElDeg": -1.13107019924566,
+          "spiceAzDeg": 225.9288086558476,
+          "spiceElDeg": -1.1310699764432024,
+          "directionErrorDeg": 2.2331965044602967e-7,
+          "rangeDifferenceKm": 0.08616575598716736
+        },
+        {
+          "utc": "2039-11-01T17:03:53.000Z",
+          "horizonsAzDeg": 224.91641807678494,
+          "horizonsElDeg": -1.1333339042159358,
+          "spiceAzDeg": 224.91641809113978,
+          "spiceElDeg": -1.1333336807350753,
+          "directionErrorDeg": 2.2394123304477605e-7,
+          "rangeDifferenceKm": 0.08590909838676453
+        },
+        {
+          "utc": "2039-11-01T19:03:53.000Z",
+          "horizonsAzDeg": 223.9040223094975,
+          "horizonsElDeg": -1.135520322110015,
+          "spiceAzDeg": 223.90402232290046,
+          "spiceElDeg": -1.1355200979088167,
+          "directionErrorDeg": 2.246013046612821e-7,
+          "rangeDifferenceKm": 0.0856316089630127
+        },
+        {
+          "utc": "2039-11-01T21:03:53.000Z",
+          "horizonsAzDeg": 222.89162072801574,
+          "horizonsElDeg": -1.1376282777042772,
+          "spiceAzDeg": 222.89162074073823,
+          "spiceElDeg": -1.1376280538129615,
+          "directionErrorDeg": 2.2425235642071407e-7,
+          "rangeDifferenceKm": 0.08533495664596558
+        },
+        {
+          "utc": "2039-11-01T23:03:53.000Z",
+          "horizonsAzDeg": 221.87921272750472,
+          "horizonsElDeg": -1.1396566229984073,
+          "spiceAzDeg": 221.8792127395435,
+          "spiceElDeg": -1.1396563983395394,
+          "directionErrorDeg": 2.2498106981165985e-7,
+          "rangeDifferenceKm": 0.08501768112182617
+        }
+      ],
+      "maxDirectionErrorDeg": 2.2498106981165985e-7
+    },
+    {
+      "id": "shackleton",
+      "body": "earth",
+      "lat": -89.67,
+      "lon": 129.78,
+      "elevationM": -2788.691,
+      "mastM": 2,
+      "samples": [
+        {
+          "utc": "2039-11-01T01:03:53.000Z",
+          "horizonsAzDeg": 234.24666512219127,
+          "horizonsElDeg": -4.204543366186613,
+          "spiceAzDeg": 234.24666584237949,
+          "spiceElDeg": -4.204544309128885,
+          "directionErrorDeg": 0.0000011853367069453583,
+          "rangeDifferenceKm": 0.0018736828933469951
+        },
+        {
+          "utc": "2039-11-01T03:03:53.000Z",
+          "horizonsAzDeg": 234.16896165747085,
+          "horizonsElDeg": -4.104342483558532,
+          "spiceAzDeg": 234.16896237208908,
+          "spiceElDeg": -4.104343397193928,
+          "directionErrorDeg": 0.0000011587893598692473,
+          "rangeDifferenceKm": 0.0019339367281645536
+        },
+        {
+          "utc": "2039-11-01T05:03:53.000Z",
+          "horizonsAzDeg": 234.0898481692182,
+          "horizonsElDeg": -4.003084673609615,
+          "spiceAzDeg": 234.08984887845378,
+          "spiceElDeg": -4.003085558313367,
+          "directionErrorDeg": 0.0000011328126282189579,
+          "rangeDifferenceKm": 0.0019943875959143043
+        },
+        {
+          "utc": "2039-11-01T07:03:53.000Z",
+          "horizonsAzDeg": 234.0093382786854,
+          "horizonsElDeg": -3.9008054585043928,
+          "spiceAzDeg": 234.00933898144618,
+          "spiceElDeg": -3.9008063137348903,
+          "directionErrorDeg": 0.0000011058961255556779,
+          "rangeDifferenceKm": 0.0020568612380884588
+        },
+        {
+          "utc": "2039-11-01T09:03:53.000Z",
+          "horizonsAzDeg": 233.92744619784295,
+          "horizonsElDeg": -3.797540397184077,
+          "spiceAzDeg": 233.92744689436006,
+          "spiceElDeg": -3.7975412237334703,
+          "directionErrorDeg": 0.0000010799036510001351,
+          "rangeDifferenceKm": 0.0021210091654211283
+        },
+        {
+          "utc": "2039-11-01T11:03:53.000Z",
+          "horizonsAzDeg": 233.84418673577787,
+          "horizonsElDeg": -3.693325076259915,
+          "spiceAzDeg": 233.84418742446022,
+          "spiceElDeg": -3.693325873783446,
+          "directionErrorDeg": 0.0000010527863787740336,
+          "rangeDifferenceKm": 0.0021859501721337438
+        },
+        {
+          "utc": "2039-11-01T13:03:53.000Z",
+          "horizonsAzDeg": 233.75957530023715,
+          "horizonsElDeg": -3.588195092508156,
+          "spiceAzDeg": 233.75957598013116,
+          "spiceElDeg": -3.5881958608768985,
+          "directionErrorDeg": 0.0000010251028096272068,
+          "rangeDifferenceKm": 0.002252210979349911
+        },
+        {
+          "utc": "2039-11-01T15:03:53.000Z",
+          "horizonsAzDeg": 233.67362790324933,
+          "horizonsElDeg": -3.4821860411517584,
+          "spiceAzDeg": 233.6736285748106,
+          "spiceElDeg": -3.4821867802860234,
+          "directionErrorDeg": 9.978227666422242e-7,
+          "rangeDifferenceKm": 0.0023205147590488195
+        },
+        {
+          "utc": "2039-11-01T17:03:53.000Z",
+          "horizonsAzDeg": 233.58636116445456,
+          "horizonsElDeg": -3.3753335031903755,
+          "spiceAzDeg": 233.5863618270985,
+          "spiceElDeg": -3.3753342127194075,
+          "directionErrorDeg": 9.700548064887967e-7,
+          "rangeDifferenceKm": 0.002390542533248663
+        },
+        {
+          "utc": "2039-11-01T19:03:53.000Z",
+          "horizonsAzDeg": 233.4977923138229,
+          "horizonsElDeg": -3.2676730310703443,
+          "spiceAzDeg": 233.49779296619275,
+          "spiceElDeg": -3.267673711762428,
+          "directionErrorDeg": 9.420962535499e-7,
+          "rangeDifferenceKm": 0.0024605048820376396
+        },
+        {
+          "utc": "2039-11-01T21:03:53.000Z",
+          "horizonsAzDeg": 233.40793919438264,
+          "horizonsElDeg": -3.159240139626375,
+          "spiceAzDeg": 233.40793983708232,
+          "spiceElDeg": -3.1592407915618272,
+          "directionErrorDeg": 9.147831396858788e-7,
+          "rangeDifferenceKm": 0.00253311573760584
+        },
+        {
+          "utc": "2039-11-01T23:03:53.000Z",
+          "horizonsAzDeg": 233.31682026371539,
+          "horizonsElDeg": -3.0500702929165366,
+          "spiceAzDeg": 233.31682089590106,
+          "spiceElDeg": -3.050070915353436,
+          "directionErrorDeg": 8.865409828956265e-7,
+          "rangeDifferenceKm": 0.002606511698104441
+        }
+      ],
+      "maxDirectionErrorDeg": 0.0000011853367069453583
+    }
+  ],
+  "horizonsSources": [
+    {
+      "id": "apollo11",
+      "body": "sun",
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%2710%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2723.47314%2C0.67416%2C-1.932901%27&START_TIME=%271969-07-20+00%3A00%3A00%27&STOP_TIME=%271969-07-21+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "version": "1.2",
+        "source": "NASA/JPL Horizons API"
+      },
+      "sha256": "77d7e5704d5c055b870e8894018302b3189aae9eace5f8fcac629d61882bd863",
+      "retrievedUtc": "2026-11-13T19:44:32.582Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": -1932.901,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "f350ad3fb2680300713cdf64d2161f67817acfec1643fff74a6712e4565181ad.txt"
+    },
+    {
+      "id": "apollo11",
+      "body": "earth",
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27399%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2723.47314%2C0.67416%2C-1.932901%27&START_TIME=%271969-07-20+00%3A00%3A00%27&STOP_TIME=%271969-07-21+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "version": "1.2",
+        "source": "NASA/JPL Horizons API"
+      },
+      "sha256": "2c81b393fb852d1cc8bc4bea82c1f3c27eea63330de1498baa89e8e037f1bd3b",
+      "retrievedUtc": "2026-11-13T19:44:33.329Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": -1932.901,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "42fbbee51022b2772b5a83f2fdc4d6266b8d302865a7fbe5b415600c14fc48a9.txt"
+    },
+    {
+      "id": "apollo15",
+      "body": "sun",
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%2710%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%273.6333%2C26.13239%2C-1.923189%27&START_TIME=%271971-07-30+00%3A00%3A00%27&STOP_TIME=%271971-07-31+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "source": "NASA/JPL Horizons API",
+        "version": "1.2"
+      },
+      "sha256": "205527e3b3040ee394a857bfb70dafba7f652cdd05c565cdc9ec4c6f2a5060d3",
+      "retrievedUtc": "2026-11-13T19:44:33.858Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": -1923.189,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "0ab27fea5e5797291e19c1f9326aa2ece4c3fac6774a3b54c2f99a2cec7942b7.txt"
+    },
+    {
+      "id": "apollo15",
+      "body": "earth",
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27399%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%273.6333%2C26.13239%2C-1.923189%27&START_TIME=%271971-07-30+00%3A00%3A00%27&STOP_TIME=%271971-07-31+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "version": "1.2",
+        "source": "NASA/JPL Horizons API"
+      },
+      "sha256": "9870391341d1f1d1e750ee7e461c222cde8e10e50efba0d555029ffb906666cb",
+      "retrievedUtc": "2026-11-13T19:44:34.375Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": -1923.189,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "37fcc07321e1c1163d1db3711b5492f3074fbffdfce46436b2a0685f56310a08.txt"
+    },
+    {
+      "id": "change4",
+      "body": "sun",
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%2710%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27177.5885%2C-45.4561%2C-5.928431%27&START_TIME=%272019-01-03+00%3A00%3A00%27&STOP_TIME=%272019-01-04+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "version": "1.2",
+        "source": "NASA/JPL Horizons API"
+      },
+      "sha256": "9816ae50147f397e78464a5cd1a8123ad1554bd85d2b10f8caec8eeb104c840c",
+      "retrievedUtc": "2026-11-13T19:44:36.226Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": -5928.431,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "085d484c51d04152f6f637b61610a12feb00455bf8155e1879e3bb362ecb029e.txt"
+    },
+    {
+      "id": "change4",
+      "body": "earth",
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27399%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27177.5885%2C-45.4561%2C-5.928431%27&START_TIME=%272019-01-03+00%3A00%3A00%27&STOP_TIME=%272019-01-04+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "version": "1.2",
+        "source": "NASA/JPL Horizons API"
+      },
+      "sha256": "573de84b8c8fd4d31b196c0680bcfcb8c88dfa5ce6c032bb37195b5f92abcb39",
+      "retrievedUtc": "2026-11-13T19:44:36.744Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": -5928.431,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "3f742e482ec51e0463e4cf4f99f0adad5daadaa55eb5e22100fa9c7fb1f102a8.txt"
+    },
+    {
+      "id": "chandrayaan3",
+      "body": "sun",
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%2710%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2732.32%2C-69.3741%2C0.531988%27&START_TIME=%272023-08-23+00%3A00%3A00%27&STOP_TIME=%272023-08-24+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "version": "1.2",
+        "source": "NASA/JPL Horizons API"
+      },
+      "sha256": "d68097bf80f77ee0a6e8a6f6c057f9f98bcbbbb18b39207149d61194afd4ed32",
+      "retrievedUtc": "2026-11-13T19:44:37.479Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": 531.988,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "a4317aec63a7fb63f302f9411edfc560cf5ecb3fbd5ee5d3e28ce2a4f3367de3.txt"
+    },
+    {
+      "id": "chandrayaan3",
+      "body": "earth",
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27399%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2732.32%2C-69.3741%2C0.531988%27&START_TIME=%272023-08-23+00%3A00%3A00%27&STOP_TIME=%272023-08-24+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "version": "1.2",
+        "source": "NASA/JPL Horizons API"
+      },
+      "sha256": "468c6434529ccd52989ad1a5681489bde0e8cfbc34dfe7646d560690ad33d1c5",
+      "retrievedUtc": "2026-11-13T19:44:38.853Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": 531.988,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "993683d2c8039191ce564631c8361575445e178235c30fba41f530983379397b.txt"
+    },
+    {
+      "id": "im1",
+      "body": "sun",
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%2710%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%271.44%2C-80.13%2C2.59643%27&START_TIME=%272024-02-22+00%3A00%3A00%27&STOP_TIME=%272024-02-23+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "version": "1.2",
+        "source": "NASA/JPL Horizons API"
+      },
+      "sha256": "1128d2a131be0fd7f5739febba9e2e77d8b55fcca0d88ff6967a1c80e1d15194",
+      "retrievedUtc": "2026-11-13T19:44:39.599Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": 2596.43,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "728de103c21341eb4628c6c220a0c49bd650e66253c24463effad2a147fe781a.txt"
+    },
+    {
+      "id": "im1",
+      "body": "earth",
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27399%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%271.44%2C-80.13%2C2.59643%27&START_TIME=%272024-02-22+00%3A00%3A00%27&STOP_TIME=%272024-02-23+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "version": "1.2",
+        "source": "NASA/JPL Horizons API"
+      },
+      "sha256": "ebc28cba7021d0989000fdaf87e7346e75327030822a4ecaf8ec9babb218570d",
+      "retrievedUtc": "2026-11-13T19:44:40.562Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": 2596.43,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "8033bbfb1dcbc7cf1015f91ec9de8803162fd6dab56455afd5b6f205e54f4c30.txt"
+    },
+    {
+      "id": "change6",
+      "body": "sun",
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%2710%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27-153.9852%2C-41.6385%2C-5.251258%27&START_TIME=%272024-06-01+00%3A00%3A00%27&STOP_TIME=%272024-06-02+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "source": "NASA/JPL Horizons API",
+        "version": "1.2"
+      },
+      "sha256": "d424594d3cb3085710d8c80491ad308f9f8f59f6998222a5d033b30a430d2c4c",
+      "retrievedUtc": "2026-11-13T19:44:42.380Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": -5251.258,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "fdd0918c0758add52ebdb2070736a061b883191de4fb21aeeefae11c259724a9.txt"
+    },
+    {
+      "id": "change6",
+      "body": "earth",
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27399%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27-153.9852%2C-41.6385%2C-5.251258%27&START_TIME=%272024-06-01+00%3A00%3A00%27&STOP_TIME=%272024-06-02+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "source": "NASA/JPL Horizons API",
+        "version": "1.2"
+      },
+      "sha256": "8d451621c2d747f8c0b9657eecb90c5e34cd848ae4cbff35757ee35ad9039fcd",
+      "retrievedUtc": "2026-11-13T19:44:43.131Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": -5251.258,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "1cd481dab547c0c07745556d72089438c357f074f40ff5c3c76d6321e139e9c7.txt"
+    },
+    {
+      "id": "blueghost1",
+      "body": "sun",
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%2710%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2761.81%2C18.562%2C-3.6482959999999998%27&START_TIME=%272025-03-02+00%3A00%3A00%27&STOP_TIME=%272025-03-03+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "version": "1.2",
+        "source": "NASA/JPL Horizons API"
+      },
+      "sha256": "64645d44e7a68ffeac535602fbb69bd6657eda813a7a0992a3a2d3840a3e01de",
+      "retrievedUtc": "2026-11-13T19:44:43.987Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": -3648.296,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "1330bca4e4bda52003f2035af32cebe84ffc0a770f5c3757465d6f155a5c8258.txt"
+    },
+    {
+      "id": "blueghost1",
+      "body": "earth",
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27399%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2761.81%2C18.562%2C-3.6482959999999998%27&START_TIME=%272025-03-02+00%3A00%3A00%27&STOP_TIME=%272025-03-03+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "source": "NASA/JPL Horizons API",
+        "version": "1.2"
+      },
+      "sha256": "1f31acc6a04db369527434a7d6861ab599fdf42ed049f4588bcd247bdab4b790",
+      "retrievedUtc": "2026-11-13T19:44:45.726Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": -3648.296,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "8e978f8e0a53842255f9028de2fac34e22f1ac31c7cea197112820a75508597f.txt"
+    },
+    {
+      "id": "im2",
+      "body": "sun",
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%2710%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2729.1957%2C-84.7906%2C5.32388%27&START_TIME=%272025-03-06+00%3A00%3A00%27&STOP_TIME=%272025-03-07+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "source": "NASA/JPL Horizons API",
+        "version": "1.2"
+      },
+      "sha256": "6b14b8f59f3a4279077c5718607a9633ce2478194822d906c31a177cad79ad67",
+      "retrievedUtc": "2026-11-13T19:44:46.927Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": 5323.88,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "bed991c4dca99b4598c35c0fd5adad53f9f5daa827ff9940995a2389399f0dd4.txt"
+    },
+    {
+      "id": "im2",
+      "body": "earth",
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27399%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2729.1957%2C-84.7906%2C5.32388%27&START_TIME=%272025-03-06+00%3A00%3A00%27&STOP_TIME=%272025-03-07+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "source": "NASA/JPL Horizons API",
+        "version": "1.2"
+      },
+      "sha256": "9e0ec41a835251b62c2942d5bd1d31e0a8c762640ef7e78a16f5dad957668a2e",
+      "retrievedUtc": "2026-11-13T19:44:47.881Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": 5323.88,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "67c5fce5ab58bab314262424125d25579fb122c52b275a778463adc7e21200e6.txt"
+    },
+    {
+      "id": "shackleton",
+      "body": "sun",
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%2710%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27129.78%2C-89.67%2C-2.786691%27&START_TIME=%272039-11-01+00%3A00%3A00%27&STOP_TIME=%272039-11-02+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "version": "1.2",
+        "source": "NASA/JPL Horizons API"
+      },
+      "sha256": "88ff37cbd83c3adab96e8ab3c3d7078bffc048640abd2dd597f0e6517b840c82",
+      "retrievedUtc": "2026-11-13T19:44:49.524Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": -2786.691,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "6ad1290a6d00eba90103f7cca3976dd88ca20b8f54e0b57c372c277ed7c39d89.txt"
+    },
+    {
+      "id": "shackleton",
+      "body": "earth",
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27399%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27129.78%2C-89.67%2C-2.786691%27&START_TIME=%272039-11-01+00%3A00%3A00%27&STOP_TIME=%272039-11-02+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "source": "NASA/JPL Horizons API",
+        "version": "1.2"
+      },
+      "sha256": "536766c0ae1dede6d43edc3fe3695cf9f0083c363e33a710170632ba2c3d2c1d",
+      "retrievedUtc": "2026-11-13T19:44:50.474Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": -2786.691,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "01c02d983b0a6341a72e8220accd235f1ffeaf0b71ce847d2732086d7355ea7b.txt"
+    }
+  ]
+}

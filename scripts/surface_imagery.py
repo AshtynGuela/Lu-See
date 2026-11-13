@@ -7,11 +7,11 @@ from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageFilter
 
 from lunar_terrain import RADIUS, forward
 
-SIZE = 512
+SIZE = 768
 BASE = "https://trek.nasa.gov/tiles/Moon"
 LAYERS = {
     "EQ": ("EQ", "LRO_WAC_Mosaic_Global_303ppd_v02", "jpg", 8),
@@ -19,6 +19,9 @@ LAYERS = {
     "NP": ("NP", "LRO_WAC_Mosaic_NPole60_100mp", "png", 4),
     "NAC": ("SP", "LRO_NAC_AvgMosaic_SPole855_1mp", "png", 11),
     "IM1": ("SP", "LRO_LOLA_NAC_ColorHillshade_3_5mpp_IM_1_LandingSite_SP", "png", 10),
+    "IM1_NAC": ("SP", "LRO_NAC_Post_Landing_OrthoMosaic_1mpp_IM_1_LandingSite_SP", "png", 12),
+    "PSR": ("SP", "NAC_POLE_PSR_SOUTH_STRETCH", "png", 8),
+    "RELIEF": ("EQ", "LRO_LOLAKaguya_ClrHillshade_60N60S_512ppd", "png", 10),
 }
 
 
@@ -113,19 +116,36 @@ def texture(lat, lon, width, folder):
     latitude, longitude = forward(lat, lon, np.arctan2(east, north), np.hypot(east, north))
     projection = "SP" if lat <= -65 else "NP" if lat >= 65 else "EQ"
     rgb, coverage = sample(projection, latitude, longitude, folder)
-    detail = "NAC" if lat <= -85.5 else (
-        "IM1" if -80.46 <= lat <= -79.8 and .9 <= lon <= 1.95 else None
-    )
-    if detail:
+    details = []
+    if lat <= -85.5:
+        details = [("NAC", 11 if width <= 1280 else 9, .92), ("PSR", 8, .85)]
+    elif -80.46 <= lat <= -79.8 and .9 <= lon <= 1.95:
+        details = [("IM1", 10 if width <= 1280 else 9, .85), ("IM1_NAC", 12 if width <= 1280 else 9, .78)]
+    elif abs(lat) < 59.9:
+        details = [("RELIEF", 10, .7)]
+    for detail, level, strength in details:
         try:
-            detail_rgb, weight = sample(detail, latitude, longitude, folder, 9 if width > 1280 else None)
-            # IM-1's published relief is colour-coded. Use its luminance for the
-            # visual relief and feather across its actual coverage boundary.
+            detail_rgb, weight = sample(detail, latitude, longitude, folder, level)
+            # Add luminance detail from NASA's imagery and fixed-light relief.
+            # Remove the broad brightness trend to soften regional mosaic seams.
             grey = detail_rgb @ np.array([.2126, .7152, .0722])
-            edge = np.minimum.reduce([east + width/2, width/2-east, north + width/2, width/2-north])
-            fade = np.clip(edge / (width * .08), 0, 1) * weight
-            blend = np.where(coverage > .05, fade, weight)
-            rgb = rgb * (1-blend[..., None]) + grey[..., None] * blend[..., None]
+            image = Image.fromarray(np.clip(grey, 0, 255).astype(np.uint8))
+            smooth = np.asarray(image.filter(ImageFilter.GaussianBlur(9)), dtype=float)
+            confidence = np.asarray(
+                Image.fromarray(np.rint(weight * 255).clip(0, 255).astype(np.uint8))
+                .filter(ImageFilter.GaussianBlur(4)), dtype=float,
+            ) / 255
+            blend = np.minimum(confidence, weight) * strength
+            if detail == "PSR":
+                # The shadow mosaic covers dark ground. Avoid replacing
+                # already illuminated pixels from the camera mosaic.
+                blend *= np.clip((105 - rgb.mean(axis=-1)) / 55, 0, 1)
+            if detail in ("RELIEF", "IM1", "IM1_NAC"):
+                enhanced = 0.55 * grey + 0.45 * 128 + np.clip(grey - smooth, -45, 45) * .8
+            else:
+                enhanced = grey + np.clip(grey - smooth, -40, 40) * .6
+            blend = np.where(coverage > .05, blend, weight)
+            rgb = rgb * (1-blend[..., None]) + enhanced[..., None] * blend[..., None]
             coverage = np.maximum(coverage, blend)
         except (OSError, ValueError):
             pass  # The broad WAC mosaic remains available.
@@ -139,12 +159,12 @@ def texture(lat, lon, width, folder):
     # Camera images contain lighting from their acquisition. Preserve image
     # contrast but limit deep baked shadows before applying the scene lighting.
     rgb = np.where(coverage[..., None] > .05, rgb, 135)
-    rgb = 44 + rgb * .78
-    return Image.fromarray(np.rint(rgb).clip(0, 255).astype(np.uint8))
+    grey = rgb @ np.array([.2126, .7152, .0722])
+    return Image.fromarray(np.rint(32 + grey * .84).clip(0, 255).astype(np.uint8))
 
 
 if __name__ == "__main__":
     latitude, longitude, width = map(float, sys.argv[1:4])
     destination, folder = map(Path, sys.argv[4:6])
     folder.mkdir(parents=True, exist_ok=True)
-    texture(latitude, longitude, width, folder).save(destination, "JPEG", quality=88)
+    texture(latitude, longitude, width, folder).save(destination, "JPEG", quality=88, optimize=True)

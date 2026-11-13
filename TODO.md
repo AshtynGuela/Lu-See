@@ -2,8 +2,12 @@
 
 ## Horizon View
 
-- Add more regional high-resolution lunar imagery as suitable products become available. Global camera imagery is too coarse for close ground detail at many sites.
+- Extend high-resolution camera coverage beyond the available regional mosaics. Global imagery and relief remain coarser at ground level.
 
-## App copy cleanup
+## Nearby sites
 
-- Remove all disclaimer text from the app so the interface feels more natural. Pending user direction to begin.
+- Add the dense 500 m grid from the specification with batch elevation reads and horizon evaluation.
+
+## Validation
+
+- Compare numerical terrain profiles against an independently sampled elevation service or model.

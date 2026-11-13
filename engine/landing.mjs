@@ -33,7 +33,9 @@ export function landingWindows(data, start, end, durationDays, mask, minAntennaE
     const a = first + i * step, b = Math.min(finish, a + step);
     return p[i] + (p[i + 1] - p[i]) * (t - a) / (b - a);
   };
-  const windows = []; let matching = 0, tested = 0, previous = null;
+  const windows = [];
+  const score = r => r.sunlitPct + r.earthDtePct - r.longestDarkH / durationDays / 24;
+  let matching = 0, tested = 0, previous = null, firstRun = 0;
   for (let time = first; time <= last; time += HOUR) {
     tested++;
     const endTime = time + duration;
@@ -42,10 +44,15 @@ export function landingWindows(data, start, end, durationDays, mask, minAntennaE
     const fullEnd = time + Math.floor(duration / step) * step;
     const tail = endTime - fullEnd;
     const tailCondition = tail ? conditions(data, fullEnd + tail / 2, mask, minAntennaEl) : null;
-    let longestDark = dark.reduce((max, [a,b]) => Math.max(max, Math.max(0, Math.min(b, fullEnd) - Math.max(a, time))), 0);
-    if (tail && !tailCondition.sun.visible) {
-      const run = dark.find(([a,b]) => a <= fullEnd && b >= fullEnd);
-      longestDark = Math.max(longestDark, tail + (run ? fullEnd - Math.max(time, run[0]) : 0));
+    // Arrival times are ordered. Discard runs before this arrival and stop
+    // scanning at the last complete cell, which may join the fractional tail.
+    while (firstRun < dark.length && dark[firstRun][1] < time) firstRun++;
+    const darkTail = tailCondition && !tailCondition.sun.visible ? tail : 0;
+    let longestDark = darkTail;
+    for (let i = firstRun; i < dark.length && dark[i][0] <= fullEnd; i++) {
+      const [a, b] = dark[i];
+      const overlap = Math.min(b, fullEnd) - Math.max(a, time);
+      longestDark = Math.max(longestDark, overlap + (b >= fullEnd ? darkTail : 0));
     }
     const row = { time,
       sunlitPct: 100 * (integral(sun, fullEnd) - integral(sun, time) + (tailCondition?.sun.visible ? tail : 0)) / duration,
@@ -57,7 +64,6 @@ export function landingWindows(data, start, end, durationDays, mask, minAntennaE
     if (!previous) { previous = { start: time, end: time, first: row, best: row, count: 1 }; windows.push(previous); }
     else {
       previous.end = time; previous.count++;
-      const score = r => r.sunlitPct + r.earthDtePct - r.longestDarkH / durationDays / 24;
       if (score(row) > score(previous.best)) previous.best = row;
     }
   }

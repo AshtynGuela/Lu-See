@@ -9,6 +9,7 @@ import SolarSystem, { SolarCanvasScene } from "./SolarSystem";
 import SpaceBackdrop from "./SpaceBackdrop";
 import HorizonReadout from "./HorizonReadout";
 import { captureMap } from "./mapSnapshot";
+import type { RankedSite } from "./NearbySites";
 export const lunarPoint = (lat: number, lon: number, r = 3.5) =>
   new THREE.Vector3(
     Math.cos((lat * Math.PI) / 180) * Math.cos((lon * Math.PI) / 180) * r,
@@ -202,16 +203,34 @@ function HorizonSilhouette({ mask, mast }: { mask: number[] | null; mast: number
 }
 const skylineMaterial = new THREE.LineBasicMaterial({ color: "#8a9b9d", toneMapped: false });
 
-function blendTerrainEdge(shader: THREE.WebGLProgramParametersWithUniforms) {
+function shadeSurface(shader: THREE.WebGLProgramParametersWithUniforms, horizon: boolean,
+  near: THREE.Texture | null, nearRatio: number, terrainLighting: boolean) {
+  shader.uniforms.surfaceNear = { value: near };
+  shader.uniforms.surfaceNearRatio = { value: nearRatio };
   shader.vertexShader = shader.vertexShader
     .replace("#include <common>", "#include <common>\nvarying vec2 terrainUv;")
     .replace("#include <begin_vertex>", "#include <begin_vertex>\nterrainUv = uv;");
   shader.fragmentShader = shader.fragmentShader
-    .replace("#include <common>", "#include <common>\nvarying vec2 terrainUv;")
+    .replace("#include <common>", `#include <common>
+      varying vec2 terrainUv;
+      uniform sampler2D surfaceNear;
+      uniform float surfaceNearRatio;`)
+    .replace("#include <map_fragment>", `
+      #include <map_fragment>
+      ${near ? `
+        vec2 nearUv = (terrainUv - 0.5) / surfaceNearRatio + 0.5;
+        vec2 nearEdge = abs(nearUv - 0.5) * 2.0;
+        float nearBlend = 1.0 - smoothstep(0.68, 0.99, max(nearEdge.x, nearEdge.y));
+        diffuseColor.rgb = mix(diffuseColor.rgb, texture2D(surfaceNear, clamp(nearUv, 0.0, 1.0)).rgb, nearBlend);
+      ` : ""}
+    `)
     .replace("#include <opaque_fragment>", `
+      ${terrainLighting ? "outgoingLight = mix(outgoingLight, diffuseColor.rgb, 0.64);" : ""}
+      ${horizon ? `
       vec2 edge = abs(terrainUv - 0.5) * 2.0;
-      float blend = smoothstep(0.80, 1.0, max(edge.x, edge.y));
+      float blend = smoothstep(0.90, 1.0, max(edge.x, edge.y));
       outgoingLight = mix(outgoingLight, vec3(${horizonColor.toArray().join(", ")}), blend);
+      ` : ""}
       #include <opaque_fragment>
     `);
 }
@@ -245,22 +264,16 @@ function Earth({
 }
 type SurfaceImageState = "loading" | "ready" | "unavailable";
 
-function LocalTerrain({ site, onImageState }: { site: Site; onImageState: (state: SurfaceImageState) => void }) {
-  const state = useScout(),
-    terrain = state.terrains[state.selected];
+function useSurfaceMap(url: string | null, onImageState?: (state: SurfaceImageState) => void) {
   const invalidate = useThree(s => s.invalidate);
-  const width = terrain?.tile.widthM;
-  const imageUrl = width && site
-    ? "/api/surface-imagery?" + new URLSearchParams({ lat: String(site.lat), lon: String(site.lon), width: String(width) })
-    : null;
   const [image, setImage] = useState<{ url: string; texture: THREE.Texture } | null>(null);
   useEffect(() => {
-    if (!imageUrl) return;
-    onImageState("loading");
+    if (!url) return;
+    onImageState?.("loading");
     const request = new AbortController();
     let map: THREE.Texture | undefined;
     let bitmap: ImageBitmap | undefined;
-    fetch(imageUrl, { signal: request.signal })
+    fetch(url, { signal: request.signal })
       .then(response => {
         if (!response.ok) throw Error("Surface imagery unavailable");
         return response.blob();
@@ -274,21 +287,37 @@ function LocalTerrain({ site, onImageState }: { site: Site; onImageState: (state
         bitmap = result;
         map = new THREE.Texture(bitmap);
         map.colorSpace = THREE.SRGBColorSpace;
-        map.anisotropy = 8;
+        map.anisotropy = 16;
         map.needsUpdate = true;
-        setImage({ url: imageUrl, texture: map });
-        onImageState("ready");
+        setImage({ url, texture: map });
+        onImageState?.("ready");
         invalidate();
       })
-      .catch(() => { if (!request.signal.aborted) onImageState("unavailable"); });
+      .catch(() => { if (!request.signal.aborted) onImageState?.("unavailable"); });
     return () => {
       request.abort();
       map?.dispose();
       bitmap?.close();
-      setImage(current => current?.url === imageUrl ? null : current);
+      setImage(current => current?.url === url ? null : current);
     };
-  }, [imageUrl, onImageState, invalidate]);
-  const map = image?.url === imageUrl ? image.texture : null;
+  }, [url, onImageState, invalidate]);
+  return image?.url === url ? image.texture : null;
+}
+
+function LocalTerrain({ site, onImageState, terrainLighting }: {
+  site: Site; onImageState: (state: SurfaceImageState) => void; terrainLighting: boolean;
+}) {
+  const terrain = useScout(s => s.terrains[site.id]);
+  const view = useScout(s => s.view);
+  const grid = useScout(s => s.grid);
+  const loading = useScout(s => s.loading[packetKey(site.id, s.mastM)]);
+  const width = terrain?.tile.widthM;
+  const nearWidth = width === 12000 ? 1280 : 512;
+  const imageryUrl = (extent: number) =>
+    "/api/surface-imagery?" + new URLSearchParams({ lat: String(site.lat), lon: String(site.lon), width: String(extent), v: "4" });
+  const map = useSurfaceMap(width ? imageryUrl(width) : null, onImageState);
+  const nearUrl = map && width && view === "horizon" ? imageryUrl(nearWidth) : null;
+  const near = useSurfaceMap(nearUrl);
   const geometry = useMemo(() => {
     if (!terrain) return null;
     const { size, widthM, heightsM } = terrain.tile,
@@ -330,7 +359,7 @@ function LocalTerrain({ site, onImageState }: { site: Site; onImageState: (state
     return (
       <Html center>
         <div className="scene-notice">
-          {state.loading[packetKey(state.selected, state.mastM)]
+          {loading
             ? "Loading local terrain and sky positions…"
             : "Local terrain is unavailable."}
         </div>
@@ -338,18 +367,19 @@ function LocalTerrain({ site, onImageState }: { site: Site; onImageState: (state
     );
   return (
     <group>
-      <mesh geometry={geometry}>
+      <mesh geometry={geometry} castShadow={!terrainLighting && !grid} receiveShadow={!terrainLighting && !grid}>
         <meshStandardMaterial
-          key={state.view + (map ? "-imagery" : "-relief")}
-          onBeforeCompile={state.view === "horizon" ? blendTerrainEdge : undefined}
+          key={`${view}-${map?.id}-${near?.id}-${terrainLighting}`}
+          customProgramCacheKey={() => `${view}-${!!near}-${terrainLighting && !!map}`}
+          onBeforeCompile={shader => shadeSurface(shader, view === "horizon", near, nearWidth / (width ?? nearWidth), terrainLighting && !!map)}
           map={map}
           color={map ? "#ffffff" : "#97978b"}
           roughness={1}
           side={THREE.DoubleSide}
-          wireframe={state.grid}
+          wireframe={grid}
         />
       </mesh>
-      {state.view !== "horizon" && (
+      {view !== "horizon" && (
         <>
           <Shuttle position={[0, 0.012, 0]} scale={0.025} />
           <Html position={[0, 0.1, 0]} center>
@@ -396,12 +426,20 @@ function Scene({
   onSnapshot,
   onBearing,
   onImageState,
+  terrainLighting,
+  nearbyPins,
+  nearbyCenter,
+  onNearbyPin,
   targetBearing,
 }: {
   onContext: (p: any) => void;
   onSnapshot: (fn: () => string) => void;
   onBearing: (bearing: number) => void;
   onImageState: (state: SurfaceImageState) => void;
+  terrainLighting: boolean;
+  nearbyPins?: RankedSite[];
+  nearbyCenter?: { lat: number; lon: number };
+  onNearbyPin: (site: RankedSite) => void;
   targetBearing: { az: number; el: number } | null;
 }) {
   const state = useScout(),
@@ -422,10 +460,10 @@ function Scene({
     );
   const packet = packetFor(state, state.selected),
     terrain = state.terrains[state.selected],
-    mask = getMask(terrain, state.mastM),
-    c = packet
-      ? conditions(packet, state.time, mask, state.minAntennaEl)
-      : null;
+    mask = getMask(terrain, state.mastM);
+  const c = useMemo(() => packet
+    ? conditions(packet, state.time, mask, state.minAntennaEl)
+    : null, [packet, state.time, mask, state.minAntennaEl]);
   const earthVector =
     c && site
       ? scenePoint(c.earth, site, packet.observer.elevationM + state.mastM)
@@ -446,6 +484,28 @@ function Scene({
   const local = state.view === "surface" || state.view === "horizon",
     polar = state.view.startsWith("polar"),
     north = state.view === "polar_north";
+  const shadowExtent = (terrain?.tile.widthM ?? 12000) / 1000 * .78;
+  const missionShadows = local && !terrainLighting && !!terrain && !state.grid;
+  const blockers = terrain?.obstructions?.[String(state.mastM)]?.distanceM;
+  const sunAzimuth = THREE.MathUtils.degToRad(c?.sun.az ?? 0);
+  const distantBlocker = c && blockers && terrain
+    ? blockers[Math.round(c.sun.az * blockers.length / 360) % blockers.length] >
+      terrain.tile.widthM / (2 * Math.max(Math.abs(Math.sin(sunAzimuth)), Math.abs(Math.cos(sunAzimuth))))
+    : false;
+  const localSunlight = c
+    ? (distantBlocker ? c.sun.visibleFraction : c.sun.eclipse.transmission)
+    : 0;
+  useEffect(() => {
+    const shadow = sunLight.current?.shadow;
+    if (!missionShadows || !shadow) return;
+    const camera = shadow.camera;
+    camera.left = camera.bottom = -shadowExtent;
+    camera.right = camera.top = shadowExtent;
+    camera.near = 80 - shadowExtent * 2;
+    camera.far = 80 + shadowExtent * 2;
+    camera.updateProjectionMatrix();
+    invalidate();
+  }, [missionShadows, shadowExtent, invalidate]);
   useEffect(() => {
     const c = camera as THREE.PerspectiveCamera;
     c.near = 0.001;
@@ -522,7 +582,7 @@ function Scene({
   useEffect(() => {
     if (state.view !== "horizon") return;
     // Keep the skyline in view while showing more of the near ground.
-    look.current = { yaw: 0, pitch: THREE.MathUtils.degToRad(horizonAt(mask, 0) - 7) };
+    look.current = { yaw: 0, pitch: THREE.MathUtils.degToRad(horizonAt(mask, 0) - 11) };
     invalidate();
   }, [state.view, state.selected, mask, invalidate]);
   useEffect(() => {
@@ -581,6 +641,8 @@ function Scene({
         );
     } else if (state.view.startsWith("polar")) {
       position.set(0, radius * 3.6, 0.001);
+    } else if (nearbyCenter && state.view === "globe") {
+      position.copy(lunarPoint(nearbyCenter.lat, nearbyCenter.lon, radius * 1.14));
     } else {
       const normal = site
         ? lunarPoint(site.lat, site.lon, 1)
@@ -607,6 +669,7 @@ function Scene({
     !!earth,
     !!site,
     terrain?.tile.widthM,
+    nearbyCenter,
     size.width,
     size.height,
   ]);
@@ -717,15 +780,20 @@ function Scene({
   };
   return (
     <>
-      <ambientLight intensity={local ? 0.55 : 0.045} />
+      <ambientLight intensity={local ? (terrainLighting ? 0.55 : 0.12) : 0.045} />
       <directionalLight
         ref={sunLight}
-        intensity={c ? 3 * (local ? c.sun.eclipse.transmission : 1) : 0}
+        intensity={c ? 3 * (local ? (terrainLighting ? c.sun.visibleFraction : localSunlight) : 1) : 0}
         position={[20, 5, 10]}
+        castShadow={missionShadows && localSunlight > 0}
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
+        shadow-bias={-0.00002}
+        shadow-normalBias={shadowExtent / 1600}
       />
       {local ? (
         <>
-          <LocalTerrain site={site} onImageState={onImageState} />
+          <LocalTerrain site={site} onImageState={onImageState} terrainLighting={terrainLighting} />
           {state.view === "horizon" && <HorizonSilhouette mask={mask} mast={state.mastM} />}
           {c &&
             (["sun", "earth"] as const).map((body) => {
@@ -862,6 +930,17 @@ function Scene({
                   </group>
                 );
               })}
+          {state.markers && !state.pickingSite && nearbyPins?.map((point, index) => {
+            if (polar && (north ? point.lat < 80 : point.lat > -80)) return null;
+            const position = polar
+              ? polarPoint(point.lat, point.lon, radius)
+              : lunarPoint(point.lat, point.lon, radius * 1.018);
+            return <Html key={point.id || point.name} position={position} center occlude>
+              <button className="ranked-pin" title={`Compare ${point.name}`}
+                aria-label={`Compare ranked site ${index + 1}, ${point.name}`}
+                onClick={() => onNearbyPin(point)}>{index + 1}</button>
+            </Html>;
+          })}
           {state.grid && !polar && (
             <mesh>
               <sphereGeometry args={[radius * 1.003, 36, 18]} />
@@ -908,9 +987,14 @@ function Scene({
 export default function World(props: {
   onContext: (p: any) => void;
   onSnapshot: (fn: () => string) => void;
+  nearbyPins?: RankedSite[];
+  nearbyCenter?: { lat: number; lon: number };
+  onNearbyPin: (site: RankedSite) => void;
 }) {
   const [bearing, setBearing] = useState(0);
   const [surfaceImage, setSurfaceImage] = useState<SurfaceImageState>("loading");
+  const [terrainLighting, setTerrainLighting] = useState(true);
+  const toggleTerrainLighting = () => setTerrainLighting(value => !value);
   const [targetBearing, setTargetBearing] = useState<{ az: number; el: number } | null>(null);
   const state = useScout(),
     selected = [...state.sites, ...state.custom].find(
@@ -925,6 +1009,7 @@ export default function World(props: {
       >
         <Canvas
           frameloop="demand"
+          shadows={state.view === "horizon" || state.view === "surface"}
           camera={{ position: [15, 16, 60], near: 0.001, far: 500, fov: 40 }}
           dpr={[1, 1.5]}
           gl={{
@@ -938,7 +1023,7 @@ export default function World(props: {
         >
           <SpaceBackdrop />
           <Suspense fallback={null}>
-            {solar ? <SolarCanvasScene /> : <Scene {...props} onBearing={setBearing} onImageState={setSurfaceImage} targetBearing={targetBearing} />}
+            {solar ? <SolarCanvasScene /> : <Scene {...props} onBearing={setBearing} onImageState={setSurfaceImage} terrainLighting={terrainLighting} targetBearing={targetBearing} />}
           </Suspense>
         </Canvas>
         {!solar &&
@@ -956,11 +1041,13 @@ export default function World(props: {
           )}
       </div>
       {state.view === "horizon" && selected && <HorizonReadout
-        site={selected} bearing={bearing} imagery={surfaceImage} pointAt={(az, el) => setTargetBearing({ az, el })}
+        site={selected} bearing={bearing} imagery={surfaceImage} terrainLighting={terrainLighting}
+        toggleTerrainLighting={toggleTerrainLighting} pointAt={(az, el) => setTargetBearing({ az, el })}
       />}
-      {state.view === "surface" && selected && state.terrains[selected.id] && <p className="surface-imagery-credit" role="status">
-        {surfaceImage === "ready" ? "LOLA terrain · NASA Moon Trek surface imagery" : surfaceImage === "loading" ? "Loading surface imagery…" : "Surface imagery unavailable"}
-      </p>}
+      {state.view === "surface" && selected && state.terrains[selected.id] && <div className="surface-imagery-credit">
+        <span role="status">{surfaceImage === "ready" ? "NASA Moon Trek · LOLA terrain" : surfaceImage === "loading" ? "Loading Moon Trek imagery…" : "LOLA terrain"}</span>
+        <button type="button" aria-pressed={!terrainLighting} onClick={toggleTerrainLighting}>Use mission lighting</button>
+      </div>}
     </SolarSystem>
   );
 }
