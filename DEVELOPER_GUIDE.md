@@ -75,7 +75,10 @@ Primary routes: `GET /api/health`, `/api/sites`, `/api/terrain/:id`, `/api/terra
 - `data/sites.json`: curated coordinates and citations.
 - `public/data/`, `public/layers/`: derived terrain, masks and visual/statistical products loaded by the browser.
 - `public/assets/`: optimized supplied models and visual textures, with provenance records.
-- `data/raw/`: approximately 4 GB of original numeric LOLA grids; preparation/rebuilding only, not loaded by normal browser operation.
+- `scripts/remote_dem.py`: exact NASA byte-range reads, multipart validation and a bounded SQLite block cache.
+- `data/terrain-regional.json`: checksum and extent of the optional 5 m NASA regional source.
+- `data/raw/`: optional offline originals, excluded from Git and Docker.
+- `.cache/terrain-results/`: coordinate results with source/code versioning. The API returns 202 while a custom horizon is being calculated.
 - `.cache/horizons/`: cached API responses, parsed tables and provenance. Keep hashes, exact request URLs and returned frame/model metadata.
 - `data/validation/`: test reports. Fixtures belong in tests, never in scientific fallback paths.
 

@@ -48,7 +48,7 @@ export async function terrainAt(lat, lon, retry = false) {
     } catch {}
     const { stdout } = await run(process.env.LUNAR_TERRAIN_PYTHON || "python",
       [path.join(root, "scripts/lunar_terrain.py"), String(lat), String(lon)],
-      { cwd: root, windowsHide: true, timeout: 300000, maxBuffer: 4 * 1024 * 1024 });
+      { cwd: root, windowsHide: true, timeout: 600000, maxBuffer: 4 * 1024 * 1024 });
     const terrain = JSON.parse(stdout);
     await fs.mkdir(resultDir,{recursive:true});
     await fs.writeFile(file+'.part',stdout);

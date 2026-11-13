@@ -1,0 +1,15 @@
+{
+  "site": "South pole custom -89.8,180",
+  "seconds": 137.1,
+  "heightM": 131.72,
+  "resolutionM": 5.0,
+  "maxMaskErrorDeg": {
+    "0": 0.0,
+    "2": 0.0,
+    "5": 0.0,
+    "10": 0.0
+  },
+  "surfaceTileIdentical": true,
+  "source": "NASA byte ranges, 512-byte blocks and checksum-verified regional source",
+  "rawFilesPresent": false
+}

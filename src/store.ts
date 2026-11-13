@@ -66,7 +66,7 @@ export function ensureTerrain(site: Site, force = false) {
     ? "/api/terrain?" + new URLSearchParams({ lat: String(site.lat), lon: String(site.lon) })
     : "/api/terrain/" + encodeURIComponent(site.id);
   const request = (async () => {
-    const deadline = Date.now() + 360000;
+    const deadline = Date.now() + 720000;
     let terrain, first = true;
     do {
       terrain = await jsonFetch(url + (force && first && site.family === 'custom' ? '&retry=1' : ''));

@@ -2,7 +2,7 @@
 
 ## Rocky companion
 
-- Configure OpenRouter and Groq keys when ready, then test authenticated Rocky replies and visual-question retry with the live providers.
+- Verify image-dependent questions and visual-question retry with the live providers. Both keys are configured in Render and a live Nemotron text reply has passed.
 
 ## App copy cleanup
 

@@ -28,7 +28,7 @@ downloaded only when needed, checked against its original checksum, converted
 to exact numeric heights and cached. It is about 41 MB, rather than a global
 multi-gigabyte download.
 
-The raster working cache is bounded to approximately 128 MB of block payloads;
+The raster working cache is bounded to approximately 256 MB of block payloads;
 SQLite bookkeeping and regional heights add storage. Final coordinate results
 are cached separately, with a version derived from the code and source metadata.
 Only one new terrain calculation runs at a time. Uncached polar calculations

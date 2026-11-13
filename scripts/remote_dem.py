@@ -15,7 +15,7 @@ import time
 import numpy as np
 import requests
 
-PAGE = 4096
+PAGE = 512
 CACHE = Path(os.environ.get("LUNAR_TERRAIN_CACHE", Path(__file__).resolve().parents[1] / ".cache/terrain"))
 POOL = concurrent.futures.ThreadPoolExecutor(max_workers=4)
 LOCAL = threading.local()
@@ -112,7 +112,7 @@ def batches(pages, total):
     batch, size = [], 0
     for span in ranges:
         length = span[1] - span[0] + 1
-        if batch and (len(batch) == 128 or size + length > 4 * 1024 * 1024):
+        if batch and (len(batch) == 320 or size + length > 4 * 1024 * 1024):
             yield batch
             batch, size = [], 0
         batch.append(span)
@@ -130,10 +130,11 @@ class RemoteGrid:
         self.key = hashlib.sha256((source["url"] + source["sha256"] + source.get("httpEtag", "") + str(PAGE)).encode()).hexdigest()
         folder = Path(cache_dir) if cache_dir is not None else CACHE
         folder.mkdir(parents=True, exist_ok=True)
-        self.db = sqlite3.connect(folder / "raster-blocks.sqlite")
+        self.db = sqlite3.connect(folder / f"raster-blocks-{PAGE}.sqlite", timeout=30)
         self.db.execute("PRAGMA journal_mode=WAL")
         self.db.execute("PRAGMA synchronous=NORMAL")
         self.db.execute("CREATE TABLE IF NOT EXISTS blocks (source TEXT, n INTEGER, data BLOB, used REAL, PRIMARY KEY(source,n))")
+        self.db.execute("CREATE INDEX IF NOT EXISTS blocks_used ON blocks(used)")
 
     def values(self, indices):
         indices = np.asarray(indices, dtype=np.int64)
@@ -145,8 +146,9 @@ class RemoteGrid:
         ordered = page_ids[order]
         unique = np.unique(ordered)
         result = np.empty(len(flat), dtype="<i2")
-        for base in range(0, len(unique), 1024):
-            wanted = [int(n) for n in unique[base:base+1024]]
+        per_batch = 4 * 1024 * 1024 // PAGE
+        for base in range(0, len(unique), per_batch):
+            wanted = [int(n) for n in unique[base:base+per_batch]]
             stored = {}
             for i in range(0, len(wanted), 400):
                 group = wanted[i:i+400]
@@ -159,7 +161,10 @@ class RemoteGrid:
                     for page in range(a // PAGE, b // PAGE + 1):
                         data = payload[page * PAGE - a:(page + 1) * PAGE - a]
                         stored[page] = data
-                        self.db.execute("INSERT OR REPLACE INTO blocks VALUES (?,?,?,?)", (self.key, page, data, time.time()))
+            # Never hold a SQLite write lock while waiting for NASA responses.
+            now = time.time()
+            self.db.executemany("INSERT OR REPLACE INTO blocks VALUES (?,?,?,?)",
+                ((self.key, page, stored[page], now) for page in missing))
             matrix = np.zeros((len(wanted), PAGE // 2), dtype="<i2")
             for i, page in enumerate(wanted):
                 data = np.frombuffer(stored[page], dtype="<i2")
@@ -173,7 +178,7 @@ class RemoteGrid:
             self.db.executemany("UPDATE blocks SET used=? WHERE source=? AND n=?", ((now, self.key, n) for n in wanted))
             self.db.commit()
             # Bound persistent working storage; raw planet-wide files never appear.
-            maximum = int(os.environ.get("LUNAR_BLOCK_CACHE_MB", "128")) * 1024 * 1024 // PAGE
+            maximum = int(os.environ.get("LUNAR_BLOCK_CACHE_MB", "256")) * 1024 * 1024 // PAGE
             excess = self.db.execute("SELECT COUNT(*) FROM blocks").fetchone()[0] - maximum
             if excess > 0:
                 self.db.execute("DELETE FROM blocks WHERE rowid IN (SELECT rowid FROM blocks ORDER BY used LIMIT ?)", (excess,))

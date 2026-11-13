@@ -50,7 +50,7 @@ class RemoteDEMTest(unittest.TestCase):
         result=list(batches(wanted,3000*PAGE))
         actual=[]
         for batch in result:
-            self.assertLessEqual(len(batch),128)
+            self.assertLessEqual(len(batch),320)
             self.assertLessEqual(sum(b-a+1 for a,b in batch),4*1024*1024)
             for a,b in batch: actual.extend(range(a//PAGE,b//PAGE+1))
         self.assertEqual(actual,wanted)

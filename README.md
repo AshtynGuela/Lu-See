@@ -13,7 +13,7 @@ npm install
 npm run dev
 ```
 
-Open http://127.0.0.1:5173. The server binds to loopback. `npm run build` checks TypeScript and creates a production build; `npm run preview` serves that build with the API backend.
+Open http://127.0.0.1:5173. The development server binds to loopback; production binds to Render's assigned port on `0.0.0.0`. `npm run build` checks TypeScript and creates a production build; `npm run preview` serves that build with the API backend.
 
 The welcome screen now opens a Sun-centred Solar System map, following the user's JPL Orbit Viewer reference. Select any of the eight planets to focus, drag to orbit, wheel/pinch to zoom, or use WASD/QE to fly. Whole-system and inner-planet views, orbit/label toggles, readable spacing and physical scale are available. The supplied NASA planet models are optimized copies. The Sun uses the supplied `Rocky/Sun_1_1391000.glb` mesh and its emissive texture atlas, with the embedded image compressed for the web. Readable mode compresses radial spacing and enlarges bodies; physical mode uses linear AU spacing and physical radii. Numerical distances always use the unscaled JPL vectors. Model attitude and rendering brightness are visual context, not an attitude or radiometric solution.
 
@@ -42,9 +42,9 @@ Earth-shadow screening uses the real JPL Sun/Earth apparent positions and angula
 
 No orbital periods, made-up orbit animations or placeholder Sun/Earth values drive scientific results. The shuttle is explicitly a cinematic guide: travel advances to the selected arrival epoch, not a calculated transfer duration.
 
-## Prepare the actual datasets
+## Optional offline dataset preparation
 
-The downloaded elevation products total approximately 4 GB. They are acquired once with resumable range requests; final products are memory-mapped for preparation. Source labels, file sizes, hashes and processing assumptions are retained. Do not delete `data/raw/` during an active download.
+Normal Lu-See operation reads numeric elevation sections directly from NASA and caches them; deployment does not include the 4 GB source rasters. See [DEPLOYMENT.md](DEPLOYMENT.md). The commands below are only for rebuilding prepared products offline. Full downloads use resumable range requests and memory-mapped processing, with source labels and hashes retained.
 
 ```text
 python -m pip install -r requirements.txt
@@ -53,7 +53,7 @@ python scripts/prepare_polar.py
 python scripts/prepare_statistics.py
 ```
 
-`prepare_data.py` generates curated terrain records with the same sampler used for custom coordinates. Horizon View reports compass bearing, skyline angle, distance to the terrain that sets the skyline, and Sun/Earth centre clearance. The global 237 m grid and 20 m south-polar grid cover the surroundings. For Shackleton rim detail, install `rasterio`, download the [NASA Site04 elevation GeoTIFF](https://pgda.gsfc.nasa.gov/products/78), and run `python scripts/prepare_regional_terrain.py PATH_TO_TIF`. The 5 m grid is used inside its footprint with a 200 m blend at the edges. The browser checks for newly prepared terrain periodically. `prepare_polar.py` generates display-only polar relief and globe displacement. `prepare_statistics.py` reads the numeric precomputed visibility products linked by NASA PGDA. `prepare_layers.py` is an alternative Moon Trek WMTS acquisition path. If a source is unavailable, its layer remains unavailable rather than being fabricated.
+`prepare_data.py` generates curated terrain records with the same sampler used for custom coordinates. Horizon View reports compass bearing, skyline angle, distance to the terrain that sets the skyline, and Sun/Earth centre clearance. The global 237 m grid and 20 m south-polar grid cover the surroundings. Shackleton rim detail is fetched automatically from the checksum-verified [NASA Site04 elevation GeoTIFF](https://pgda.gsfc.nasa.gov/products/78) when required. The optional offline preparation tool uses `rasterio` and `python scripts/prepare_regional_terrain.py PATH_TO_TIF`. The 5 m grid is used inside its footprint with a 200 m blend at the edges. The browser checks for newly prepared terrain periodically. `prepare_polar.py` generates display-only polar relief and globe displacement. `prepare_statistics.py` reads the numeric precomputed visibility products linked by NASA PGDA. `prepare_layers.py` is an alternative Moon Trek WMTS acquisition path. If a source is unavailable, its layer remains unavailable rather than being fabricated.
 
 To prepare visual assets, run `node scripts/prepare_assets.mjs`. The parent directory's source GLBs are preserved. Rocky is copied byte-for-byte to `public/assets/rocky-original-rigged.glb`: 79.6 MB, 866,045 vertices, all eighteen original 2048-pixel textures, original material assignments, the rig and eight animation clips. He is excluded from planet simplification and texture resizing. `data/validation/rocky-original-assets.json` records the source hash and verifies that every embedded texture and material matches the original unrigged mesh. This increases initial transfer size and graphics memory use. His rights/provenance remain those of the supplied fan asset; the mascot path can be replaced.
 

@@ -9,7 +9,7 @@ Prepared 13 November 2026, local time. The governing challenge remains [Lunar La
 - UTC editing and transport, sky strip, event countdowns, observer mast and antenna limits, required mission duration, pinned/live scenarios, up to four comparisons, mission-average solar incidence, optional user thresholds, timelines and landing-date sweeps.
 - NASA long-term sunlight/Earth visibility rasters, separately labelled from the selected clock. Local terrain and horizon views use real elevations and prepared horizon masks.
 - Placeholder shuttle approach and arrival choice. Travel advances to the chosen arrival date; it is not a physical trajectory solution.
-- Supplied rigged Rocky model, question/error/cancel/retry/history flow, server-side tool results and numerical evidence checks, text fallback, and image-dependent retry without text-only fallback. Authenticated responses remain untested until keys are configured.
+- Supplied rigged Rocky model, question/error/cancel/retry/history flow, server-side tool results and numerical evidence checks, text fallback, and image-dependent retry without text-only fallback. Both provider keys are configured privately on Render; a live Nemotron text response passed.
 - Share links with scientific settings and custom coordinates, JSON/CSV exports with separate current and mission epochs, source links and raw-response provenance. Export rejects incomplete or stale mission results.
 - Geometric Earth-shadow screening from real JPL positions and apparent sizes, included in direct sunlight, power, mission summaries and date sweeps. Corresponding globe shading and local direct-light attenuation are implemented; atmosphere and refracted light are excluded.
 - Plain explanations and an Engineer inspector with horizon angles, apparent radii, direct solar-disc fraction, range and observer settings.
@@ -41,3 +41,7 @@ Terrain resolution, finite ray spacing and a 150 km horizon radius limit obstruc
 ## Calculated landing-date planning
 
 The lunar inspector distinguishes sunlight now from Earth contact now, explains centre height and compass bearing, and separates these from whole-mission totals. Plan landing defaults to calculating hourly candidate arrivals over 30/60/90 days from real JPL positions and LOLA terrain, filtered by editable sunlight, darkness and contact limits. Users select a candidate to compare or land; manual entry remains available. No matching dates is an explicit result. Custom sites use the same terrain screening when the local grids are available.
+
+## Lu-See hosting
+
+The separate Lu-See fork uses D-DIN and is hosted at https://lu-see.onrender.com. The private source repository is https://github.com/AshtynGuela/Lu-See. Original local source rasters and API keys are excluded from the repository and image. Live NASA range reads reproduce the original Apollo 11 and a regional south-pole terrain tile and all mast masks exactly. The public custom-coordinate API and Nemotron text reply have been tested. Uncached polar terrain takes longer than prepared curated-site lookups.
