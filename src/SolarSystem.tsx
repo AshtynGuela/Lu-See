@@ -18,6 +18,7 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import * as THREE from "three";
+import { captureMap } from "./mapSnapshot";
 import {
   PLANETS,
   SOLAR_BODIES,
@@ -176,7 +177,8 @@ function SolarScene({
     invalidate();
   }, []);
   useEffect(() => {
-    onSnapshot(() => gl.domElement.toDataURL("image/jpeg", 0.7));
+    onSnapshot(() => captureMap(gl.domElement));
+    return () => onSnapshot(() => "");
   }, [gl, onSnapshot]);
   useEffect(() => {
     const down = (e: KeyboardEvent) => {

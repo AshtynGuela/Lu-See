@@ -18,7 +18,7 @@ RUN npm ci --omit=dev && npm cache clean --force
 COPY --from=build /app/dist ./dist
 COPY server ./server
 COPY engine ./engine
-COPY scripts/lunar_terrain.py scripts/remote_dem.py ./scripts/
+COPY scripts/lunar_terrain.py scripts/remote_dem.py scripts/surface_imagery.py ./scripts/
 COPY public/data ./public/data
 COPY data/sites.json data/terrain-regional.json ./data/
 ENV NODE_ENV=production HOST=0.0.0.0 LUNAR_TERRAIN_MODE=remote LUNAR_TERRAIN_PYTHON=/opt/venv/bin/python PYTHONUNBUFFERED=1

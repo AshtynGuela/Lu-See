@@ -13,6 +13,13 @@ import RockyOverlay, { RockyBubble } from "./RockyOverlay";
 import { calmVoice, useDialogueReveal } from "./rocky-voice";
 
 type Phase = "IDLE" | "ASKING" | "THINKING" | "OPEN" | "ERROR";
+type PendingQuestion = {
+  question: string;
+  mode: "plain" | "engineer";
+  image?: string;
+  context: Record<string, unknown>;
+  history: { role: string; content: string }[];
+};
 function SpokenReply({ speech, details = "", stream, sound }: {
   speech: string; details?: string; stream: boolean; sound: boolean;
 }) {
@@ -39,14 +46,17 @@ export default function Rocky({ snapshot }: { snapshot: () => string }) {
     controller = useRef<AbortController | null>(null),
     input = useRef<HTMLInputElement>(null),
     lastQuestion = useRef(""),
-    pending = useRef<any>(null);
+    pending = useRef<PendingQuestion | null>(null);
+  const [attachedMap, setAttachedMap] = useState("");
+  const [retryVisual, setRetryVisual] = useState(false);
+  const resumePhase = useRef<Phase>("ASKING");
   const [animateReply, setAnimateReply] = useState(true);
   const site = [...state.sites, ...state.custom].find(
       (s) => s.id === state.selected,
     ),
     scenario = selectedScenario(state);
   useEffect(() => {
-    const open = () => setPhase(current => current === "IDLE" ? "ASKING" : current);
+    const open = () => setPhase(current => current === "IDLE" ? resumePhase.current : current);
     window.addEventListener("ask-rocky", open);
     return () => window.removeEventListener("ask-rocky", open);
   }, []);
@@ -56,7 +66,11 @@ export default function Rocky({ snapshot }: { snapshot: () => string }) {
   const ask = async (retry = false) => {
     const q = retry ? lastQuestion.current : draft.trim();
     if (!q) return;
-    if (!retry) pending.current = null;
+    if (!retry) {
+      pending.current = null;
+      setAttachedMap("");
+      setRetryVisual(image);
+    }
     lastQuestion.current = q;
     setAnimateReply(true);
     controller.current?.abort();
@@ -68,10 +82,10 @@ export default function Rocky({ snapshot }: { snapshot: () => string }) {
       const mapImage =
         retry && pending.current
           ? pending.current.image
-          : image
+          : (retry ? retryVisual : image)
             ? snapshot()
             : undefined;
-      if (image && !mapImage)
+      if ((retry ? retryVisual : image) && !mapImage)
         throw new Error(
           "The map image is not ready. Wait for the scene to load, then retry.",
         );
@@ -106,6 +120,7 @@ export default function Rocky({ snapshot }: { snapshot: () => string }) {
               ]),
             };
       pending.current = payload;
+      setAttachedMap(payload.image ?? "");
       const result = await jsonFetch("/api/assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -116,6 +131,8 @@ export default function Rocky({ snapshot }: { snapshot: () => string }) {
       setAnswer(result);
       setHistory((h) => [...h, { question: q, answer: result }]);
       setDraft("");
+      pending.current = null;
+      setAttachedMap("");
       setPhase("OPEN");
     } catch (e) {
       if (controller.current === request && !request.signal.aborted && e.name !== "AbortError") {
@@ -138,16 +155,25 @@ export default function Rocky({ snapshot }: { snapshot: () => string }) {
   const close = () => {
     controller.current?.abort();
     calmVoice.stop();
+    resumePhase.current = phase === "THINKING" ? "ASKING" : phase;
     setPhase("IDLE");
     setShowHistory(false);
     setAnimateReply(false);
+  };
+  const reopen = () => setPhase(resumePhase.current);
+  const editQuestion = () => {
+    setDraft(lastQuestion.current);
+    pending.current = null;
+    setAttachedMap("");
+    setError("");
+    setPhase("ASKING");
   };
   useEffect(() => () => controller.current?.abort(), []);
   return <RockyOverlay
     visible={!state.welcome}
     open={phase !== "IDLE"}
     thinking={phase === "THINKING"}
-    onChat={() => phase === "IDLE" ? setPhase(answer ? "OPEN" : "ASKING") : close()}
+    onChat={() => phase === "IDLE" ? reopen() : close()}
     renderChat={(stream, sound) => (
       <div className="rocky-panel" onKeyDown={e => {
         if (e.key === "Escape") { e.stopPropagation(); close(); }
@@ -199,14 +225,18 @@ export default function Rocky({ snapshot }: { snapshot: () => string }) {
             <>
               {phase === "ASKING" && (
                 <>
-                  <RockyBubble><p>Friend! What do we explore today, question?</p></RockyBubble>
+                  <RockyBubble><p>Friend! Pick a place. Rocky helps check Sun, Earth, and terrain. Where we go, question?</p></RockyBubble>
                   <div className="question-chips">
                     {[
                       "When does the Sun set here?",
                       "Why is the lunar south pole difficult?",
                       "Explain the horizon assumptions.",
+                      "What can you see on this map?",
                     ].map((q) => (
-                      <button key={q} onClick={() => setDraft(q)}>
+                      <button key={q} onClick={() => {
+                        setDraft(q);
+                        if (q === "What can you see on this map?") setImage(true);
+                      }}>
                         {q}
                       </button>
                     ))}
@@ -216,21 +246,22 @@ export default function Rocky({ snapshot }: { snapshot: () => string }) {
               {phase === "THINKING" && (
                 <div className="thinking">
                   <LoaderCircle className="spin" size={18} />
-                  <div className="rocky-thinking-bubble"><SpokenReply speech="Checking the evidence…" stream={stream} sound={sound} /></div>
+                  <div className="rocky-thinking-bubble"><SpokenReply speech={attachedMap ? "Rocky looks at your map. One moment." : "Rocky checks the numbers. One moment."} stream={stream} sound={sound} /></div>
                   <button onClick={close}>Cancel</button>
                 </div>
               )}
               {phase === "ERROR" && (
                 <div className="assistant-error">
-                  <RockyBubble><p>Question… I cannot answer right now.</p></RockyBubble>
+                  <RockyBubble><p>{retryVisual ? "Rocky still has your question. Try again, question?" : "Rocky needs another try. Ready, question?"}</p></RockyBubble>
                   <small>{error}</small>
+                  {attachedMap && <figure className="rocky-map-preview">
+                    <img src={attachedMap} alt="Map snapshot saved for retry" />
+                    <figcaption>Retry uses this same map and time.</figcaption>
+                  </figure>}
                   <button onClick={() => { if (sound) void calmVoice.unlock(); ask(true); }}>
                     <RotateCcw size={14} /> Retry
                   </button>
-                  <p className="data-note">
-                    Keys belong in the server’s .env file. Visual questions
-                    remain pending if Nemotron is unavailable.
-                  </p>
+                  <button onClick={editQuestion}>Edit question</button>
                 </div>
               )}
               {phase === "OPEN" && answer && (

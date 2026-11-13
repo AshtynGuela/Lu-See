@@ -1,8 +1,8 @@
 # Next work
 
-## Rocky companion
+## Horizon View
 
-- Verify image-dependent questions and visual-question retry with the live providers. Both keys are configured in Render and a live Nemotron text reply has passed.
+- Add more regional high-resolution lunar imagery as suitable products become available. Global camera imagery is too coarse for close ground detail at many sites.
 
 ## App copy cleanup
 

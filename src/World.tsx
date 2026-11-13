@@ -8,6 +8,7 @@ import { useEclipseMaterial } from "./eclipseMaterial";
 import SolarSystem, { SolarCanvasScene } from "./SolarSystem";
 import SpaceBackdrop from "./SpaceBackdrop";
 import HorizonReadout from "./HorizonReadout";
+import { captureMap } from "./mapSnapshot";
 export const lunarPoint = (lat: number, lon: number, r = 3.5) =>
   new THREE.Vector3(
     Math.cos((lat * Math.PI) / 180) * Math.cos((lon * Math.PI) / 180) * r,
@@ -209,7 +210,7 @@ function blendTerrainEdge(shader: THREE.WebGLProgramParametersWithUniforms) {
     .replace("#include <common>", "#include <common>\nvarying vec2 terrainUv;")
     .replace("#include <opaque_fragment>", `
       vec2 edge = abs(terrainUv - 0.5) * 2.0;
-      float blend = smoothstep(0.60, 1.0, max(edge.x, edge.y));
+      float blend = smoothstep(0.80, 1.0, max(edge.x, edge.y));
       outgoingLight = mix(outgoingLight, vec3(${horizonColor.toArray().join(", ")}), blend);
       #include <opaque_fragment>
     `);
@@ -242,9 +243,52 @@ function Earth({
     </group>
   );
 }
-function LocalTerrain() {
+type SurfaceImageState = "loading" | "ready" | "unavailable";
+
+function LocalTerrain({ site, onImageState }: { site: Site; onImageState: (state: SurfaceImageState) => void }) {
   const state = useScout(),
     terrain = state.terrains[state.selected];
+  const invalidate = useThree(s => s.invalidate);
+  const width = terrain?.tile.widthM;
+  const imageUrl = width && site
+    ? "/api/surface-imagery?" + new URLSearchParams({ lat: String(site.lat), lon: String(site.lon), width: String(width) })
+    : null;
+  const [image, setImage] = useState<{ url: string; texture: THREE.Texture } | null>(null);
+  useEffect(() => {
+    if (!imageUrl) return;
+    onImageState("loading");
+    const request = new AbortController();
+    let map: THREE.Texture | undefined;
+    let bitmap: ImageBitmap | undefined;
+    fetch(imageUrl, { signal: request.signal })
+      .then(response => {
+        if (!response.ok) throw Error("Surface imagery unavailable");
+        return response.blob();
+      })
+      .then(blob => createImageBitmap(blob, { imageOrientation: "flipY" }))
+      .then(result => {
+        if (request.signal.aborted) {
+          result.close();
+          return;
+        }
+        bitmap = result;
+        map = new THREE.Texture(bitmap);
+        map.colorSpace = THREE.SRGBColorSpace;
+        map.anisotropy = 8;
+        map.needsUpdate = true;
+        setImage({ url: imageUrl, texture: map });
+        onImageState("ready");
+        invalidate();
+      })
+      .catch(() => { if (!request.signal.aborted) onImageState("unavailable"); });
+    return () => {
+      request.abort();
+      map?.dispose();
+      bitmap?.close();
+      setImage(current => current?.url === imageUrl ? null : current);
+    };
+  }, [imageUrl, onImageState, invalidate]);
+  const map = image?.url === imageUrl ? image.texture : null;
   const geometry = useMemo(() => {
     if (!terrain) return null;
     const { size, widthM, heightsM } = terrain.tile,
@@ -296,9 +340,10 @@ function LocalTerrain() {
     <group>
       <mesh geometry={geometry}>
         <meshStandardMaterial
-          key={state.view}
+          key={state.view + (map ? "-imagery" : "-relief")}
           onBeforeCompile={state.view === "horizon" ? blendTerrainEdge : undefined}
-          color="#97978b"
+          map={map}
+          color={map ? "#ffffff" : "#97978b"}
           roughness={1}
           side={THREE.DoubleSide}
           wireframe={state.grid}
@@ -350,11 +395,13 @@ function Scene({
   onContext,
   onSnapshot,
   onBearing,
+  onImageState,
   targetBearing,
 }: {
   onContext: (p: any) => void;
   onSnapshot: (fn: () => string) => void;
   onBearing: (bearing: number) => void;
+  onImageState: (state: SurfaceImageState) => void;
   targetBearing: { az: number; el: number } | null;
 }) {
   const state = useScout(),
@@ -474,7 +521,8 @@ function Scene({
   }, [state.view, gl, camera]);
   useEffect(() => {
     if (state.view !== "horizon") return;
-    look.current = { yaw: 0, pitch: THREE.MathUtils.degToRad(horizonAt(mask, 0)) };
+    // Keep the skyline in view while showing more of the near ground.
+    look.current = { yaw: 0, pitch: THREE.MathUtils.degToRad(horizonAt(mask, 0) - 7) };
     invalidate();
   }, [state.view, state.selected, mask, invalidate]);
   useEffect(() => {
@@ -489,7 +537,8 @@ function Scene({
     move.current = null;
   }, [state.travel?.started]);
   useEffect(() => {
-    onSnapshot(() => gl.domElement.toDataURL("image/jpeg", 0.7));
+    onSnapshot(() => captureMap(gl.domElement));
+    return () => onSnapshot(() => "");
   }, [gl, onSnapshot]);
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -676,7 +725,7 @@ function Scene({
       />
       {local ? (
         <>
-          <LocalTerrain />
+          <LocalTerrain site={site} onImageState={onImageState} />
           {state.view === "horizon" && <HorizonSilhouette mask={mask} mast={state.mastM} />}
           {c &&
             (["sun", "earth"] as const).map((body) => {
@@ -861,6 +910,7 @@ export default function World(props: {
   onSnapshot: (fn: () => string) => void;
 }) {
   const [bearing, setBearing] = useState(0);
+  const [surfaceImage, setSurfaceImage] = useState<SurfaceImageState>("loading");
   const [targetBearing, setTargetBearing] = useState<{ az: number; el: number } | null>(null);
   const state = useScout(),
     selected = [...state.sites, ...state.custom].find(
@@ -888,7 +938,7 @@ export default function World(props: {
         >
           <SpaceBackdrop />
           <Suspense fallback={null}>
-            {solar ? <SolarCanvasScene /> : <Scene {...props} onBearing={setBearing} targetBearing={targetBearing} />}
+            {solar ? <SolarCanvasScene /> : <Scene {...props} onBearing={setBearing} onImageState={setSurfaceImage} targetBearing={targetBearing} />}
           </Suspense>
         </Canvas>
         {!solar &&
@@ -906,8 +956,11 @@ export default function World(props: {
           )}
       </div>
       {state.view === "horizon" && selected && <HorizonReadout
-        site={selected} bearing={bearing} pointAt={(az, el) => setTargetBearing({ az, el })}
+        site={selected} bearing={bearing} imagery={surfaceImage} pointAt={(az, el) => setTargetBearing({ az, el })}
       />}
+      {state.view === "surface" && selected && state.terrains[selected.id] && <p className="surface-imagery-credit" role="status">
+        {surfaceImage === "ready" ? "LOLA terrain · NASA Moon Trek surface imagery" : surfaceImage === "loading" ? "Loading surface imagery…" : "Surface imagery unavailable"}
+      </p>}
     </SolarSystem>
   );
 }

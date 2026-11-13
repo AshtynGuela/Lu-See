@@ -71,7 +71,7 @@ function zeroTransmission(map: Texture) {
 }
 
 function Model({ clip, paused, replay, onReady }: { clip: string; paused: boolean; replay: number; onReady: () => void }) {
-  const { scene, animations } = useGLTF("/assets/rocky-original-rigged.glb");
+  const { scene, animations } = useGLTF("/assets/rocky-web.glb");
   const { actions, ref } = useAnimations(animations);
   const invalidate = useThree(s => s.invalidate);
   useLayoutEffect(() => {

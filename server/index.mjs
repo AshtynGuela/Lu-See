@@ -8,6 +8,7 @@ import { ephemeris } from "./horizons.mjs";
 import { answerQuestion } from "./assistant.mjs";
 import { solarPacket } from "./solar.mjs";
 import { coordinateTerrainReady, terrainAt } from "./terrain.mjs";
+import { surfaceImagery } from "./surface-imagery.mjs";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 process.chdir(root);
 const app = express(),
@@ -113,6 +114,17 @@ app.get("/api/terrain", async (req, res, next) => {
     res.json({ ...terrain, lat, lon });
   } catch (e) {
     next(e);
+  }
+});
+app.get("/api/surface-imagery", async (req, res, next) => {
+  try {
+    const { lat, lon } = coords.parse(req.query);
+    const width = Number(req.query.width);
+    if (width !== 1280 && width !== 12000) return res.status(400).json({ error: "Invalid surface extent." });
+    const image = await surfaceImagery(root, lat, lon, width);
+    res.set("Cache-Control", "public, max-age=604800").type("jpeg").send(image);
+  } catch (error) {
+    next(error);
   }
 });
 app.get("/api/terrain/:id", async (req, res) => {

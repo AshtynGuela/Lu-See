@@ -7,9 +7,10 @@ const cardinals = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
 const compass = (az: number) => cardinals[Math.round(az / 45) % 8];
 const degrees = (angle: number) => `${angle.toFixed(1)}°`;
 
-export default function HorizonReadout({ site, bearing, pointAt }: {
+export default function HorizonReadout({ site, bearing, imagery, pointAt }: {
   site: Site;
   bearing: number;
+  imagery: "loading" | "ready" | "unavailable";
   pointAt: (az: number, el: number) => void;
 }) {
   const id = useId();
@@ -48,6 +49,10 @@ export default function HorizonReadout({ site, bearing, pointAt }: {
         {skyline === null ? "Local skyline unavailable" : <>Skyline {degrees(skyline)}{distance(bearing) && ` · terrain ${distance(bearing)} away`}</>}
         <span>{mast} m mast</span>
       </p>
+      {terrain && <p className="horizon-imagery" role="status">
+        {imagery === "ready" ? "LOLA terrain · NASA Moon Trek surface imagery"
+          : imagery === "loading" ? "Loading surface imagery…" : "Surface imagery unavailable"}
+      </p>}
       {sky && mask && <div className="horizon-targets">
         {(["sun", "earth"] as const).map(body => {
           const sample = sky[body];

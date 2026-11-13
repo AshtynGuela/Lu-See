@@ -8,14 +8,14 @@ import { HOUR, DAY } from '../engine/index.mjs';
 const browser = await chromium.launch({headless:true,args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 const page = await browser.newPage({viewport:{width:1440,height:1000},reducedMotion:'reduce'}), errors=[];
 page.on('pageerror',e=>{
-  if (e.message !== 'Could not load /assets/rocky-original-rigged.glb: Failed to fetch') errors.push(e.message);
+  if (e.message !== 'Could not load /assets/rocky-web.glb: Failed to fetch') errors.push(e.message);
 });
 const state={scenarios:[],custom:[],mastM:2,minAntennaEl:5,time:Date.parse('2025-03-14T07:00Z'),selected:'apollo11',view:'globe',mode:'plain'};
 const label=t=>new Date(t).toISOString().slice(0,16).replace('T',' ');
 try {
   // Model fidelity/motion has a separate browser check. Keep this scientific
   // workflow independent of the full original mesh's software-rendering cost.
-  await page.route('**/assets/rocky-original-rigged.glb',route=>route.abort());
+  await page.route('**/assets/rocky-web.glb',route=>route.abort());
   await page.goto('http://127.0.0.1:5175/?session='+encodeURIComponent(encodeSession(state)));
   await page.getByRole('button',{name:'Skip introduction'}).click();
   await page.getByRole('button',{name:'Plan landing',exact:true}).click();

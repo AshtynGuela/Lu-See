@@ -2,11 +2,16 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs/promises";
 import { createHash } from "node:crypto";
 await fs.mkdir("public/assets", { recursive: true });
-// Preserve the supplied geometry, material assignments, texture pixels and rig.
-// Rocky is deliberately excluded from the planet simplification pipeline.
+// Compress Rocky's buffers while retaining every vertex and original texture.
 const rockySource = "../Rocky/Rocky-Rigged.glb";
-const rockyTarget = "public/assets/rocky-original-rigged.glb";
-await fs.copyFile(rockySource, rockyTarget);
+const rockyTarget = "public/assets/rocky-web.glb";
+execFileSync(
+  process.platform === "win32" ? "npx.cmd" : "npx",
+  ["--yes", "@gltf-transform/cli@4.4.0", "meshopt", rockySource, rockyTarget,
+    "--quantize-position", "16", "--quantize-texcoord", "14",
+    "--quantize-normal", "12", "--quantize-weight", "12"],
+  { stdio: "inherit", shell: process.platform === "win32" },
+);
 const rockyHash = createHash("sha256").update(await fs.readFile(rockyTarget)).digest("hex");
 for (const [source, target, ratio, size] of [
   [
@@ -61,8 +66,8 @@ await fs.writeFile(
       },
       rocky: {
         source: "User-supplied Rocky/Rocky-Rigged.glb",
-        servedAsset: "/assets/rocky-original-rigged.glb",
-        preparation: "Byte-for-byte copy; original geometry, textures, materials, skin and animations",
+        servedAsset: "/assets/rocky-web.glb",
+        preparation: "Meshopt with high-precision quantization; no mesh simplification or texture recompression",
         sha256: rockyHash,
         note: "Fan character asset; configurable for replacement before public release",
       },
