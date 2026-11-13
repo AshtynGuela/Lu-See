@@ -1,0 +1,25 @@
+{
+  "moon": {
+    "url": "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/lroc_color_2k.jpg",
+    "sourcePage": "https://svs.gsfc.nasa.gov/4720/",
+    "purpose": "NASA LROC/LOLA rendering texture; visual only"
+  },
+  "earth": {
+    "source": "User-supplied NASA Earth_1_12756.glb",
+    "optimizedWith": "glTF Transform / meshopt"
+  },
+  "rocky": {
+    "source": "User-supplied Rocky/Rocky-Rigged.glb",
+    "jointCount": 21,
+    "animationCount": 8,
+    "servedAsset": "/assets/rocky-original-rigged.glb",
+    "preparation": "Byte-for-byte copy; original geometry, textures, materials, skin and animations",
+    "sha256": "1a16a1c552c48bbdd31d87863097a897bee011986b0d1e3d2c41483a6c03f976",
+    "bytes": 79615072,
+    "vertices": 866045,
+    "textureSize": [
+      2048,
+      2048
+    ]
+  }
+}

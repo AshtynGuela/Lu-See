@@ -1,0 +1,46 @@
+{
+  "products": [
+    {
+      "product": "ldem_128",
+      "url": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/cylindrical/img/ldem_128.img",
+      "labelUrl": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/cylindrical/img/ldem_128.lbl",
+      "sha256": "0e4fea9b863e3255f58de15ccbd2bb8b1e248cb09217fd55d23ed37489f764b4",
+      "rows": 23040,
+      "cols": 46080,
+      "scale": 0.5,
+      "mapScaleM": 236.901,
+      "retrievedUtc": "2026-11-12T16:48:05Z",
+      "httpEtag": "\"fd324c812827d31:0\"",
+      "httpLastModified": "Wed, 06 Sep 2017 15:55:04 GMT"
+    },
+    {
+      "product": "ldem_80s_20m",
+      "url": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/polar/img/ldem_80s_20m.img",
+      "labelUrl": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/polar/img/ldem_80s_20m.lbl",
+      "sha256": "db44c3b2444acff1af528301c8a6988934b490249aceff0ac55668bdf3eab365",
+      "rows": 30400,
+      "cols": 30400,
+      "scale": 0.5,
+      "mapScaleM": 20.0,
+      "retrievedUtc": "2026-11-12T17:13:56Z",
+      "httpEtag": "\"0cae2605ef6d21:0\"",
+      "httpLastModified": "Thu, 06 Jul 2017 13:47:16 GMT"
+    }
+  ],
+  "siteIds": [
+    "im1",
+    "shackleton",
+    "apollo11",
+    "apollo12",
+    "apollo14",
+    "apollo15",
+    "apollo16",
+    "apollo17",
+    "blueghost1",
+    "im2",
+    "chandrayaan3",
+    "slim",
+    "change6",
+    "change4"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "testedUtc": "2026-11-13T13:44:29.501Z",
+  "realApi": true,
+  "rockyRenderingExcluded": true,
+  "emptyRange": {
+    "start": 1742403600000,
+    "end": 1743008400000
+  },
+  "continuedFrom": 1743012000000,
+  "nextWindow": {
+    "start": 1743660000000,
+    "end": 1744750800000,
+    "first": {
+      "time": 1743660000000,
+      "sunlitPct": 83.33333333333333,
+      "earthDtePct": 100,
+      "longestDarkH": 12
+    },
+    "best": {
+      "time": 1743703200000,
+      "sunlitPct": 100,
+      "earthDtePct": 100,
+      "longestDarkH": 0
+    },
+    "count": 304
+  },
+  "saved": {
+    "id": "A",
+    "siteId": "apollo11",
+    "epoch": "2025-04-03T06:00:00.000Z",
+    "durationDays": 3,
+    "arrayMode": "horizontal",
+    "arrayAzimuth": 0,
+    "profile": {
+      "minSunlitPct": 80,
+      "maxDarknessHours": 12,
+      "minEarthDtePct": 60
+    },
+    "flightProfile": "im-1"
+  },
+  "mobile": true,
+  "errors": []
+}

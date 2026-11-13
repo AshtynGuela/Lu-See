@@ -1,0 +1,48 @@
+{
+  "earth_visibility": {
+    "product": "AVGVISIB_85S_060M_201608_EARTH",
+    "url": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/extras/illumination/img/avgvisib_85s_060m_201608_earth.img",
+    "labelUrl": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/extras/illumination/img/avgvisib_85s_060m_201608_earth.lbl",
+    "sourcePage": "https://pgda.gsfc.nasa.gov/products/69",
+    "sha256": "0958313069d6039b2474c875ff662f28dbcba2bd853d9ea458aa807b7948c11f",
+    "resolutionM": 60.0,
+    "displayResolutionM": 240.0,
+    "boundsM": [
+      -151740.0,
+      -151740.0,
+      151740.0,
+      151740.0
+    ],
+    "legend": {
+      "min": 0,
+      "max": 100,
+      "unit": "%",
+      "low": "#132430",
+      "high": "#89c9ea"
+    },
+    "note": "Precomputed long-term average, not the selected clock or mission interval. Source definition counts visibility of any part of the disc. DE421 ME/PA source frame. Numerical mission metrics use live Horizons and local terrain instead of raster colours."
+  },
+  "illumination": {
+    "product": "AVGVISIB_85S_060M_201608",
+    "url": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/extras/illumination/img/avgvisib_85s_060m_201608.img",
+    "labelUrl": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/extras/illumination/img/avgvisib_85s_060m_201608.lbl",
+    "sourcePage": "https://pgda.gsfc.nasa.gov/products/69",
+    "sha256": "82dadf321dee28f1947c1fed81858d4cf50fe8eb2aa405aae114e8ab21c1efe1",
+    "resolutionM": 60.0,
+    "displayResolutionM": 240.0,
+    "boundsM": [
+      -151740.0,
+      -151740.0,
+      151740.0,
+      151740.0
+    ],
+    "legend": {
+      "min": 0,
+      "max": 100,
+      "unit": "%",
+      "low": "#132430",
+      "high": "#f1cf74"
+    },
+    "note": "Precomputed long-term average, not the selected clock or mission interval. Source definition counts visibility of any part of the disc. DE421 ME/PA source frame. Numerical mission metrics use live Horizons and local terrain instead of raster colours."
+  }
+}

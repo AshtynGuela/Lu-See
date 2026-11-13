@@ -1,0 +1,112 @@
+{
+  "validatedUtc": "2026-11-13T00:12:16.964Z",
+  "site": {
+    "id": "apollo11",
+    "name": "Apollo 11",
+    "region": "Mare Tranquillitatis",
+    "family": "apollo",
+    "lat": 0.67416,
+    "lon": 23.47314,
+    "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+    "description": "Lunar Module coordinates from LRO imagery, ME/PA DE421 reference."
+  },
+  "checks": [
+    {
+      "utc": "2025-03-14T02:00:00.000Z",
+      "expected": "none",
+      "observed": "none",
+      "sunElDeg": 71.837728295,
+      "solarDiscBlockedFraction": 0,
+      "solarDiscVisibleFraction": 1,
+      "trackingPowerIndex": 1.00641783264889
+    },
+    {
+      "utc": "2025-03-14T07:00:00.000Z",
+      "expected": "total",
+      "observed": "total",
+      "sunElDeg": 69.308420922,
+      "solarDiscBlockedFraction": 1,
+      "solarDiscVisibleFraction": 0,
+      "trackingPowerIndex": 0
+    },
+    {
+      "utc": "2025-03-14T12:00:00.000Z",
+      "expected": "none",
+      "observed": "none",
+      "sunElDeg": 66.778601045,
+      "solarDiscBlockedFraction": 0,
+      "solarDiscVisibleFraction": 1,
+      "trackingPowerIndex": 1.0061769718150027
+    }
+  ],
+  "metrics": {
+    "start": 1741910400000,
+    "end": 1741996800000,
+    "sunlitPct": 84.72222222222221,
+    "earthVisiblePct": 100,
+    "earthDtePct": 100,
+    "longestDarkH": 3.6666666666666665,
+    "longestSunlitH": 15,
+    "meanPowerIndex": 0.7792424726021024,
+    "eclipseHours": 5,
+    "events": [],
+    "stepMinutes": 10
+  },
+  "reference": {
+    "url": "https://science.nasa.gov/solar-system/moon/what-you-need-to-know-about-the-march-2025-total-lunar-eclipse/",
+    "totalityWholeMoonUtc": [
+      "2025-03-14T06:26:00Z",
+      "2025-03-14T07:31:00Z"
+    ]
+  },
+  "scope": "Actual JPL topocentric observer geometry at a curated Apollo 11 point. Broad state checks well inside/outside NASA's documented March 2025 eclipse; not a contact-time validation. Local site occultation times differ from whole-Moon contacts. Atmospheric shadow enlargement, refraction/scattering, solar limb darkening and ellipsoidal Earth limb excluded.",
+  "sources": [
+    {
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%2710%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2723.47314%2C0.67416%2C-1.932901%27&START_TIME=%272025-03-14+00%3A00%3A00%27&STOP_TIME=%272025-03-15+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "version": "1.2",
+        "source": "NASA/JPL Horizons API"
+      },
+      "sha256": "e3abf2fd33b06c716f4376af75c47fe4614144a596137bfd2764b7970fe71f76",
+      "retrievedUtc": "2026-11-13T00:12:16.631Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": -1932.901,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "74c8cd4a1e4481827e2110960ab33bdcc357d82eb0497f9fed4d522d07247592.txt"
+    },
+    {
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27399%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2723.47314%2C0.67416%2C-1.932901%27&START_TIME=%272025-03-14+00%3A00%3A00%27&STOP_TIME=%272025-03-15+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "version": "1.2",
+        "source": "NASA/JPL Horizons API"
+      },
+      "sha256": "2fce752471fe5674f89945e7064011b72ebb7dc819a9616324996a6c12826122",
+      "retrievedUtc": "2026-11-13T00:12:16.927Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": -1932.901,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "8619aa3efe48c0030aecb791ed6ef5c3dd6f611c05c8bfe03ced60616c80d8ff.txt"
+    }
+  ],
+  "terrainSources": [
+    {
+      "product": "ldem_128",
+      "url": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/cylindrical/img/ldem_128.img",
+      "labelUrl": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/cylindrical/img/ldem_128.lbl",
+      "sha256": "0e4fea9b863e3255f58de15ccbd2bb8b1e248cb09217fd55d23ed37489f764b4",
+      "rows": 23040,
+      "cols": 46080,
+      "scale": 0.5,
+      "mapScaleM": 236.901,
+      "retrievedUtc": "2026-11-12T16:48:05Z"
+    }
+  ]
+}

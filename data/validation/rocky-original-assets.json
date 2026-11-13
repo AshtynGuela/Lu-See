@@ -1,0 +1,22 @@
+{
+  "sourceMesh": "Rocky/26_11_12_09_31_03_057.glb",
+  "riggedSource": "Rocky/Rocky-Rigged.glb",
+  "servedAsset": "/assets/rocky-original-rigged.glb",
+  "bytes": 79615072,
+  "sha256": "1a16a1c552c48bbdd31d87863097a897bee011986b0d1e3d2c41483a6c03f976",
+  "byteIdenticalToRiggedSource": true,
+  "allOriginalTexturesIdentical": true,
+  "originalMaterialsIdentical": true,
+  "textureCount": 18,
+  "vertices": 866045,
+  "animations": [
+    "Attentive",
+    "Question",
+    "JazzHands",
+    "RockyDance",
+    "ClawGrip",
+    "Scuttle",
+    "FistBump",
+    "Celebration"
+  ]
+}

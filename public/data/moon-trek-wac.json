@@ -1,0 +1,12 @@
+{
+  "name": "LRO LROC WAC global mosaic v2",
+  "service": "NASA/JPL Moon Trek WMTS",
+  "urlTemplate": "https://trek.nasa.gov/tiles/Moon/EQ/LRO_WAC_Mosaic_Global_303ppd_v02/1.0.0/default/default028mm/2/{row}/{column}.jpg",
+  "extent": [
+    -180,
+    -90,
+    180,
+    90
+  ],
+  "sha256": "690b881580b739e5969edb2858195e01eebaef7daa9e974c7fa40ab19ba5c1cf"
+}

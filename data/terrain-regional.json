@@ -1,0 +1,16 @@
+[
+  {
+    "product": "site04",
+    "name": "Shackleton rim adjusted LOLA",
+    "url": "https://pgda.gsfc.nasa.gov/data/LOLA_5mpp/Site04/Site04_final_adj_5mpp_surf.tif",
+    "sourceSha256": "38ff70dbdf2f066c2cfa94a646c3a59d653ce7f6b4528b15fc1b43ee397ce758",
+    "sha256": "0c306bb12bdc4d1bc81980c7a6b0833f6d2795c950eb87b7c23297715cbce227",
+    "rows": 3200,
+    "cols": 3200,
+    "mapScaleM": 5.0,
+    "westM": -9000.0,
+    "northM": 1000.0,
+    "byteLength": 40980806,
+    "httpEtag": "W/\"2715146-17285c863d0\""
+  }
+]

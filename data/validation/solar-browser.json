@@ -1,0 +1,13 @@
+{
+  "testedUtc": "2026-11-13T01:16:03.055Z",
+  "sunVisible": true,
+  "planetsLoaded": 8,
+  "focusedSaturn": true,
+  "physicalScalePreservesDistance": true,
+  "lunarHandoff": true,
+  "overflow": {
+    "width": 390,
+    "scrollWidth": 390
+  },
+  "errors": []
+}

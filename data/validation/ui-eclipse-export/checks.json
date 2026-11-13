@@ -1,0 +1,19 @@
+{
+  "testedUtc": "2026-11-13T01:17:36.109Z",
+  "realApi": true,
+  "eclipseState": true,
+  "zeroDirectPowerInTotality": true,
+  "missionTimeBasisPreserved": true,
+  "csvAndJsonDownloaded": true,
+  "modesPreserveReadings": true,
+  "globeShadow": {
+    "daylightLuminance": 141.3636875,
+    "partialLuminance": 96.1182,
+    "eclipseLuminance": 0
+  },
+  "overflow": {
+    "width": 390,
+    "scrollWidth": 390
+  },
+  "errors": []
+}

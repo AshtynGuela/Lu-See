@@ -1,0 +1,166 @@
+{
+  "validatedUtc": "2026-11-12T18:28:37.099Z",
+  "method": "Direct off-grid JPL Horizons observer tables vs local normalized unit-vector direction interpolation; two sites/dates, not the full acceptance matrix.",
+  "results": [
+    {
+      "site": "apollo11",
+      "body": "sun",
+      "count": 206,
+      "maxDirectionErrorDeg": 3.5800026242583576e-7,
+      "coarse": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%2710%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2723.47314%2C0.67416%2C0%27&START_TIME=%271969-07-20+00%3A00%3A00%27&STOP_TIME=%271969-07-21+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+        "apiSignature": {
+          "source": "NASA/JPL Horizons API",
+          "version": "1.2"
+        },
+        "sha256": "bf89aa0c2ad1dc3888fef2283ed721252d0daebc5ff274c2bc141e72f73c4101",
+        "retrievedUtc": "2026-11-12T16:31:18.779Z",
+        "frame": "MEAN_ME (high precision)",
+        "model": "DE441",
+        "refraction": "AIRLESS",
+        "step": "10m",
+        "observerAltitudeM": 0,
+        "timeSystem": "UTC (Horizons UT output after 1962)",
+        "rawFile": "253dcef099b903a1a50a2ef5b99d3ae24904bd32dbe520856bd21e65e65e8950.txt"
+      },
+      "reference": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%2710%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2723.47314%2C0.67416%2C0%27&START_TIME=%271969-07-20+00%3A00%3A00%27&STOP_TIME=%271969-07-21+00%3A00%3A00%27&STEP_SIZE=%277m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+        "apiSignature": {
+          "source": "NASA/JPL Horizons API",
+          "version": "1.2"
+        },
+        "sha256": "51cca7f680b7149127aa8a068c016facada668468232bb626de3e935f68443bc",
+        "retrievedUtc": "2026-11-12T16:31:20.226Z",
+        "frame": "MEAN_ME (high precision)",
+        "model": "DE441",
+        "refraction": "AIRLESS",
+        "step": "7m",
+        "observerAltitudeM": 0,
+        "timeSystem": "UTC (Horizons UT output after 1962)",
+        "rawFile": "a937ab246f5e6f7efe80859dcc6bd663223f369fc13611cfddd7d2e01f7757bc.txt"
+      }
+    },
+    {
+      "site": "apollo11",
+      "body": "earth",
+      "count": 206,
+      "maxDirectionErrorDeg": 0.000002021446601224462,
+      "coarse": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27399%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2723.47314%2C0.67416%2C0%27&START_TIME=%271969-07-20+00%3A00%3A00%27&STOP_TIME=%271969-07-21+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+        "apiSignature": {
+          "version": "1.2",
+          "source": "NASA/JPL Horizons API"
+        },
+        "sha256": "45b171f71627ba678c362ae77b55d237bdbd2a0aaf509606ef5d24c6fb127ed4",
+        "retrievedUtc": "2026-11-12T16:31:20.830Z",
+        "frame": "MEAN_ME (high precision)",
+        "model": "DE441",
+        "refraction": "AIRLESS",
+        "step": "10m",
+        "observerAltitudeM": 0,
+        "timeSystem": "UTC (Horizons UT output after 1962)",
+        "rawFile": "d48bb5f3dfaffe49f79f2420a9734847268630776cad8fee3efa7c71f48ac844.txt"
+      },
+      "reference": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27399%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2723.47314%2C0.67416%2C0%27&START_TIME=%271969-07-20+00%3A00%3A00%27&STOP_TIME=%271969-07-21+00%3A00%3A00%27&STEP_SIZE=%277m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+        "apiSignature": {
+          "source": "NASA/JPL Horizons API",
+          "version": "1.2"
+        },
+        "sha256": "5d3f05b0bc52e87f68e4530522736b8d40770f2cc83ea84268b91efe98389f38",
+        "retrievedUtc": "2026-11-12T16:31:21.692Z",
+        "frame": "MEAN_ME (high precision)",
+        "model": "DE441",
+        "refraction": "AIRLESS",
+        "step": "7m",
+        "observerAltitudeM": 0,
+        "timeSystem": "UTC (Horizons UT output after 1962)",
+        "rawFile": "ded2f26bcb5a50790a606040ffcf7469262aa71192e717d69f106aca669a9bde.txt"
+      }
+    },
+    {
+      "site": "im1",
+      "body": "sun",
+      "count": 206,
+      "maxDirectionErrorDeg": 4.1924260287976103e-7,
+      "coarse": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%2710%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%271.44%2C-80.13%2C0%27&START_TIME=%272026-11-13+00%3A00%3A00%27&STOP_TIME=%272026-11-14+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+        "apiSignature": {
+          "source": "NASA/JPL Horizons API",
+          "version": "1.2"
+        },
+        "sha256": "97feddd399162b79abb6de94bd7a7435f7c23897034fd614793b3f50f426b7b3",
+        "retrievedUtc": "2026-11-12T16:31:22.469Z",
+        "frame": "MEAN_ME (high precision)",
+        "model": "DE441",
+        "refraction": "AIRLESS",
+        "step": "10m",
+        "observerAltitudeM": 0,
+        "timeSystem": "UTC (Horizons UT output after 1962)",
+        "rawFile": "addb6638ee37d9c3c396b728508df6509e573ddb59adeade6277733f48dbe070.txt"
+      },
+      "reference": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%2710%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%271.44%2C-80.13%2C0%27&START_TIME=%272026-11-13+00%3A00%3A00%27&STOP_TIME=%272026-11-14+00%3A00%3A00%27&STEP_SIZE=%277m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+        "apiSignature": {
+          "source": "NASA/JPL Horizons API",
+          "version": "1.2"
+        },
+        "sha256": "1c6b9201cf910b29add8311184835856bccc5fe74fc8659f2a5efb1dc863a648",
+        "retrievedUtc": "2026-11-12T16:31:23.782Z",
+        "frame": "MEAN_ME (high precision)",
+        "model": "DE441",
+        "refraction": "AIRLESS",
+        "step": "7m",
+        "observerAltitudeM": 0,
+        "timeSystem": "UTC (Horizons UT output after 1962)",
+        "rawFile": "02d2bbf0471306572dca84f12415d7c5ccb4da9d93788f13652492c90eb65eb2.txt"
+      }
+    },
+    {
+      "site": "im1",
+      "body": "earth",
+      "count": 206,
+      "maxDirectionErrorDeg": 0.0000014645924183485485,
+      "coarse": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27399%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%271.44%2C-80.13%2C0%27&START_TIME=%272026-11-13+00%3A00%3A00%27&STOP_TIME=%272026-11-14+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+        "apiSignature": {
+          "source": "NASA/JPL Horizons API",
+          "version": "1.2"
+        },
+        "sha256": "0685ac46464f76e9dff683fb289d4ddefc4c0d306042e1615b959374a7670ebc",
+        "retrievedUtc": "2026-11-12T16:31:25.409Z",
+        "frame": "MEAN_ME (high precision)",
+        "model": "DE441",
+        "refraction": "AIRLESS",
+        "step": "10m",
+        "observerAltitudeM": 0,
+        "timeSystem": "UTC (Horizons UT output after 1962)",
+        "rawFile": "31a4ecf222b607c5e926afb976438ef3fb7aeef0d8367bd0f2276b68bf3e1873.txt"
+      },
+      "reference": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27399%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%271.44%2C-80.13%2C0%27&START_TIME=%272026-11-13+00%3A00%3A00%27&STOP_TIME=%272026-11-14+00%3A00%3A00%27&STEP_SIZE=%277m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+        "apiSignature": {
+          "version": "1.2",
+          "source": "NASA/JPL Horizons API"
+        },
+        "sha256": "706f9df9bec35ee59bbf238134df6011bda8bf2c884a0f0ef37bfcbc32d59548",
+        "retrievedUtc": "2026-11-12T16:31:27.865Z",
+        "frame": "MEAN_ME (high precision)",
+        "model": "DE441",
+        "refraction": "AIRLESS",
+        "step": "7m",
+        "observerAltitudeM": 0,
+        "timeSystem": "UTC (Horizons UT output after 1962)",
+        "rawFile": "5cbb608041016b212765eafeb58c5514ff8027c54481b5c1859faae2eab904ab.txt"
+      }
+    }
+  ]
+}

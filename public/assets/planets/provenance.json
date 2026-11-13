@@ -1,0 +1,46 @@
+{
+  "source": "Owner-supplied NASA models in ../SolarSystem; rendering assets, not ephemerides",
+  "physicalSource": "https://ssd.jpl.nasa.gov/planets/phys_par.html",
+  "bodies": {
+    "mercury": {
+      "source": "Mercury_1_4878.glb",
+      "bytes": 217124,
+      "optimizedWith": "glTF Transform 4.4.0 / meshopt"
+    },
+    "venus": {
+      "source": "Venussurface_1_12103.glb",
+      "bytes": 382936,
+      "optimizedWith": "glTF Transform 4.4.0 / meshopt"
+    },
+    "earth": {
+      "source": "Earth_1_12756.glb",
+      "bytes": 1106380,
+      "optimizedWith": "glTF Transform 4.4.0 / meshopt"
+    },
+    "mars": {
+      "source": "24881_Mars_1_6792.glb",
+      "bytes": 296348,
+      "optimizedWith": "glTF Transform 4.4.0 / meshopt"
+    },
+    "jupiter": {
+      "source": "Jupiter_1_142984.glb",
+      "bytes": 208148,
+      "optimizedWith": "glTF Transform 4.4.0 / meshopt"
+    },
+    "saturn": {
+      "source": "Saturn_1_120536.glb",
+      "bytes": 160696,
+      "optimizedWith": "glTF Transform 4.4.0 / meshopt"
+    },
+    "uranus": {
+      "source": "Uranus_1_51118.glb",
+      "bytes": 64260,
+      "optimizedWith": "glTF Transform 4.4.0 / meshopt"
+    },
+    "neptune": {
+      "source": "Neptune_1_49528.glb",
+      "bytes": 202008,
+      "optimizedWith": "glTF Transform 4.4.0 / meshopt"
+    }
+  }
+}

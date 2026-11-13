@@ -1,0 +1,130 @@
+{
+  "maskChecks": [
+    {
+      "site": "apollo11",
+      "elevationM": -1934.901,
+      "minHorizonDeg": 0.042,
+      "maxHorizonDeg": 1.78274,
+      "resolutionM": 236.901
+    },
+    {
+      "site": "apollo12",
+      "elevationM": -1424.384,
+      "minHorizonDeg": -0.57232,
+      "maxHorizonDeg": 0.48629,
+      "resolutionM": 236.901
+    },
+    {
+      "site": "apollo14",
+      "elevationM": -1061.913,
+      "minHorizonDeg": 0.07989,
+      "maxHorizonDeg": 3.97419,
+      "resolutionM": 236.901
+    },
+    {
+      "site": "apollo15",
+      "elevationM": -1925.189,
+      "minHorizonDeg": 0.38154,
+      "maxHorizonDeg": 13.52582,
+      "resolutionM": 236.901
+    },
+    {
+      "site": "apollo16",
+      "elevationM": 10.364,
+      "minHorizonDeg": -0.0399,
+      "maxHorizonDeg": 5.39949,
+      "resolutionM": 236.901
+    },
+    {
+      "site": "apollo17",
+      "elevationM": -2628.737,
+      "minHorizonDeg": 0.28734,
+      "maxHorizonDeg": 14.17266,
+      "resolutionM": 236.901
+    },
+    {
+      "site": "blueghost1",
+      "elevationM": -3650.296,
+      "minHorizonDeg": -0.29698,
+      "maxHorizonDeg": 2.2265,
+      "resolutionM": 236.901
+    },
+    {
+      "site": "chandrayaan3",
+      "elevationM": 529.988,
+      "minHorizonDeg": 0.44191,
+      "maxHorizonDeg": 2.4568,
+      "resolutionM": 236.901
+    },
+    {
+      "site": "change4",
+      "elevationM": -5930.431,
+      "minHorizonDeg": -0.01653,
+      "maxHorizonDeg": 2.99194,
+      "resolutionM": 236.901
+    },
+    {
+      "site": "change6",
+      "elevationM": -5253.258,
+      "minHorizonDeg": -0.1392,
+      "maxHorizonDeg": 3.33566,
+      "resolutionM": 236.901
+    },
+    {
+      "site": "im1",
+      "elevationM": 2594.43,
+      "minHorizonDeg": -0.24961,
+      "maxHorizonDeg": 10.9309,
+      "resolutionM": 20.0
+    },
+    {
+      "site": "im2",
+      "elevationM": 5321.88,
+      "minHorizonDeg": -1.47049,
+      "maxHorizonDeg": 4.06309,
+      "resolutionM": 20.0
+    },
+    {
+      "site": "shackleton",
+      "elevationM": -2788.691,
+      "minHorizonDeg": 19.77048,
+      "maxHorizonDeg": 23.5722,
+      "resolutionM": 20.0
+    },
+    {
+      "site": "slim",
+      "elevationM": -916.695,
+      "minHorizonDeg": 0.49347,
+      "maxHorizonDeg": 9.69477,
+      "resolutionM": 236.901
+    }
+  ],
+  "publishedHeightChecks": [
+    {
+      "site": "im1",
+      "demHeightM": 2594.43,
+      "publishedHeightM": 2579,
+      "deltaM": 15.429999999999836,
+      "toleranceM": 80,
+      "source": "https://www.nasa.gov/missions/lro/nasas-lro-images-intuitive-machines-odysseus-lander/"
+    },
+    {
+      "site": "chandrayaan3",
+      "demHeightM": 529.988,
+      "publishedHeightM": 529.2,
+      "deltaM": 0.7880000000000109,
+      "toleranceM": 100,
+      "source": "https://www.nasa.gov/wp-content/uploads/2026/02/42-240a.pdf"
+    },
+    {
+      "site": "change6",
+      "demHeightM": -5253.258,
+      "publishedHeightM": -5256,
+      "deltaM": 2.742000000000189,
+      "toleranceM": 100,
+      "source": "https://www.nasa.gov/centers-and-facilities/goddard/nasas-lro-spots-chinas-change-6-spacecraft-on-lunar-far-side/"
+    }
+  ],
+  "flatSphereLimbTest": true,
+  "limitations": "Sanity checks and three published height spot checks, not independent validation of every horizon ray against QuickMap or a mission-grade model."
+}

@@ -1,0 +1,142 @@
+[
+  {
+    "id": "im1",
+    "name": "Odysseus · IM-1",
+    "region": "Malapert A",
+    "family": "clps",
+    "lat": -80.13,
+    "lon": 1.44,
+    "source": "https://www.nasa.gov/missions/lro/nasas-lro-images-intuitive-machines-odysseus-lander/",
+    "description": "NASA LRO-imaged CLPS landing site. Published coordinates rounded to 0.01°."
+  },
+  {
+    "id": "shackleton",
+    "name": "Shackleton crater",
+    "region": "South polar region",
+    "family": "polar",
+    "lat": -89.67,
+    "lon": 129.78,
+    "source": "https://planetarynames.wr.usgs.gov/Feature/5450",
+    "description": "IAU/USGS named-feature centre, not a certified landing site or a rim location."
+  },
+  {
+    "id": "apollo11",
+    "name": "Apollo 11",
+    "region": "Mare Tranquillitatis",
+    "family": "apollo",
+    "lat": 0.67416,
+    "lon": 23.47314,
+    "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+    "description": "Lunar Module coordinates from LRO imagery, ME/PA DE421 reference."
+  },
+  {
+    "id": "apollo12",
+    "name": "Apollo 12",
+    "region": "Oceanus Procellarum",
+    "family": "apollo",
+    "lat": -3.0128,
+    "lon": -23.4219,
+    "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+    "description": "Lunar Module coordinates from LRO imagery, ME/PA DE421 reference."
+  },
+  {
+    "id": "apollo14",
+    "name": "Apollo 14",
+    "region": "Fra Mauro",
+    "family": "apollo",
+    "lat": -3.64589,
+    "lon": -17.47194,
+    "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+    "description": "Lunar Module coordinates from LRO imagery, ME/PA DE421 reference."
+  },
+  {
+    "id": "apollo15",
+    "name": "Apollo 15",
+    "region": "Hadley–Apennine",
+    "family": "apollo",
+    "lat": 26.13239,
+    "lon": 3.6333,
+    "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+    "description": "Lunar Module coordinates from LRO imagery, ME/PA DE421 reference."
+  },
+  {
+    "id": "apollo16",
+    "name": "Apollo 16",
+    "region": "Descartes Highlands",
+    "family": "apollo",
+    "lat": -8.9734,
+    "lon": 15.5011,
+    "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+    "description": "Lunar Module coordinates from LRO imagery, ME/PA DE421 reference."
+  },
+  {
+    "id": "apollo17",
+    "name": "Apollo 17",
+    "region": "Taurus–Littrow",
+    "family": "apollo",
+    "lat": 20.1911,
+    "lon": 30.7723,
+    "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+    "description": "Lunar Module coordinates from LRO imagery, ME/PA DE421 reference."
+  },
+  {
+    "id": "blueghost1",
+    "name": "Blue Ghost 1",
+    "region": "Mare Crisium",
+    "family": "clps",
+    "lat": 18.562,
+    "lon": 61.81,
+    "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html",
+    "description": "Landing coordinates from NASA NSSDCA’s lunar spacecraft catalogue. Published coordinate precision and frame realisation limit site accuracy."
+  },
+  {
+    "id": "im2",
+    "name": "Athena · IM-2",
+    "region": "South polar region",
+    "family": "clps",
+    "lat": -84.7906,
+    "lon": 29.1957,
+    "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html",
+    "description": "Landing coordinates from NASA NSSDCA’s lunar spacecraft catalogue. Published coordinate precision and frame realisation limit site accuracy."
+  },
+  {
+    "id": "chandrayaan3",
+    "name": "Chandrayaan-3",
+    "region": "Shiv Shakti region",
+    "family": "international",
+    "lat": -69.3741,
+    "lon": 32.32,
+    "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html",
+    "description": "Landing coordinates from NASA NSSDCA’s lunar spacecraft catalogue. Published coordinate precision and frame realisation limit site accuracy."
+  },
+  {
+    "id": "slim",
+    "name": "SLIM",
+    "region": "Shioli crater vicinity",
+    "family": "international",
+    "lat": -13.316,
+    "lon": 25.251,
+    "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html",
+    "description": "Landing coordinates from NASA NSSDCA’s lunar spacecraft catalogue. Published coordinate precision and frame realisation limit site accuracy."
+  },
+  {
+    "id": "change6",
+    "name": "Chang’e 6",
+    "region": "Apollo basin · far side",
+    "family": "international",
+    "lat": -41.6385,
+    "lon": -153.9852,
+    "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html",
+    "description": "Landing coordinates from NASA NSSDCA’s lunar spacecraft catalogue. Published coordinate precision and frame realisation limit site accuracy."
+  },
+  {
+    "id": "change4",
+    "name": "Chang’e 4",
+    "region": "Von Kármán crater · far side",
+    "family": "international",
+    "lat": -45.4561,
+    "lon": 177.5885,
+    "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html",
+    "description": "LRO-derived lander coordinates in NASA NSSDCA. Far-side Earth visibility requires particular attention; no relay network is modelled."
+  }
+]

@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 2,
+  "application": "Very Best Lunar Site Scouter",
+  "engineVersion": "0.2.0",
+  "exportedUtc": "2026-11-13T01:17:29.525Z",
+  "challenge": "https://www.spaceappschallenge.org/2026/challenges/lunar-landing-site-navigator/",
+  "site": {
+    "id": "apollo11",
+    "name": "Apollo 11",
+    "region": "Mare Tranquillitatis",
+    "family": "apollo",
+    "lat": 0.67416,
+    "lon": 23.47314,
+    "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+    "description": "Lunar Module coordinates from LRO imagery, ME/PA DE421 reference.",
+    "terrainReady": true,
+    "resolutionM": 236.901,
+    "elevationM": -1934.901
+  },
+  "settings": {
+    "mastM": 2,
+    "minAntennaEl": 5,
+    "timeScale": "UTC"
+  },
+  "current": {
+    "epochUtc": "2025-03-14T12:00:00.000Z",
+    "arrayMode": "horizontal",
+    "observer": {
+      "lat": 0.67416,
+      "lon": 23.47314,
+      "elevationM": -1934.901,
+      "mastM": 2,
+      "terrainApplied": true
+    },
+    "values": {
+      "time": 1741953600000,
+      "sun": {
+        "az": 268.224472742,
+        "el": 66.778601045,
+        "radius": 0.2672747222222222,
+        "distanceKm": 149137969.28974107,
+        "horizon": 1.1352287608715188,
+        "terrainVisibleFraction": 1,
+        "eclipse": {
+          "state": "none",
+          "blockedFraction": 0,
+          "transmission": 1,
+          "separationDeg": 2.2540040673589257
+        },
+        "visibleFraction": 1,
+        "visible": true
+      },
+      "earth": {
+        "az": 267.955704103,
+        "el": 69.030342336,
+        "radius": 0.9128505555555556,
+        "distanceKm": 400345.6621329572,
+        "horizon": 1.1068591945829613,
+        "visible": true,
+        "dte": true
+      },
+      "powerIndex": 0.9246647087236913,
+      "terrain": true
+    },
+    "sourceIds": [
+      "42e44e40520f1695159286134541f61660a0c34d6ee1fb2219f75203948c2fba",
+      "c0831107682a15ffee891ba3a8e8943897bd2e045148cdfaf51c8b8aa644eeba"
+    ]
+  },
+  "mission": {
+    "scenario": {
+      "id": "A",
+      "siteId": "apollo11",
+      "epoch": "2025-03-14T00:00:00.000Z",
+      "durationDays": 1,
+      "arrayMode": "tracking",
+      "arrayAzimuth": 0
+    },
+    "startUtc": "2025-03-14T00:00:00.000Z",
+    "endUtc": "2025-03-15T00:00:00.000Z",
+    "observer": {
+      "lat": 0.67416,
+      "lon": 23.47314,
+      "elevationM": -1934.901,
+      "mastM": 2,
+      "terrainApplied": true
+    },
+    "metrics": {
+      "start": 1741910400000,
+      "end": 1741996800000,
+      "sunlitPct": 84.72222222222221,
+      "earthVisiblePct": 100,
+      "earthDtePct": 100,
+      "longestDarkH": 3.6666666666666665,
+      "longestSunlitH": 15,
+      "meanPowerIndex": 0.8524818814264561,
+      "eclipseHours": 5,
+      "events": [],
+      "stepMinutes": 10
+    },
+    "eventScope": "within mission interval",
+    "sourceIds": [
+      "42e44e40520f1695159286134541f61660a0c34d6ee1fb2219f75203948c2fba",
+      "c0831107682a15ffee891ba3a8e8943897bd2e045148cdfaf51c8b8aa644eeba"
+    ]
+  },
+  "terrain": {
+    "included": true,
+    "resolutionM": 236.901,
+    "elevationM": -1934.901,
+    "note": "Bilinear LOLA heights; 0.5 degree rays to 150 km; unresolved small obstacles and between-ray ridges can be missed. Apollo coordinates published in DE421 ME/PA; Horizons currently uses high-precision MEAN_ME.",
+    "sources": [
+      {
+        "product": "ldem_128",
+        "url": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/cylindrical/img/ldem_128.img",
+        "labelUrl": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/cylindrical/img/ldem_128.lbl",
+        "sha256": "0e4fea9b863e3255f58de15ccbd2bb8b1e248cb09217fd55d23ed37489f764b4",
+        "rows": 23040,
+        "cols": 46080,
+        "scale": 0.5,
+        "mapScaleM": 236.901,
+        "retrievedUtc": "2026-11-12T16:48:05Z"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%2710%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2723.47314%2C0.67416%2C-1.932901%27&START_TIME=%272025-03-14+00%3A00%3A00%27&STOP_TIME=%272025-04-16+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "source": "NASA/JPL Horizons API",
+        "version": "1.2"
+      },
+      "sha256": "42e44e40520f1695159286134541f61660a0c34d6ee1fb2219f75203948c2fba",
+      "retrievedUtc": "2026-11-13T00:17:03.145Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": -1932.901,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "6d4f9bd77f94cfba58d802bbc08f85bb535b5576d51535abcb2e91e77cfc97ab.txt"
+    },
+    {
+      "name": "NASA/JPL Horizons",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27399%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2723.47314%2C0.67416%2C-1.932901%27&START_TIME=%272025-03-14+00%3A00%3A00%27&STOP_TIME=%272025-04-16+00%3A00%3A00%27&STEP_SIZE=%2710m%27&QUANTITIES=%274%2C13%2C20%27&CSV_FORMAT=%27YES%27&EXTRA_PREC=%27YES%27&OBJ_DATA=%27NO%27&APPARENT=%27AIRLESS%27&TIME_DIGITS=%27SECONDS%27&CAL_FORMAT=%27CAL%27",
+      "apiSignature": {
+        "version": "1.2",
+        "source": "NASA/JPL Horizons API"
+      },
+      "sha256": "c0831107682a15ffee891ba3a8e8943897bd2e045148cdfaf51c8b8aa644eeba",
+      "retrievedUtc": "2026-11-13T00:17:05.163Z",
+      "frame": "MEAN_ME (high precision)",
+      "model": "DE441",
+      "refraction": "AIRLESS",
+      "step": "10m",
+      "observerAltitudeM": -1932.901,
+      "timeSystem": "UTC (Horizons UT output after 1962)",
+      "rawFile": "dcc17ae8ec10fffae5b30cf85c33a3011869c001aed0cf173e6406bc2f7ffcf5.txt"
+    },
+    {
+      "product": "ldem_128",
+      "url": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/cylindrical/img/ldem_128.img",
+      "labelUrl": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/cylindrical/img/ldem_128.lbl",
+      "sha256": "0e4fea9b863e3255f58de15ccbd2bb8b1e248cb09217fd55d23ed37489f764b4",
+      "rows": 23040,
+      "cols": 46080,
+      "scale": 0.5,
+      "mapScaleM": 236.901,
+      "retrievedUtc": "2026-11-12T16:48:05Z"
+    }
+  ],
+  "assumptions": [
+    "Early screening; confirm results with independent mission tools.",
+    "Sun/Earth directions and angular sizes: actual topocentric airless JPL Horizons observer data; normalized unit-vector interpolation, no extrapolation.",
+    "Solar fraction combines the terrain horizon with an opaque circular apparent Earth disc. Partial eclipse overlap uses a small-angle disc-area approximation. Atmosphere, refracted/scattered light, solar limb darkening and Earth's ellipsoidal limb are excluded.",
+    "Terrain clipping uses 127 deterministic solar-disc samples; mission integration uses ten-minute midpoints. Short grazing events can be missed.",
+    "Sunrise/set are terrain-centre crossings, not eclipse contacts. Refined event times do not imply one-second physical accuracy.",
+    "DTE is Earth-centre geometry and the antenna elevation limit, not station availability or a radio link budget.",
+    "Power index is idealized incidence and distance scaling relative to normal incidence at 1 AU, not electrical energy or a full spacecraft power budget.",
+    "Terrain horizon: 720 azimuth samples, 150 km search radius, finite LOLA DEM resolution; local obstacles and hardware excluded."
+  ]
+}

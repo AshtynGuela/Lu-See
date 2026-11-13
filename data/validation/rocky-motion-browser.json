@@ -1,0 +1,28 @@
+{
+  "testedUtc": "2026-11-13T14:01:12.017Z",
+  "originalModel": true,
+  "greeting": true,
+  "continuousWebGLMotion": true,
+  "renderingSuspendedDuringControlChecks": true,
+  "randomDuringChat": true,
+  "randomDuringMenu": true,
+  "position": {
+    "x": 920,
+    "y": 579,
+    "width": 122,
+    "height": 122
+  },
+  "reset": {
+    "x": 920,
+    "y": 579,
+    "width": 122,
+    "height": 122
+  },
+  "mobile": {
+    "x": 274,
+    "y": 222.078125,
+    "width": 96,
+    "height": 96
+  },
+  "errors": []
+}

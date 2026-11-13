@@ -1,0 +1,14 @@
+.git
+.env
+.env.*
+node_modules
+dist
+.cache
+.impeccable
+data/raw
+data/kernels
+data/validation
+tests
+test-results
+**/__pycache__
+*.tsbuildinfo

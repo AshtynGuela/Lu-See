@@ -1,0 +1,318 @@
+{
+  "validatedUtc": "2026-11-13T01:00:28.548Z",
+  "method": "One off-grid check per planet against direct JPL vectors; not independent ephemeris validation. Six-hour cubic Hermite position/velocity interpolation.",
+  "reports": [
+    {
+      "body": "Mercury",
+      "timeUtc": "2026-11-13T03:17:18.999Z",
+      "errorKm": 0.07377370822346364,
+      "source": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27199%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27ECLIPTIC%27&REF_SYSTEM=%27ICRF%27&VEC_CORR=%27NONE%27&OUT_UNITS=%27AU-D%27&TIME_TYPE=%27UT%27&START_TIME=%272026-11-01+00%3A00%3A00%27&STOP_TIME=%272026-12-01+00%3A00%3A00%27&STEP_SIZE=%276h%27&CSV_FORMAT=%27YES%27&VEC_TABLE=%272%27&OBJ_DATA=%27NO%27",
+        "sha256": "0878682a4c1533fe9cd556128d591715ce1ff7b1058741f2bbaa093ed0c3184c",
+        "rawFile": "75d962094c101bc58297c123478f91d274e3de7efa260182ea6cf50d2f5558f7.txt",
+        "retrievedUtc": "2026-11-13T00:50:53.604Z",
+        "apiSignature": {
+          "version": "1.2",
+          "source": "NASA/JPL Horizons API"
+        },
+        "frame": "Sun-centred ecliptic J2000 / ICRF",
+        "timeSystem": "UTC (Horizons UT after 1962)",
+        "units": "AU, AU/day",
+        "target": "199",
+        "targetType": "planet centre",
+        "model": "DE441"
+      },
+      "reference": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27199%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27ECLIPTIC%27&REF_SYSTEM=%27ICRF%27&VEC_CORR=%27NONE%27&OUT_UNITS=%27AU-D%27&TIME_TYPE=%27UT%27&START_TIME=%272026-11-13+03%3A17%3A19%27&STOP_TIME=%272026-11-13+03%3A17%3A21%27&STEP_SIZE=%271%27&CSV_FORMAT=%27YES%27&VEC_TABLE=%272%27&OBJ_DATA=%27NO%27",
+        "sha256": "e1c8d284ab9a7db6fcdb495edc8a5aa1092bc7baf33230dbb0fdb1ac22c65c41",
+        "rawFile": "af7845b53177911e3bb86ff70d814aadbc3b8a77b76c9dfb5147d8c03e56e773.txt",
+        "retrievedUtc": "2026-11-13T01:00:26.432Z",
+        "apiSignature": {
+          "version": "1.2",
+          "source": "NASA/JPL Horizons API"
+        },
+        "frame": "Sun-centred ecliptic J2000 / ICRF",
+        "timeSystem": "UTC (Horizons UT after 1962)",
+        "units": "AU, AU/day",
+        "target": "199",
+        "targetType": "planet centre",
+        "model": "DE441"
+      }
+    },
+    {
+      "body": "Venus",
+      "timeUtc": "2026-11-13T03:17:18.999Z",
+      "errorKm": 0.0006767157161803094,
+      "source": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27299%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27ECLIPTIC%27&REF_SYSTEM=%27ICRF%27&VEC_CORR=%27NONE%27&OUT_UNITS=%27AU-D%27&TIME_TYPE=%27UT%27&START_TIME=%272026-11-01+00%3A00%3A00%27&STOP_TIME=%272026-12-01+00%3A00%3A00%27&STEP_SIZE=%276h%27&CSV_FORMAT=%27YES%27&VEC_TABLE=%272%27&OBJ_DATA=%27NO%27",
+        "sha256": "fbbe70c753b0374591f975987423cbc4973dab90ef676a35b11cc9899a5eb843",
+        "rawFile": "b7a35d4e2e32501ce9fa4b3f3e9246f016369c08bc473d693f9bfbf368cd2d5e.txt",
+        "retrievedUtc": "2026-11-13T00:50:54.450Z",
+        "apiSignature": {
+          "version": "1.2",
+          "source": "NASA/JPL Horizons API"
+        },
+        "frame": "Sun-centred ecliptic J2000 / ICRF",
+        "timeSystem": "UTC (Horizons UT after 1962)",
+        "units": "AU, AU/day",
+        "target": "299",
+        "targetType": "planet centre",
+        "model": "DE441"
+      },
+      "reference": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27299%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27ECLIPTIC%27&REF_SYSTEM=%27ICRF%27&VEC_CORR=%27NONE%27&OUT_UNITS=%27AU-D%27&TIME_TYPE=%27UT%27&START_TIME=%272026-11-13+03%3A17%3A19%27&STOP_TIME=%272026-11-13+03%3A17%3A21%27&STEP_SIZE=%271%27&CSV_FORMAT=%27YES%27&VEC_TABLE=%272%27&OBJ_DATA=%27NO%27",
+        "sha256": "2574ce7c6b745dc8c3ec15494ec013477507c4b004d79c438266320a44ecf3b7",
+        "rawFile": "3ebe09e311b2848570bb1e038c0bb50e8a12e0ef58eeaaaad2ca6e55aa2d83f5.txt",
+        "retrievedUtc": "2026-11-13T01:00:26.744Z",
+        "apiSignature": {
+          "source": "NASA/JPL Horizons API",
+          "version": "1.2"
+        },
+        "frame": "Sun-centred ecliptic J2000 / ICRF",
+        "timeSystem": "UTC (Horizons UT after 1962)",
+        "units": "AU, AU/day",
+        "target": "299",
+        "targetType": "planet centre",
+        "model": "DE441"
+      }
+    },
+    {
+      "body": "Earth",
+      "timeUtc": "2026-11-13T03:17:18.999Z",
+      "errorKm": 0.00023956066312003766,
+      "source": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27399%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27ECLIPTIC%27&REF_SYSTEM=%27ICRF%27&VEC_CORR=%27NONE%27&OUT_UNITS=%27AU-D%27&TIME_TYPE=%27UT%27&START_TIME=%272026-11-01+00%3A00%3A00%27&STOP_TIME=%272026-12-01+00%3A00%3A00%27&STEP_SIZE=%276h%27&CSV_FORMAT=%27YES%27&VEC_TABLE=%272%27&OBJ_DATA=%27NO%27",
+        "sha256": "873ad3f8b558786f29729ba671e4d3e4885216ea27a1ddbf57f15f227ae0509f",
+        "rawFile": "ee5df09e9ec2e921b849758d7fc156bed9feeacd853fd3828292cf620dcc3578.txt",
+        "retrievedUtc": "2026-11-13T00:48:19.561Z",
+        "apiSignature": {
+          "version": "1.2",
+          "source": "NASA/JPL Horizons API"
+        },
+        "frame": "Sun-centred ecliptic J2000 / ICRF",
+        "timeSystem": "UTC (Horizons UT after 1962)",
+        "units": "AU, AU/day",
+        "target": "399",
+        "targetType": "planet centre",
+        "model": "DE441"
+      },
+      "reference": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27399%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27ECLIPTIC%27&REF_SYSTEM=%27ICRF%27&VEC_CORR=%27NONE%27&OUT_UNITS=%27AU-D%27&TIME_TYPE=%27UT%27&START_TIME=%272026-11-13+03%3A17%3A19%27&STOP_TIME=%272026-11-13+03%3A17%3A21%27&STEP_SIZE=%271%27&CSV_FORMAT=%27YES%27&VEC_TABLE=%272%27&OBJ_DATA=%27NO%27",
+        "sha256": "c0de2b43cb11c80665f2b29186aefc118ab618c1fa5fe8aaed5499da8dc75312",
+        "rawFile": "11e0702528a15e71ab20ee627f862021cf957fb6fed44bd66ef316b81f49df12.txt",
+        "retrievedUtc": "2026-11-13T01:00:27.048Z",
+        "apiSignature": {
+          "version": "1.2",
+          "source": "NASA/JPL Horizons API"
+        },
+        "frame": "Sun-centred ecliptic J2000 / ICRF",
+        "timeSystem": "UTC (Horizons UT after 1962)",
+        "units": "AU, AU/day",
+        "target": "399",
+        "targetType": "planet centre",
+        "model": "DE441"
+      }
+    },
+    {
+      "body": "Mars",
+      "timeUtc": "2026-11-13T03:17:18.999Z",
+      "errorKm": 0.00022095615402559557,
+      "source": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27499%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27ECLIPTIC%27&REF_SYSTEM=%27ICRF%27&VEC_CORR=%27NONE%27&OUT_UNITS=%27AU-D%27&TIME_TYPE=%27UT%27&START_TIME=%272026-11-01+00%3A00%3A00%27&STOP_TIME=%272026-12-01+00%3A00%3A00%27&STEP_SIZE=%276h%27&CSV_FORMAT=%27YES%27&VEC_TABLE=%272%27&OBJ_DATA=%27NO%27",
+        "sha256": "4ce1d7053e54a6a2bda7c6d92760001a20f908c87bb11836624458ca12659147",
+        "rawFile": "6b8331c5bd695a9676d5a01ac5432036fd9c2f83488ba1d06bcdb86075691eeb.txt",
+        "retrievedUtc": "2026-11-13T00:50:55.191Z",
+        "apiSignature": {
+          "version": "1.2",
+          "source": "NASA/JPL Horizons API"
+        },
+        "frame": "Sun-centred ecliptic J2000 / ICRF",
+        "timeSystem": "UTC (Horizons UT after 1962)",
+        "units": "AU, AU/day",
+        "target": "499",
+        "targetType": "planet centre",
+        "model": "mar099"
+      },
+      "reference": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27499%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27ECLIPTIC%27&REF_SYSTEM=%27ICRF%27&VEC_CORR=%27NONE%27&OUT_UNITS=%27AU-D%27&TIME_TYPE=%27UT%27&START_TIME=%272026-11-13+03%3A17%3A19%27&STOP_TIME=%272026-11-13+03%3A17%3A21%27&STEP_SIZE=%271%27&CSV_FORMAT=%27YES%27&VEC_TABLE=%272%27&OBJ_DATA=%27NO%27",
+        "sha256": "134bd3e0851368cf96953efb7c359b7b6684531ad1eb368fc1c29b0d49d80bb5",
+        "rawFile": "a953cc51977a57f6c6c3b27f425e4f0142ef68976eb2b5045e909ed9798dcfa5.txt",
+        "retrievedUtc": "2026-11-13T01:00:27.350Z",
+        "apiSignature": {
+          "source": "NASA/JPL Horizons API",
+          "version": "1.2"
+        },
+        "frame": "Sun-centred ecliptic J2000 / ICRF",
+        "timeSystem": "UTC (Horizons UT after 1962)",
+        "units": "AU, AU/day",
+        "target": "499",
+        "targetType": "planet centre",
+        "model": "mar099"
+      }
+    },
+    {
+      "body": "Jupiter",
+      "timeUtc": "2026-11-13T03:17:18.999Z",
+      "errorKm": 0.00003565827004893969,
+      "source": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%275%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27ECLIPTIC%27&REF_SYSTEM=%27ICRF%27&VEC_CORR=%27NONE%27&OUT_UNITS=%27AU-D%27&TIME_TYPE=%27UT%27&START_TIME=%272026-11-01+00%3A00%3A00%27&STOP_TIME=%272026-12-01+00%3A00%3A00%27&STEP_SIZE=%276h%27&CSV_FORMAT=%27YES%27&VEC_TABLE=%272%27&OBJ_DATA=%27NO%27",
+        "sha256": "13e97fa8877a93f3ee016db2ea5cae76336ad65b416ee1f40a60291ba810b42e",
+        "rawFile": "043bb201ff89dc56e1bf52eb052194768808c3d4175abf4b28a2081deaf3323f.txt",
+        "retrievedUtc": "2026-11-13T00:50:55.866Z",
+        "apiSignature": {
+          "source": "NASA/JPL Horizons API",
+          "version": "1.2"
+        },
+        "frame": "Sun-centred ecliptic J2000 / ICRF",
+        "timeSystem": "UTC (Horizons UT after 1962)",
+        "units": "AU, AU/day",
+        "target": "5",
+        "targetType": "planetary-system barycentre",
+        "model": "DE441"
+      },
+      "reference": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%275%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27ECLIPTIC%27&REF_SYSTEM=%27ICRF%27&VEC_CORR=%27NONE%27&OUT_UNITS=%27AU-D%27&TIME_TYPE=%27UT%27&START_TIME=%272026-11-13+03%3A17%3A19%27&STOP_TIME=%272026-11-13+03%3A17%3A21%27&STEP_SIZE=%271%27&CSV_FORMAT=%27YES%27&VEC_TABLE=%272%27&OBJ_DATA=%27NO%27",
+        "sha256": "43f9782e72d347a90846f5ca154e32c5cb5364094d036a535b012aa0cfd9c705",
+        "rawFile": "b9ff6da97d6d54018a286c32274597c12204b04e31296269abf2582d4ced5bdf.txt",
+        "retrievedUtc": "2026-11-13T01:00:27.651Z",
+        "apiSignature": {
+          "version": "1.2",
+          "source": "NASA/JPL Horizons API"
+        },
+        "frame": "Sun-centred ecliptic J2000 / ICRF",
+        "timeSystem": "UTC (Horizons UT after 1962)",
+        "units": "AU, AU/day",
+        "target": "5",
+        "targetType": "planetary-system barycentre",
+        "model": "DE441"
+      }
+    },
+    {
+      "body": "Saturn",
+      "timeUtc": "2026-11-13T03:17:18.999Z",
+      "errorKm": 0.000027205562725680802,
+      "source": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%276%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27ECLIPTIC%27&REF_SYSTEM=%27ICRF%27&VEC_CORR=%27NONE%27&OUT_UNITS=%27AU-D%27&TIME_TYPE=%27UT%27&START_TIME=%272026-11-01+00%3A00%3A00%27&STOP_TIME=%272026-12-01+00%3A00%3A00%27&STEP_SIZE=%276h%27&CSV_FORMAT=%27YES%27&VEC_TABLE=%272%27&OBJ_DATA=%27NO%27",
+        "sha256": "a4b4d32a7f542ba149d5c704d9b3d2e6a7d027ed23224816842ec35ff21637fc",
+        "rawFile": "ce9a7ed0912f89bb9b3f55b7455a96e5849a8ac44fd3dcaaacdacc0ecec6f632.txt",
+        "retrievedUtc": "2026-11-13T00:50:56.490Z",
+        "apiSignature": {
+          "version": "1.2",
+          "source": "NASA/JPL Horizons API"
+        },
+        "frame": "Sun-centred ecliptic J2000 / ICRF",
+        "timeSystem": "UTC (Horizons UT after 1962)",
+        "units": "AU, AU/day",
+        "target": "6",
+        "targetType": "planetary-system barycentre",
+        "model": "DE441"
+      },
+      "reference": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%276%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27ECLIPTIC%27&REF_SYSTEM=%27ICRF%27&VEC_CORR=%27NONE%27&OUT_UNITS=%27AU-D%27&TIME_TYPE=%27UT%27&START_TIME=%272026-11-13+03%3A17%3A19%27&STOP_TIME=%272026-11-13+03%3A17%3A21%27&STEP_SIZE=%271%27&CSV_FORMAT=%27YES%27&VEC_TABLE=%272%27&OBJ_DATA=%27NO%27",
+        "sha256": "9754e53fcf5bb3ad9b6476e994eda759539f9578b6d3e878259ce96edf0501bb",
+        "rawFile": "6eb9bc172be1007909bb0b2e65b97c856093aa0ec469c37989eb487db98dbb9e.txt",
+        "retrievedUtc": "2026-11-13T01:00:27.953Z",
+        "apiSignature": {
+          "source": "NASA/JPL Horizons API",
+          "version": "1.2"
+        },
+        "frame": "Sun-centred ecliptic J2000 / ICRF",
+        "timeSystem": "UTC (Horizons UT after 1962)",
+        "units": "AU, AU/day",
+        "target": "6",
+        "targetType": "planetary-system barycentre",
+        "model": "DE441"
+      }
+    },
+    {
+      "body": "Uranus",
+      "timeUtc": "2026-11-13T03:17:18.999Z",
+      "errorKm": 0.000018787762394275825,
+      "source": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%277%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27ECLIPTIC%27&REF_SYSTEM=%27ICRF%27&VEC_CORR=%27NONE%27&OUT_UNITS=%27AU-D%27&TIME_TYPE=%27UT%27&START_TIME=%272026-11-01+00%3A00%3A00%27&STOP_TIME=%272026-12-01+00%3A00%3A00%27&STEP_SIZE=%276h%27&CSV_FORMAT=%27YES%27&VEC_TABLE=%272%27&OBJ_DATA=%27NO%27",
+        "sha256": "5d6d0112bd3178b224318ecce771bc9ce055cc3df006fafed447196d50e6d811",
+        "rawFile": "19a0113fd8cdae78f4616cf69e765fb0d019482400641d56e6b033088885ca52.txt",
+        "retrievedUtc": "2026-11-13T00:50:57.171Z",
+        "apiSignature": {
+          "version": "1.2",
+          "source": "NASA/JPL Horizons API"
+        },
+        "frame": "Sun-centred ecliptic J2000 / ICRF",
+        "timeSystem": "UTC (Horizons UT after 1962)",
+        "units": "AU, AU/day",
+        "target": "7",
+        "targetType": "planetary-system barycentre",
+        "model": "DE441"
+      },
+      "reference": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%277%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27ECLIPTIC%27&REF_SYSTEM=%27ICRF%27&VEC_CORR=%27NONE%27&OUT_UNITS=%27AU-D%27&TIME_TYPE=%27UT%27&START_TIME=%272026-11-13+03%3A17%3A19%27&STOP_TIME=%272026-11-13+03%3A17%3A21%27&STEP_SIZE=%271%27&CSV_FORMAT=%27YES%27&VEC_TABLE=%272%27&OBJ_DATA=%27NO%27",
+        "sha256": "3c725051b0c1674693f092e40b753a50761d6486c3ccd2eee81d32f2834f04af",
+        "rawFile": "88f9b11d48d4b9bb20799c537952e44729e172d095eab0c005d69e574fed6308.txt",
+        "retrievedUtc": "2026-11-13T01:00:28.248Z",
+        "apiSignature": {
+          "source": "NASA/JPL Horizons API",
+          "version": "1.2"
+        },
+        "frame": "Sun-centred ecliptic J2000 / ICRF",
+        "timeSystem": "UTC (Horizons UT after 1962)",
+        "units": "AU, AU/day",
+        "target": "7",
+        "targetType": "planetary-system barycentre",
+        "model": "DE441"
+      }
+    },
+    {
+      "body": "Neptune",
+      "timeUtc": "2026-11-13T03:17:18.999Z",
+      "errorKm": 0.000015149765747746918,
+      "source": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%278%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27ECLIPTIC%27&REF_SYSTEM=%27ICRF%27&VEC_CORR=%27NONE%27&OUT_UNITS=%27AU-D%27&TIME_TYPE=%27UT%27&START_TIME=%272026-11-01+00%3A00%3A00%27&STOP_TIME=%272026-12-01+00%3A00%3A00%27&STEP_SIZE=%276h%27&CSV_FORMAT=%27YES%27&VEC_TABLE=%272%27&OBJ_DATA=%27NO%27",
+        "sha256": "1509ff1256705faf2ace6093b9b656e9a5e20201b74ca5036f3c0e76b832f800",
+        "rawFile": "c72948f611bf8d8785b1882b1185eb098dd2ec83d7f7dd434606e7fc44d938db.txt",
+        "retrievedUtc": "2026-11-13T00:50:57.795Z",
+        "apiSignature": {
+          "source": "NASA/JPL Horizons API",
+          "version": "1.2"
+        },
+        "frame": "Sun-centred ecliptic J2000 / ICRF",
+        "timeSystem": "UTC (Horizons UT after 1962)",
+        "units": "AU, AU/day",
+        "target": "8",
+        "targetType": "planetary-system barycentre",
+        "model": "DE441"
+      },
+      "reference": {
+        "name": "NASA/JPL Horizons",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%278%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%4010%27&REF_PLANE=%27ECLIPTIC%27&REF_SYSTEM=%27ICRF%27&VEC_CORR=%27NONE%27&OUT_UNITS=%27AU-D%27&TIME_TYPE=%27UT%27&START_TIME=%272026-11-13+03%3A17%3A19%27&STOP_TIME=%272026-11-13+03%3A17%3A21%27&STEP_SIZE=%271%27&CSV_FORMAT=%27YES%27&VEC_TABLE=%272%27&OBJ_DATA=%27NO%27",
+        "sha256": "fd816aec25fad71694f8ddb827cb6bf4d70cd3a82747ce104cc2135590374297",
+        "rawFile": "6fe81f95f141b7e2899e355036a091aa9b6950dcff6f688fbb503d5c20fcbfb9.txt",
+        "retrievedUtc": "2026-11-13T01:00:28.546Z",
+        "apiSignature": {
+          "source": "NASA/JPL Horizons API",
+          "version": "1.2"
+        },
+        "frame": "Sun-centred ecliptic J2000 / ICRF",
+        "timeSystem": "UTC (Horizons UT after 1962)",
+        "units": "AU, AU/day",
+        "target": "8",
+        "targetType": "planetary-system barycentre",
+        "model": "DE441"
+      }
+    }
+  ]
+}
