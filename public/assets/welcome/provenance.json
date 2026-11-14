@@ -1,0 +1,34 @@
+{
+  "source": "https://www.figma.com/design/us7HrDlifYdVAzJaQM4m3F/Untitled?node-id=1-2",
+  "node": "11:4",
+  "asset": "astronaut.png",
+  "sha256": "3e2688e30e9906be1cc7ac103f93febc33955ca9a86b45d6b2b8290e67e74d3a",
+  "dimensions": [
+    1440,
+    1024
+  ],
+  "purpose": "Owner-supplied Figma opening-screen background. Not a scientific terrain or navigation dataset.",
+  "typography": "Existing D-DINExp.otf and D-DINExp-Bold.otf under public/assets/fonts/d-din; SIL Open Font License.",
+  "nasaInsignia": {
+    "asset": "nasa-insignia.png",
+    "source": "https://www.nasa.gov/wp-content/themes/nasa/assets/images/nasa-logo@2x.png",
+    "sourcePage": "https://www.nasa.gov/nasa-brand-center/brand-guidelines/",
+    "sha256": "f3de7b1ffb783f6e462d03d65ee6be358967632fba1864059e35f5d0ef2642b5",
+    "dimensions": [
+      121,
+      102
+    ],
+    "purpose": "Unmodified full-color NASA insignia in the source-credit footer; links to nasa.gov."
+  },
+  "titleX": {
+    "asset": "x-glass.svg",
+    "source": "https://www.figma.com/design/us7HrDlifYdVAzJaQM4m3F/Untitled?node-id=23-120",
+    "purpose": "Figma SVG export preserves outlined D-DIN Expanded X and inner shadow. CSS clipped backdrop approximates Figma glass refraction, which SVG export omits."
+  },
+  "ambientScene": {
+    "sourceNode": "11:4",
+    "image": "astronaut.png",
+    "mask": "astronaut-mask.svg",
+    "purpose": "Original Figma image reused as cropped star strips, upper light, and masked astronaut. Mask is presentation-only, not replacement artwork. Independent compositor animations; no new image downloads."
+  }
+}

@@ -8,6 +8,7 @@ import {
   Image,
   History,
   Check,
+  SlidersHorizontal,
 } from "lucide-react";
 import { actionLabel } from "../engine/app-actions.mjs";
 import { runAppAction } from "./app-actions";
@@ -196,6 +197,7 @@ export default function Rocky({ snapshot, hasInspector }: { snapshot: () => stri
           <header>
             <strong>Rocky</strong>
             <span className="muted">{site?.name || "Earth–Moon space"}</span>
+            <button className="phone-only icon-button" aria-label="Rocky options" onClick={()=>window.dispatchEvent(new Event("rocky-menu"))}><SlidersHorizontal size={18}/></button>
             <button
               className="icon-button"
               aria-label="Answer history"
@@ -212,7 +214,7 @@ export default function Rocky({ snapshot, hasInspector }: { snapshot: () => stri
               <X size={16} />
             </button>
           </header>
-          {showHistory ? (
+          <div className="rocky-chat-body">{showHistory ? (
             <div className="history-list">
               {history.length ? (
                 history.map((h, i) => (
@@ -322,7 +324,9 @@ export default function Rocky({ snapshot, hasInspector }: { snapshot: () => stri
                   </small>
                 </div>
               )}
-              {(phase === "ASKING" || phase === "OPEN") && (
+            </>
+          )}</div>
+              {!showHistory && (phase === "ASKING" || phase === "OPEN") && (
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
@@ -348,7 +352,7 @@ export default function Rocky({ snapshot, hasInspector }: { snapshot: () => stri
                       <Send size={17} />
                     </button>
                   </div>
-                  <label className="snapshot-check">
+                  <div className="desktop-chat-settings"><label className="snapshot-check">
                     <input
                       type="checkbox"
                       checked={image}
@@ -358,10 +362,14 @@ export default function Rocky({ snapshot, hasInspector }: { snapshot: () => stri
                   </label>
                   <label className="snapshot-check"><input type="checkbox" checked={autoUse} onChange={event=>setAutoUse(event.target.checked)}/>Let Rocky use app tools</label>
                   <p className="rocky-tools-hint">Rocky can open views, adjust settings and run your chosen analysis. Completed actions appear below his reply.</p>
+                  </div>
+                  <details className="phone-only phone-chat-options"><summary>Chat options</summary>
+                    <label className="snapshot-check"><input type="checkbox" checked={image} onChange={event=>setImage(event.target.checked)}/>Include current map image</label>
+                    <label className="snapshot-check"><input type="checkbox" checked={autoUse} onChange={event=>setAutoUse(event.target.checked)}/>Let Rocky use app tools</label>
+                    <p className="rocky-tools-hint">Rocky can open views, adjust settings and run your chosen analysis. Completed actions appear below his reply.</p>
+                  </details>
                 </form>
               )}
-            </>
-          )}
         </div>
       </div>
     )}

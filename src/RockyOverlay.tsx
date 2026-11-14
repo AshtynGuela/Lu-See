@@ -161,6 +161,11 @@ export default function RockyOverlay({ visible, open, thinking, hasInspector, on
     return Number.isFinite(saved)&&saved>=280&&saved<=640?Math.round(saved/10)*10:390;
   });
   const resizeDrag=useRef<{id:number;x:number;y:number;scale:number}|null>(null);
+  useEffect(()=>{
+    const open=()=>{setMenu({x:Math.max(8,innerWidth-240),y:innerHeight-140});setSpeech(null);};
+    window.addEventListener("rocky-menu",open);
+    return()=>window.removeEventListener("rocky-menu",open);
+  },[]);
   const [movement, setMovement] = useState("Random");
   const [randomClip, setRandomClip] = useState("Attentive");
   const [gesture, setGesture] = useState<{ clip: string; id: number } | null>(null);

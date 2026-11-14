@@ -61,7 +61,8 @@ import {
   useMetrics,
   ComparisonBoard,
 } from "./Charts";
-import { APP_NAME, APP_EXPANSION } from "../engine/app-actions.mjs";
+import { APP_NAME } from "../engine/app-actions.mjs";
+import Welcome, { WELCOME_ENTRY_MS } from "./Welcome";
 import { FEATURE_EVENT, type ActionResult } from "./app-actions";
 import { encodeSession, decodeSession } from "./share.mjs";
 import type { NearbyMission, NearbyPoint, RankedSite } from "./NearbySites";
@@ -126,6 +127,7 @@ export default function App() {
   const state = useScout(),
     [siteFilter, setSiteFilter] = useState(""),
     [inspector, setInspector] = useState(true),
+    [phoneDetails, setPhoneDetails] = useState(false),
     [menu, setMenu] = useState<any>(null),
     [customDialog, setCustomDialog] = useState<any>(null),
     [customName, setCustomName] = useState(""),
@@ -336,21 +338,12 @@ export default function App() {
   }, [menu]);
   useEffect(() => {
     if (!intro) return;
-    const reveal = setTimeout(
-      () =>
-        state.set({
-          view: "solar_system",
-          focusVersion: state.focusVersion + 1,
-        }),
-      900,
-    );
     const timer = setTimeout(() => {
       setIntro(false);
       state.set({ welcome: false });
-    }, 2300);
+    }, WELCOME_ENTRY_MS);
     return () => {
       clearTimeout(timer);
-      clearTimeout(reveal);
     };
   }, [intro]);
   const rail = (id: string) =>
@@ -495,7 +488,7 @@ export default function App() {
     const needsSite=["fly_to","open_inspector","add_to_compare","plan_landing","rank_nearby","export_report"].includes(action.type);
     if(needsSite&&!chosen)return {ok:false,message:"Choose a lunar site first. The site list may still be loading."};
     if(action.siteId){current.select(action.siteId);setInspector(true);}
-    if(action.type==="fly_to"||action.type==="open_inspector") {current.fly(action.siteId);setInspector(true);}
+    if(action.type==="fly_to"||action.type==="open_inspector") {current.fly(action.siteId);setInspector(true);setPhoneDetails(true);}
     else if(action.type==="open_panel") {
       if(["landing","nearby","date_slip"].includes(action.panel)&&!chosen)return {ok:false,message:"Choose a lunar site first."};
       if(["sites","time","layers","settings"].includes(action.panel))current.set({rail:action.panel==="time"?"clock":action.panel,...(current.view==="solar_system"&&action.panel!=="time"?{view:"globe"}: {})});
@@ -603,10 +596,13 @@ export default function App() {
       : [];
   return (
     <main
+      style={{ "--entry-duration": `${WELCOME_ENTRY_MS}ms` } as React.CSSProperties}
+      data-phone-details={phoneDetails && inspector ? "open" : "closed"}
       className={
         "app" +
         (inspector && !solar ? " has-inspector" : "") +
-        (solar ? " solar-mode" : "")
+        (solar ? " solar-mode" : "") +
+        (intro ? " app--entering" : "")
       }
       onPointerDown={() => menu && setMenu(null)}
     >
@@ -645,6 +641,7 @@ export default function App() {
           className="brand"
           onClick={(e) => {
             e.preventDefault();
+            setPhoneDetails(false);
             state.set({
               view: "solar_system",
               rail: null,
@@ -668,6 +665,9 @@ export default function App() {
           </span>
         </div>
         <div className="top-actions">
+          <button className="phone-only phone-rocky" disabled={!rockyStarted}
+            onClick={() => window.dispatchEvent(new Event("ask-rocky"))}
+            onContextMenu={event=>{event.preventDefault();window.dispatchEvent(new Event("rocky-menu"));}}>Rocky</button>
           <button
             className="mode-toggle"
             onClick={() =>
@@ -730,6 +730,7 @@ export default function App() {
           onClick={() => setSources(true)}
         >
           <Info size={19} />
+          <span className="phone-only">Sources</span>
         </IconButton>
       </nav>
       {state.rail && (
@@ -770,6 +771,8 @@ export default function App() {
                     onClick={() => {
                       state.select(s.id);
                       setInspector(true);
+                      setPhoneDetails(true);
+                      if(matchMedia("(max-width: 760px), (max-width: 960px) and (max-height: 500px)").matches)state.set({rail:null});
                     }}
                     onContextMenu={(e) => {
                       e.preventDefault();
@@ -1009,6 +1012,16 @@ export default function App() {
           )}
         </section>
       )}
+      <div className="phone-only phone-map-controls" aria-label="Phone map controls">
+        <label>View<select aria-label="Map view" value={state.view} onChange={event=>{state.set({view:event.target.value as typeof state.view,rail:null});setPhoneDetails(false);}}>
+          <option value="solar_system">Solar System</option><option value="overview">Earth–Moon</option><option value="globe">Moon</option>
+          <option value="polar_south">South pole</option><option value="polar_north">North pole</option><option value="surface">Terrain flyover</option><option value="horizon">Horizon</option>
+        </select></label>
+        <button aria-expanded={phoneDetails && inspector} onClick={()=>{setInspector(true);setPhoneDetails(value=>!value);state.set({rail:null,compare:false,timeline:false});}}>
+          {phoneDetails && inspector ? "Close details" : solar ? "Body details" : "Site details"}
+        </button>
+      </div>
+      <button className="phone-only phone-details-close" aria-label="Close details" onClick={()=>setPhoneDetails(false)}><X size={18}/>Close</button>
       <div className="view-toolbar" aria-label="View controls">
         {[
           [Orbit, "solar_system", "Solar System"],
@@ -1580,54 +1593,14 @@ export default function App() {
       <Suspense fallback={null}>
         {rockyStarted && <Rocky snapshot={() => snapshot.current()} hasInspector={inspector && !solar} />}
       </Suspense>
-      {state.welcome && (
-        <div className={"welcome " + (intro ? "departing" : "")}>
-          <div className="welcome-content">
-            <Orbit size={42} strokeWidth={1} />
-            <h1>
-              {APP_NAME}<span>.</span>
-            </h1>
-            <p className="brand-expansion">{APP_EXPANSION}</p>
-            <p>
-              A different place. A different date.
-              <br />A new window to the Sun and Earth.
-            </p>
-            <button
-              className="primary welcome-enter"
-              onClick={() => {
-                state.set({ rail: null, view: "solar_system" });
-                if (matchMedia("(prefers-reduced-motion: reduce)").matches)
-                  state.set({ welcome: false });
-                else {
-                  state.set({
-                    view: "solar_system",
-                    focusVersion: state.focusVersion + 1,
-                  });
-                  setIntro(true);
-                }
-              }}
-            >
-              Enter the Solar System <ArrowUpRight size={19} />
-            </button>
-            <span className="welcome-caption">
-              Sun and Earth positions from NASA/JPL. Lunar terrain from LOLA.
-            </span>
-          </div>
-          <div className="welcome-bottom">
-            <a
-              href="https://www.spaceappschallenge.org/2026/challenges/lunar-landing-site-navigator/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Inspired by the NASA Space Apps lunar landing site challenge{" "}
-              <ExternalLink size={12} />
-            </a>
-            <button onClick={() => state.set({ welcome: false })}>
-              Skip introduction
-            </button>
-          </div>
-        </div>
-      )}
+      {state.welcome && <Welcome departing={intro} enter={() => {
+        state.set({ rail: null, view: "solar_system" });
+        if (matchMedia("(prefers-reduced-motion: reduce)").matches) state.set({ welcome: false });
+        else {
+          state.set({ view: "solar_system", focusVersion: state.focusVersion + 1 });
+          setIntro(true);
+        }
+      }} skip={() => { setIntro(false); state.set({ welcome: false }); }} />}
       {menu && (
         <div
           ref={menuRef}

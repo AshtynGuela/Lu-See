@@ -1,0 +1,261 @@
+@font-face {
+  font-family: "D-DIN Expanded";
+  src: url("/assets/fonts/d-din/D-DINExp.otf") format("opentype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "D-DIN Expanded";
+  src: url("/assets/fonts/d-din/D-DINExp-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-display: swap;
+}
+.mission-welcome {
+  position: absolute;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  overscroll-behavior: contain;
+  min-height: 100%;
+  padding: 0 3.958333vw;
+  background: #000;
+  color: #fff;
+  font-family: "D-DIN Expanded", "D-DIN", sans-serif;
+  isolation: isolate;
+}
+.mission-welcome:focus { outline: none; }
+.mission-welcome--departing { pointer-events: none; overflow: hidden; animation: welcome-depart var(--entry-duration) linear both; }
+.mission-welcome__space {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+}
+.mission-welcome__composition {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(110vw, 154.6875vh);
+  height: max(110vh, 78.222222vw);
+  transform: translate(-50%, -50%);
+}
+.mission-welcome__stars { position: absolute; inset: 0; display: flex; --ambient-animation: welcome-stars-drift 32s ease-in-out infinite; animation: var(--ambient-animation); }
+.mission-welcome__stars--near {
+  opacity: .25;
+  mix-blend-mode: screen;
+  mask-image: linear-gradient(110deg, #000, #0009 60%, transparent);
+  -webkit-mask-image: linear-gradient(110deg, #000, #0009 60%, transparent);
+  --ambient-animation: welcome-near-stars-drift 23s ease-in-out infinite;
+}
+.mission-welcome__glow {
+  position: absolute;
+  inset: -5%;
+  background: radial-gradient(ellipse at 86% 8%, #e8f1ff24, transparent 42%), radial-gradient(ellipse at 18% 68%, #a4bfdd0b, transparent 46%);
+  --ambient-animation: welcome-glow-drift 17s ease-in-out infinite;
+  animation: var(--ambient-animation);
+}
+.mission-welcome__star-strip { flex: 0 0 33.333333%; overflow: hidden; }
+/* Repeat the star-only left third of the supplied image, at native scale.
+   This fills behind the astronaut, avoiding a second stationary silhouette. */
+.mission-welcome__star-strip img { display: block; width: 300%; max-width: none; height: 100%; }
+.mission-welcome__astronaut, .mission-welcome__light {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.mission-welcome__astronaut {
+  mask: url("/assets/welcome/astronaut-mask.svg") center / 100% 100% no-repeat;
+  -webkit-mask: url("/assets/welcome/astronaut-mask.svg") center / 100% 100% no-repeat;
+  transform-origin: 74% 62%;
+  --ambient-animation: welcome-astronaut-drift 18s ease-in-out infinite;
+  animation: var(--ambient-animation);
+}
+.mission-welcome__light {
+  mask-image: linear-gradient(#000 0%, #000 9%, transparent 16%);
+  -webkit-mask-image: linear-gradient(#000 0%, #000 9%, transparent 16%);
+  transform-origin: 100% 0;
+  --ambient-animation: welcome-light-drift 21s ease-in-out infinite;
+  animation: var(--ambient-animation);
+}
+.mission-welcome__float { --ambient-animation: welcome-copy-float 12s ease-in-out infinite; animation: var(--ambient-animation); }
+.mission-welcome__credits { --ambient-animation: welcome-credits-float 16s ease-in-out infinite; animation: var(--ambient-animation); }
+.mission-welcome--ambient :is(.mission-welcome__stars,.mission-welcome__astronaut,.mission-welcome__light,.mission-welcome__glow,.mission-welcome__float,.mission-welcome__credits) { animation-play-state: running; }
+.mission-welcome__float:focus-within, .mission-welcome__credits:focus-within { animation-play-state: paused !important; }
+.mission-welcome__content {
+  margin-top: max(80px, 31.738281vh);
+  max-width: 730px;
+  padding-bottom: 72px;
+}
+.mission-welcome h1 {
+  position: relative;
+  width: 4.607843em;
+  height: 1.627451em;
+  margin: 0;
+  color: #fff;
+  font-family: inherit;
+  font-size: 51px;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0;
+}
+.mission-welcome__wordmark { position: absolute; left: 0; top: 27.710843%; line-height: 1.078431; }
+/* Exact outlined glyph and inner shadow exported from Figma node 23:120.
+   The clipped backdrop supplies its glass treatment without a heavy shader. */
+.mission-welcome__x { position: absolute; left: 78.723404%; top: 0; width: 21.276596%; height: 100%; }
+.mission-welcome__x img, .mission-welcome__x::before { position: absolute; top: 18.072289%; left: 0; width: 98%; height: 63.855422%; }
+.mission-welcome__x img { display: block; }
+.mission-welcome__x::before {
+  content: "";
+  backdrop-filter: blur(5px) saturate(1.15);
+  -webkit-backdrop-filter: blur(5px) saturate(1.15);
+  clip-path: polygon(41% 47.5%,3.3% 0,20% 0,49.5% 37.4%,78.6% 0,94.9% 0,57.5% 47%,98.6% 99%,81.9% 99%,48.7% 57.1%,16.3% 99%,0 99%);
+}
+.mission-welcome p { margin: 0; color: #fff; font-weight: 400; line-height: 1.13; }
+.mission-welcome__tagline { font-size: 32px; margin-top: 12px !important; }
+.mission-welcome__description { max-width: 710px; margin-top: 38px !important; font-size: 32px; }
+.mission-welcome__actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: 36px; }
+.mission-welcome__enter {
+  min-height: 52px;
+  padding: 14px 20px;
+  gap: 20px;
+  background: #fff;
+  color: #111;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 700;
+}
+.mission-welcome__enter:hover { background: #dedede; border-color: #dedede; }
+.mission-welcome__skip { min-height: 48px; padding: 12px 0; color: #fff; font-size: 14px; background: transparent; border: 0; }
+.mission-welcome__skip:hover { background: transparent; text-decoration: underline; }
+.mission-welcome :is(a,button):focus-visible { outline-color: #fff; }
+.mission-welcome__credits {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: auto;
+  padding: 24px 0 40px;
+  flex-shrink: 0;
+}
+.mission-welcome__credits a { color: #fff; }
+.mission-welcome__nasa { display: flex; min-height: 44px; align-items: center; flex-shrink: 0; padding: 12px; }
+.mission-welcome__nasa img { display: block; width: 84px; height: auto; }
+.mission-welcome__sources { min-width: 0; border-left: 1px solid #626262; padding-left: 24px; font-size: 14px; }
+.mission-welcome__sources p { line-height: 1.6; }
+.mission-welcome__challenge { display: inline-flex; align-items: center; min-height: 32px; font-size: 12px; }
+@media (max-width: 1100px) and (min-width: 761px) {
+  .mission-welcome__content { max-width: 64%; }
+  .mission-welcome__tagline, .mission-welcome__description { font-size: 25px; }
+  .mission-welcome h1 { font-size: 43px; }
+}
+@media (max-width: 760px) {
+  .mission-welcome {
+    padding: max(24px, env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-right, 0px)) max(20px, env(safe-area-inset-bottom, 0px)) max(24px, env(safe-area-inset-left, 0px));
+    min-height: 100dvh;
+  }
+  .mission-welcome__space { position: fixed; }
+  .mission-welcome__composition { left: 65%; transform: translate(-65%, -50%); opacity: .65; }
+  .mission-welcome::before { content: ""; position: fixed; inset: 0; z-index: -1; background: linear-gradient(90deg, #000b, #0003), linear-gradient(0deg, #000 0%, #0000 38%); pointer-events: none; }
+  .mission-welcome__content { margin-top: clamp(56px, 17dvh, 160px); max-width: none; padding-bottom: 44px; }
+  .mission-welcome h1 { font-size: clamp(37px, 10vw, 51px); }
+  .mission-welcome__tagline { font-size: 23px; line-height: 1.3 !important; margin-top: 16px !important; }
+  .mission-welcome__description { font-size: 20px; line-height: 1.5 !important; margin-top: 28px !important; }
+  .mission-welcome__actions { align-items: stretch; gap: 8px; margin-top: 32px; }
+  .mission-welcome__enter { justify-content: space-between; width: 100%; font-size: 16px; min-height: 56px; }
+  .mission-welcome__skip { font-size: 14px; }
+  .mission-welcome__credits { align-items: flex-start; gap: 16px; padding: 16px 0 0; }
+  .mission-welcome__nasa { padding: 8px; }
+  .mission-welcome__nasa img { width: 64px; }
+  .mission-welcome__sources { padding-left: 16px; font-size: 13px; }
+  .mission-welcome__sources p { line-height: 1.7; }
+  .mission-welcome__sources p a { display: inline-block; padding-block: 4px; }
+  .mission-welcome__challenge { display: block; min-height: 44px; padding-block: 8px; font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+}
+@media (max-width: 380px) {
+  .mission-welcome__credits { flex-direction: column; gap: 4px; }
+  .mission-welcome__sources { border-left: 0; padding-left: 0; }
+}
+@media (max-height: 600px) and (min-width: 761px) {
+  .mission-welcome__content { margin-top: 48px; padding-bottom: 36px; }
+  .mission-welcome__tagline, .mission-welcome__description { font-size: 23px; }
+  .mission-welcome__description { margin-top: 24px !important; }
+  .mission-welcome__credits { padding-bottom: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* The requested always-on ambient scene is scoped separately from app motion. */
+  .mission-welcome--ambient:not(.mission-welcome--departing) :is(.mission-welcome__stars,.mission-welcome__astronaut,.mission-welcome__light,.mission-welcome__glow,.mission-welcome__float,.mission-welcome__credits) { animation: var(--ambient-animation) !important; }
+  .mission-welcome--ambient:not(.mission-welcome--departing) :is(.mission-welcome__float,.mission-welcome__credits):focus-within { animation-play-state: paused !important; }
+  .mission-welcome--departing, .mission-welcome--departing *, .app--entering .world,
+  .app--entering :is(.topbar,.instrument-rail,.clockbar,.view-toolbar,.phone-map-controls,.solar-catalog,.solar-info,.solar-controls) { animation: none !important; }
+}
+
+/* Separate float and departure layers keep the handoff continuous. */
+.mission-welcome--departing .mission-welcome__space {
+  transform-origin: 65% 45%;
+  will-change: transform, opacity;
+  animation: welcome-image-depart var(--entry-duration) cubic-bezier(.4,0,.2,1) both;
+}
+.mission-welcome--departing .mission-welcome__content,
+.mission-welcome--departing .mission-welcome__credits { animation: welcome-copy-depart 600ms cubic-bezier(.22,1,.36,1) both; }
+.mission-welcome--departing .mission-welcome__credits { animation-duration: 420ms; }
+.app--entering .world { animation: welcome-scene-arrive var(--entry-duration) cubic-bezier(.22,1,.36,1) both; }
+.app--entering :is(.topbar,.instrument-rail,.clockbar,.view-toolbar,.phone-map-controls,.solar-catalog,.solar-info,.solar-controls) {
+  animation: welcome-controls-arrive var(--entry-duration) cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes welcome-stars-drift {
+  0%, 100% { transform: scale(1.08) translate3d(-22px, 14px, 0) rotate(-.45deg); }
+  50% { transform: scale(1.12) translate3d(24px, -18px, 0) rotate(.45deg); }
+}
+@keyframes welcome-near-stars-drift {
+  0%, 100% { transform: scale(1.25) translate3d(34px, -22px, 0) rotate(.6deg); opacity: .16; }
+  50% { transform: scale(1.32) translate3d(-36px, 25px, 0) rotate(-.6deg); opacity: .34; }
+}
+@keyframes welcome-glow-drift {
+  0%, 100% { transform: translate3d(18px, -12px, 0) scale(1); opacity: .45; }
+  50% { transform: translate3d(-24px, 18px, 0) scale(1.08); opacity: .9; }
+}
+@keyframes welcome-astronaut-drift {
+  0%, 100% { transform: translate3d(24px, 20px, 0) rotate(1.5deg); }
+  35% { transform: translate3d(-22px, -26px, 0) rotate(-1.8deg); }
+  70% { transform: translate3d(10px, -6px, 0) rotate(.35deg); }
+}
+@keyframes welcome-light-drift {
+  0%, 100% { transform: rotate(-1.6deg) scale(1.04); opacity: .55; }
+  50% { transform: rotate(1.8deg) scale(1.13); opacity: 1; }
+}
+@keyframes welcome-copy-float {
+  0%, 100% { transform: translate3d(0, 4px, 0); }
+  50% { transform: translate3d(4px, -8px, 0); }
+}
+@keyframes welcome-credits-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(3px, -4px, 0); }
+}
+@keyframes welcome-depart {
+  0%, 15% { opacity: 1; }
+  70% { opacity: .15; }
+  100% { opacity: 0; }
+}
+@keyframes welcome-copy-depart {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-18px); }
+}
+@keyframes welcome-image-depart {
+  0%, 10% { transform: scale(1); opacity: 1; }
+  55% { opacity: .7; }
+  100% { transform: scale(1.3) translate3d(0,-12px,0); opacity: 0; }
+}
+@keyframes welcome-scene-arrive {
+  0%, 15% { transform: scale(1.05); opacity: 0; }
+  85%, 100% { transform: scale(1); opacity: 1; }
+}
+@keyframes welcome-controls-arrive {
+  0%, 58% { opacity: 0; }
+  100% { opacity: 1; }
+}

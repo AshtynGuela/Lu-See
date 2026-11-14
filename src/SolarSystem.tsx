@@ -615,6 +615,11 @@ export default function SolarSystem({
           >
             <h2>Solar System</h2>
             <p>Choose a body to focus.</p>
+            <label className="phone-only phone-destination">Destination
+              <select aria-label="Solar System destination" value={selected} onChange={event=>choose(event.target.value)}>
+                <option value="sun">Sun</option>{SOLAR_BODIES.map(body=><option key={body.id} value={body.id}>{body.name}</option>)}
+              </select>
+            </label>
             <button
               className={selected === "sun" ? "selected" : ""}
               onClick={() => choose("sun")}
