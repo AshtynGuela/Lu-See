@@ -11,6 +11,7 @@ import { answerQuestion } from "./assistant.mjs";
 import { solarPacket } from "./solar.mjs";
 import { coordinateTerrainReady, surfaceTopography, terrainAt } from "./terrain.mjs";
 import { surfaceImagery } from "./surface-imagery.mjs";
+import { lunarTerrainLayer } from "../engine/lunar-map.mjs";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 process.chdir(root);
 const app = express(),
@@ -129,6 +130,10 @@ app.get("/api/terrain", async (req, res, next) => {
     next(e);
   }
 });
+app.get("/api/lunar-terrain/layer.json", (req, res) => {
+  res.set("Cache-Control", "public, max-age=86400").json(lunarTerrainLayer);
+});
+app.use("/cesium", express.static(path.join(root, "node_modules/cesium/Build/Cesium")));
 app.get("/api/surface-topography", async (req, res, next) => {
   try {
     const { lat, lon } = coords.parse(req.query);

@@ -1,6 +1,6 @@
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState, lazy } from "react";
 import { Canvas, useFrame, useThree, ThreeEvent } from "@react-three/fiber";
-import { OrbitControls, Html, useGLTF, useTexture } from "@react-three/drei";
+import { OrbitControls, Html, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { useScout, Site, packetKey, packetFor, getMask } from "./store";
 import { conditions, horizonAt } from "../engine/index.mjs";
@@ -9,8 +9,11 @@ import SolarSystem, { SolarCanvasScene } from "./SolarSystem";
 import SpaceBackdrop from "./SpaceBackdrop";
 import HorizonReadout from "./HorizonReadout";
 import { captureMap } from "./mapSnapshot";
+import { planetOrientation } from "../engine/planetOrientation.mjs";
+import { EarthGlobe, useEarthOrientation } from "./EarthGlobe";
 import { surfaceDetail, surfaceDetailCredit } from "./surfaceDetails";
 import type { RankedSite } from "./NearbySites";
+const LunarGlobe = lazy(() => import("./LunarGlobe"));
 export const lunarPoint = (lat: number, lon: number, r = 3.5) =>
   new THREE.Vector3(
     Math.cos((lat * Math.PI) / 180) * Math.cos((lon * Math.PI) / 180) * r,
@@ -263,35 +266,24 @@ function shadeSurface(shader: THREE.WebGLProgramParametersWithUniforms, horizon:
       #include <opaque_fragment>
     `);
 }
-function Earth({
-  position,
-  radius,
-}: {
+function Earth({ position, radius, time }: {
   position: THREE.Vector3;
   radius: number;
+  time: number;
 }) {
-  const gltf = useGLTF("/assets/earth-web.glb");
-  const model = useMemo(() => {
-    const c = gltf.scene.clone(true),
-      box = new THREE.Box3().setFromObject(c),
-      size = box.getSize(new THREE.Vector3()).length(),
-      center = box.getCenter(new THREE.Vector3());
-    c.position.sub(center);
-    const group = new THREE.Group();
-    group.add(c);
-    group.scale.setScalar((radius * 3.464) / (size || 1));
-    return group;
-  }, [gltf, radius]);
+  const earthTable = useEarthOrientation();
+  const orientation = planetOrientation("moon", time).invert()
+    .multiply(planetOrientation("earth", time, earthTable));
   return (
     <group position={position}>
-      <primitive object={model} />
+      <group name="earth-spin" quaternion={orientation}><EarthGlobe radius={radius} /></group>
       <Html center position={[0, radius + 1, 0]}>
         <span className="body-label">EARTH</span>
       </Html>
     </group>
   );
 }
-export type SurfaceImageState = "loading" | "ready" | "unavailable" | "detail" | "detail-terrain" | "regional" | "regional-imagery";
+export type SurfaceImageState = "loading" | "ready" | "unavailable" | "detail" | "detail-terrain" | "regional" | "regional-imagery" | "quickmap";
 
 function useSurfaceMap(url: string | null, onImageState?: (state: SurfaceImageState) => void) {
   const invalidate = useThree(s => s.invalidate);
@@ -1038,7 +1030,7 @@ function Scene({
           )}
           {earth && !polar && (
             <Suspense fallback={null}>
-              <Earth position={earth} radius={state.trueScale ? 0.6378 : 4.6} />
+              <Earth position={earth} time={state.time} radius={state.trueScale ? 0.6378 : 4.6} />
             </Suspense>
           )}
           {state.travel && <Shuttle groupRef={ship} scale={radius * 0.07} />}
@@ -1069,6 +1061,8 @@ function Scene({
   );
 }
 export default function World(props: {
+  inspectorOpen: boolean;
+  onHorizonExpand: () => void;
   onContext: (p: any) => void;
   onSnapshot: (fn: () => string) => void;
   nearbyPins?: RankedSite[];
@@ -1085,13 +1079,17 @@ export default function World(props: {
       (s) => s.id === state.selected,
     );
   const solar = state.view === "solar_system";
+  const lunar = !solar && state.view !== "overview" && !state.travel;
   const closeUp = selected && surfaceDetail(selected);
   return (
     <SolarSystem onSnapshot={props.onSnapshot}>
       <div
-        className={"world" + (solar ? " solar-world" : "")}
-        aria-label="Interactive Earth–Moon map. Drag to orbit, wheel to zoom, W A S D to fly, Q and E to move vertically."
+        className={"world" + (solar ? " solar-world" : lunar ? " lunar-world" : "")}
+        aria-label={lunar ? "Interactive lunar terrain. Drag to pan, middle-drag to tilt, wheel to zoom." : "Interactive Earth–Moon map. Drag to orbit, wheel to zoom, W A S D to fly, Q and E to move vertically."}
       >
+        {lunar ? <Suspense fallback={<div className="scene-loading">Loading lunar navigation…</div>}>
+          <LunarGlobe {...props} onBearing={setBearing} targetBearing={targetBearing} terrainLighting={terrainLighting} />
+        </Suspense> : (
         <Canvas
           frameloop="demand"
           shadows={state.view === "horizon" || state.view === "surface"}
@@ -1111,7 +1109,8 @@ export default function World(props: {
             {solar ? <SolarCanvasScene /> : <Scene {...props} onBearing={setBearing} onImageState={setSurfaceImage} terrainLighting={terrainLighting} targetBearing={targetBearing} />}
           </Suspense>
         </Canvas>
-        {!solar &&
+        )}
+        {!solar && !lunar &&
           !state.pickingSite &&
           selected &&
           !state.travel &&
@@ -1126,10 +1125,11 @@ export default function World(props: {
           )}
       </div>
       {state.view === "horizon" && selected && <HorizonReadout
-        site={selected} bearing={bearing} imagery={surfaceImage} terrainLighting={terrainLighting}
+        inspectorOpen={props.inspectorOpen} onExpand={props.onHorizonExpand}
+        site={selected} bearing={bearing} imagery={lunar ? "quickmap" : surfaceImage} terrainLighting={terrainLighting}
         toggleTerrainLighting={toggleTerrainLighting} pointAt={(az, el) => setTargetBearing({ az, el })}
       />}
-      {state.view === "surface" && selected && (state.terrains[selected.id] || surfaceImage === "regional" || surfaceImage === "regional-imagery") && <div className="surface-imagery-credit">
+      {!lunar && state.view === "surface" && selected && (state.terrains[selected.id] || surfaceImage === "regional" || surfaceImage === "regional-imagery") && <div className="surface-imagery-credit">
         <span role="status">{(surfaceImage === "detail" || surfaceImage === "detail-terrain") && closeUp ? surfaceDetailCredit(closeUp, surfaceImage === "detail")
           : surfaceImage === "regional-imagery" ? "Moon Trek imagery · SLDEM2015 terrain ~60 m"
           : surfaceImage === "regional" ? "SLDEM2015 terrain ~60 m"

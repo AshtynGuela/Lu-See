@@ -5,6 +5,7 @@ RUN npm ci
 COPY src ./src
 COPY engine ./engine
 COPY public ./public
+COPY scripts/copy-cesium.mjs ./scripts/
 COPY index.html tsconfig.json ./
 RUN npm run build
 

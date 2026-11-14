@@ -28,6 +28,8 @@ import {
   solarDisplayPoint,
 } from "../engine/solar.mjs";
 import { useScout, jsonFetch } from "./store";
+import { planetOrientation } from "../engine/planetOrientation.mjs";
+import { EarthGlobe, useEarthOrientation } from "./EarthGlobe";
 const SolarContext = createContext<any>(null);
 export function SolarCanvasScene() {
   return <SolarScene {...useContext(SolarContext)} />;
@@ -138,6 +140,7 @@ function SolarScene({
     controls = useRef<any>(null),
     flight = useRef<any>(null),
     keys = useRef(new Set<string>());
+  const earthOrientation = useEarthOrientation();
   const positions = useMemo(
     () =>
       Object.fromEntries(
@@ -388,14 +391,16 @@ function SolarScene({
           choose("sun");
         }}
       >
-        <Suspense fallback={
-          <mesh>
-            <sphereGeometry args={[sunRadius, 48, 32]} />
-            <meshBasicMaterial color="#ffcd76" toneMapped={false} />
-          </mesh>
-        }>
-          <BodyModel id="sun" radius={sunRadius} />
-        </Suspense>
+        <group name="sun-spin" quaternion={planetOrientation("sun", state.time)}>
+          <Suspense fallback={
+            <mesh>
+              <sphereGeometry args={[sunRadius, 48, 32]} />
+              <meshBasicMaterial color="#ffcd76" toneMapped={false} />
+            </mesh>
+          }>
+            <BodyModel id="sun" radius={sunRadius} />
+          </Suspense>
+        </group>
         {!state.trueScale && (
           <mesh scale={1.25}>
             <sphereGeometry args={[sunRadius, 32, 24]} />
@@ -427,7 +432,9 @@ function SolarScene({
               />
             )}
             <group
+              name={`planet-${body.id}`}
               position={pos}
+              quaternion={planetOrientation(body.id, state.time, earthOrientation)}
               onClick={(e) => {
                 e.stopPropagation();
                 choose(body.id);
@@ -443,6 +450,8 @@ function SolarScene({
               >
                 {body.id === "moon" ? (
                   <MoonModel radius={r} />
+                ) : body.id === "earth" ? (
+                  <EarthGlobe radius={r} />
                 ) : (
                   <BodyModel id={body.id} radius={r} />
                 )}

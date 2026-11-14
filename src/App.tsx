@@ -581,6 +581,8 @@ export default function App() {
           }
         >
           <World
+            inspectorOpen={inspector}
+            onHorizonExpand={() => { if (innerWidth <= 1000) setInspector(false); }}
             nearbyPins={ranked?.rows}
             nearbyCenter={ranked?.center}
             onNearbyPin={row => { if (ranked) compareNearbySite(row, ranked.mission); }}

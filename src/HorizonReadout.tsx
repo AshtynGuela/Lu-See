@@ -1,5 +1,5 @@
-import { useId, useMemo } from "react";
-import { Compass, Radio, Sun } from "lucide-react";
+import { useEffect, useId, useMemo, useState } from "react";
+import { ChevronDown, Compass, Radio, Sun } from "lucide-react";
 import { conditions, horizonAt } from "../engine/index.mjs";
 import { getMask, packetFor, useScout, type Site } from "./store";
 import type { SurfaceImageState } from "./World";
@@ -9,15 +9,25 @@ const cardinals = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
 const compass = (az: number) => cardinals[Math.round(az / 45) % 8];
 const degrees = (angle: number) => `${angle.toFixed(1)}°`;
 
-export default function HorizonReadout({ site, bearing, imagery, terrainLighting, toggleTerrainLighting, pointAt }: {
+export default function HorizonReadout({ site, bearing, imagery, terrainLighting, toggleTerrainLighting, pointAt, inspectorOpen, onExpand }: {
   site: Site;
   bearing: number;
   imagery: SurfaceImageState;
   terrainLighting: boolean;
   toggleTerrainLighting: () => void;
   pointAt: (az: number, el: number) => void;
+  inspectorOpen: boolean;
+  onExpand: () => void;
 }) {
   const id = useId();
+  const [expanded, setExpanded] = useState(() => innerWidth > 1000);
+  useEffect(() => {
+    const narrow = matchMedia("(max-width: 1000px)");
+    const update = () => setExpanded(!narrow.matches);
+    narrow.addEventListener("change", update);
+    return () => narrow.removeEventListener("change", update);
+  }, []);
+  useEffect(() => { if (inspectorOpen && innerWidth <= 1000) setExpanded(false); }, [inspectorOpen]);
   const terrain = useScout(s => s.terrains[site.id]);
   const mast = useScout(s => s.mastM);
   const antenna = useScout(s => s.minAntennaEl);
@@ -46,9 +56,14 @@ export default function HorizonReadout({ site, bearing, imagery, terrainLighting
   return (
     <section className="horizon-readout" aria-label="Horizon controls">
       <div className="horizon-heading">
-        <h2><Compass size={16} /> Horizon</h2>
+        <h2 title={site.name}><Compass size={16} /> Horizon · {site.name}</h2>
         <output htmlFor={id}>{compass(bearing)} {bearing}°</output>
+        <button type="button" className="horizon-expand" aria-label={expanded ? "Collapse horizon controls" : "Expand horizon controls"} aria-expanded={expanded} aria-controls={id + "-body"} onClick={() => {
+          if (!expanded) onExpand();
+          setExpanded(value => !value);
+        }}><ChevronDown size={15}/></button>
       </div>
+      <div id={id + "-body"} hidden={!expanded}>
       <label htmlFor={id} className="sr-only">Compass bearing</label>
       <input id={id} type="range" min="0" max="359" step="1" value={bearing}
         aria-valuetext={`${compass(bearing)} ${bearing} degrees`}
@@ -62,8 +77,8 @@ export default function HorizonReadout({ site, bearing, imagery, terrainLighting
         {skyline === null ? "Local skyline unavailable" : <>Skyline {degrees(skyline)}{distance(bearing) && ` · terrain ${distance(bearing)} away`}</>}
         <span>{mast} m mast</span>
       </p>
-      {(terrain || imagery === "regional" || imagery === "regional-imagery") && <div className="horizon-imagery">
-        <span role="status">{closeUp
+      {(terrain || imagery === "quickmap" || imagery === "regional" || imagery === "regional-imagery") && <div className="horizon-imagery">
+        <span role="status">{imagery === "quickmap" ? <a href="https://quickmap.lroc.im-ldi.com/" target="_blank" rel="noreferrer">QuickMap terrain · LROC imagery</a> : closeUp
           ? <a href={closeUp.sourceUrl} target="_blank" rel="noreferrer">{surfaceDetailCredit(closeUp, imagery === "detail")}</a>
           : imagery === "regional-imagery" ? "Moon Trek imagery · SLDEM2015 terrain ~60 m"
           : imagery === "regional" ? "SLDEM2015 terrain ~60 m"
@@ -87,6 +102,7 @@ export default function HorizonReadout({ site, bearing, imagery, terrainLighting
           );
         })}
       </div>}
+      </div>
     </section>
   );
 }
