@@ -972,17 +972,47 @@ a svg {
   pointer-events: none;
 }
 .rocky-character, .rocky-menu { pointer-events: auto; }
-.rocky-character, .rocky-character:hover {
+.rocky-character {
   position: absolute;
   padding: 0;
-  border: 0;
-  background: transparent;
-  border-radius: 8px;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  border: 1px solid #61774b;
+  background: radial-gradient(circle at 40% 24%, #3d513c, #172923 72%);
+  border-radius: 50%;
+  color: #e2f4bc;
+  box-shadow: 0 6px 22px #0009, inset 0 0 0 3px #15221d;
   touch-action: none;
-  cursor: grab;
+  cursor: pointer;
 }
+.rocky-character:hover,
+.rocky-character[aria-expanded="true"] { border-color: #d6eb9e; background: radial-gradient(circle at 40% 24%, #536746, #253729 72%); }
+.rocky-character:focus-visible { outline: 2px solid #e2f4bc; outline-offset: 3px; }
 .rocky-character:active { cursor: grabbing; }
-.rocky-character > div { pointer-events: none; }
+.rocky-fab-model {
+  position: absolute;
+  inset: 1px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.rocky-fab-badge {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  right: 0;
+  bottom: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #d6eb9e;
+  border: 1px solid #101c18;
+  color: #18251c;
+  pointer-events: none;
+}
 .rocky-character.roaming { transition: left 1.8s ease-in-out, top 1.8s ease-in-out; }
 .rocky-conversation { position: absolute; }
 .rocky-speech-bubble {

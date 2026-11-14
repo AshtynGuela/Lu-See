@@ -142,15 +142,17 @@ function IdleBubble({ phrase, sound, onFinish }: {
   return <RockyBubble><span aria-hidden="true">{text}</span><span className="sr-only">{phrase}</span></RockyBubble>;
 }
 
-export default function RockyOverlay({ visible, open, thinking, onChat, renderChat }: {
+export default function RockyOverlay({ visible, open, thinking, hasInspector, onChat, renderChat }: {
   visible: boolean;
   open: boolean;
   thinking: boolean;
+  hasInspector: boolean;
   onChat: () => void;
   renderChat: (stream: boolean, sound: boolean) => ReactNode;
 }) {
   const [viewport, setViewport] = useState(() => ({ width: innerWidth, height: innerHeight }));
   const [position, setPosition] = useState<Point | null>(null);
+  const [docked, setDocked] = useState(false);
   const [scale, setScale] = useState(1);
   const [movement, setMovement] = useState("Random");
   const [randomClip, setRandomClip] = useState("Attentive");
@@ -178,17 +180,19 @@ export default function RockyOverlay({ visible, open, thinking, onChat, renderCh
   const pointerReleasedAfterHold = useRef(-Infinity);
   const lastPhrase = useRef("");
   const greeted = useRef(false);
+  const wasOpen = useRef(false);
   const idle = visible && pageVisible && modelReady && !open && !paused && !dragging && !menu && !gesture;
-  const compact = viewport.width < 760;
-  const baseSize = compact ? 96 : 122;
-  const size = Math.min(baseSize * scale, viewport.width, viewport.height);
+  const compact = viewport.width <= 760;
+  const baseSize = compact ? 58 : 68;
+  const size = Math.min(Math.max(44, baseSize * scale), viewport.width, viewport.height);
   const dock = { x: viewport.width - size, y: viewport.height - size };
-  // Start beside the map, clear of the inspector and bottom time controls.
+  const inspectorWidth = viewport.width <= 1200 ? 324 : viewport.width >= 1600 ? 390 : 370;
+  // Dock near the map's bottom-right, outside the clock and inspector.
   const home = {
-    x: compact ? viewport.width - size - 20 : viewport.width - (viewport.width > 1200 ? 370 : 324) - size - 28,
-    y: viewport.height * (compact ? .32 : .64) - size / 2,
+    x: dock.x - (hasInspector && !compact ? inspectorWidth : 0) - 16,
+    y: dock.y - (compact && hasInspector ? viewport.height * .43 + 78 : 68),
   };
-  const at = { x: clamp(position?.x ?? home.x, 0, dock.x), y: clamp(position?.y ?? home.y, 0, dock.y) };
+  const at = docked ? dock : { x: clamp(position?.x ?? home.x, 0, dock.x), y: clamp(position?.y ?? home.y, 0, dock.y) };
   const side = at.y + size / 2 > viewport.height * 0.51 ? "above" : "below";
   const bubbleWidth = Math.min(open ? 386 : 280, viewport.width - 24);
   const bubbleX = clamp(at.x + size / 2 - bubbleWidth / 2, 12, viewport.width - bubbleWidth - 12);
@@ -220,6 +224,8 @@ export default function RockyOverlay({ visible, open, thinking, onChat, renderCh
   }, [sound]);
   useEffect(() => {
     if (open || !visible) setSpeech(null);
+    if (visible && wasOpen.current && !open) mascot.current?.focus();
+    wasOpen.current = open;
   }, [open, visible]);
   useEffect(() => {
     if (!menu) return;
@@ -247,7 +253,7 @@ export default function RockyOverlay({ visible, open, thinking, onChat, renderCh
     return () => clearTimeout(timer);
   }, [movement, visible, pageVisible, paused, gesture, randomClip]);
   useEffect(() => {
-    if ((movement !== "Random" && movement !== "Scuttle") || !idle || reducedMotion()) return;
+    if ((movement !== "Random" && movement !== "Scuttle") || !idle || docked || reducedMotion()) return;
     const timer = setInterval(() => {
       if (document.hidden) return;
       setRoaming(true);
@@ -263,7 +269,7 @@ export default function RockyOverlay({ visible, open, thinking, onChat, renderCh
       });
     }, movement === "Scuttle" ? 4200 : 11500);
     return () => clearInterval(timer);
-  }, [movement, idle, dock.x, dock.y, home.x, home.y, size]);
+  }, [movement, idle, docked, dock.x, dock.y, home.x, home.y, size]);
   useEffect(() => {
     if (!roaming) return;
     const timer = setTimeout(() => setRoaming(false), 1900);
@@ -306,7 +312,6 @@ export default function RockyOverlay({ visible, open, thinking, onChat, renderCh
       heldForMenu.current = false;
       const rect = e.currentTarget.getBoundingClientRect();
       drag.current = { start: point, origin: { x: rect.left, y: rect.top } };
-      setPosition(drag.current.origin);
       setDragging(true);
       setRoaming(false);
       if (e.pointerType === "touch") longPress.current = setTimeout(() => {
@@ -334,6 +339,7 @@ export default function RockyOverlay({ visible, open, thinking, onChat, renderCh
     if (!moved.current && Math.hypot(dx, dy) < 5) return;
     moved.current = true;
     clearTimeout(longPress.current);
+    setDocked(false);
     setPosition({ x: clamp(origin.x + dx, 0, dock.x), y: clamp(origin.y + dy, 0, dock.y) });
   }
   function pointerEnd(e: PointerEvent<HTMLButtonElement>) {
@@ -355,7 +361,7 @@ export default function RockyOverlay({ visible, open, thinking, onChat, renderCh
     mascot.current?.focus();
   }
   const clip = gesture?.clip ?? (movement === "Random" ? (thinking ? "Question" : randomClip) : movement);
-  return <aside className="rocky-overlay" aria-label="Rocky assistant"
+  return <aside className="rocky-overlay" aria-label="Rocky assistant" hidden={!visible}
     onKeyDown={e => {
       if (e.key === "Escape" && menu) {
         e.stopPropagation();
@@ -364,9 +370,10 @@ export default function RockyOverlay({ visible, open, thinking, onChat, renderCh
         e.stopPropagation();
       }
     }}>
-    <button ref={mascot} type="button" className={`rocky-character${roaming ? " roaming" : ""}`}
+    <button ref={mascot} type="button" className={`rocky-character rocky-fab${roaming ? " roaming" : ""}`}
       style={{ left: at.x, top: at.y, width: size, height: size }}
-      aria-label={open ? "Toggle Rocky" : "Ask Rocky"} aria-expanded={open} aria-haspopup="menu"
+      aria-label={open ? "Close Rocky chat" : "Ask Rocky"} aria-expanded={open}
+      aria-controls={open ? "rocky-chat" : undefined}
       data-animation={clip} title="Click to chat. Right-click for Rocky’s options."
       onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerEnd}
       onPointerCancel={pointerEnd} onLostPointerCapture={pointerEnd}
@@ -383,14 +390,15 @@ export default function RockyOverlay({ visible, open, thinking, onChat, renderCh
           e.preventDefault(); e.stopPropagation(); showMenu({ x: at.x, y: at.y });
         }
       }}>
-      <MascotBoundary><Suspense fallback={<MessageCircle size={26} />}>
+      <div className="rocky-fab-model" aria-hidden="true"><MascotBoundary><Suspense fallback={<MessageCircle size={26} />}>
         <Canvas frameloop="demand" dpr={[1, 2]} camera={{ position: [0, 0.2, 3.1], fov: 47 }}
           gl={{ alpha: true, antialias: true }} aria-hidden="true">
           <ambientLight intensity={1.45} />
           <directionalLight intensity={3.2} position={[3, 3, 4]} />
           <Model clip={clip} paused={paused || !visible || !pageVisible} replay={gesture?.id ?? 0} onReady={modelLoaded} />
         </Canvas>
-      </Suspense></MascotBoundary>
+      </Suspense></MascotBoundary></div>
+      <span className="rocky-fab-badge" aria-hidden="true"><MessageCircle size={12} /></span>
     </button>
     {visible && (open || (speech && pageVisible && !menu && !dragging)) && <div className={`rocky-conversation ${side}`}
       style={{ left: bubbleX, width: bubbleWidth, [side === "above" ? "bottom" : "top"]: bubbleY,
@@ -399,7 +407,9 @@ export default function RockyOverlay({ visible, open, thinking, onChat, renderCh
       {open ? renderChat(stream, sound) : <IdleBubble key={speech.id} phrase={speech.text} sound={sound} onFinish={clearSpeech} />}
     </div>}
     {menu && <div ref={menuRef} className="context-menu rocky-menu" role="menu" aria-label="Rocky options"
-      style={{ left: clamp(menu.x, 8, viewport.width - 230), top: clamp(menu.y, 8, viewport.height - Math.min(680, viewport.height - 16) - 8) }}
+      style={{ left: clamp(menu.x, 8, viewport.width - 230),
+        ...(menu.y >= viewport.height / 2 ? { bottom: viewport.height - menu.y + 8 } : { top: menu.y + 8 }),
+        maxHeight: Math.min(680, Math.max(menu.y, viewport.height - menu.y) - 16) }}
       onClickCapture={e => {
         // Touch can dispatch a compatibility click at the release position
         // after a long press, even when the original pointer was captured.
@@ -430,8 +440,8 @@ export default function RockyOverlay({ visible, open, thinking, onChat, renderCh
       <button role="menuitemcheckbox" aria-checked={sound} onClick={() => menuAction(() => { if (!sound) void calmVoice.unlock(); setSound(!sound); })}>Calm dialogue blips</button>
       <button role="menuitem" onClick={() => menuAction(() => { if (sound) void calmVoice.unlock(); saySomething(); })}>Say something</button>
       <button role="menuitem" onClick={() => menuAction(() => setScale(1))}>Reset size</button>
-      <button role="menuitem" onClick={() => menuAction(() => setPosition(null))}>Reset position</button>
-      <button role="menuitem" onClick={() => menuAction(() => setPosition(dock))}>Move to corner</button>
+      <button role="menuitem" onClick={() => menuAction(() => { setDocked(false); setPosition(null); })}>Reset position</button>
+      <button role="menuitem" onClick={() => menuAction(() => setDocked(true))}>Move to corner</button>
     </div>}
   </aside>;
 }

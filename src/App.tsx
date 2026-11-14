@@ -1535,7 +1535,7 @@ export default function App() {
         {slip && <DateSlip close={() => setSlip(false)} />}
       </Suspense>
       <Suspense fallback={null}>
-        {rockyStarted && <Rocky snapshot={() => snapshot.current()} />}
+        {rockyStarted && <Rocky snapshot={() => snapshot.current()} hasInspector={inspector && !solar} />}
       </Suspense>
       {state.welcome && (
         <div className={"welcome " + (intro ? "departing" : "")}>

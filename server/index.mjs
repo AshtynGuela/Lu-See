@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { createServer as createHttpServer } from "node:http";
 import { fileURLToPath } from "node:url";
 import { z } from "zod";
 import { ephemeris } from "./horizons.mjs";
@@ -77,6 +78,7 @@ app.get("/api/health", async (req, res) => {
     heightReady = true;
   } catch {}
   res.json({
+    app: "Lu-See",
     ready: true,
     primaryConfigured: !!process.env.OPENROUTER_API_KEY,
     fallbackConfigured: !!process.env.GROQ_API_KEY,
@@ -300,6 +302,7 @@ app.use((err, req, res, next) => {
   });
 });
 const production = process.argv.includes("--production");
+const server = createHttpServer(app);
 if (production) {
   app.use(express.static(path.join(root, "dist")));
   app.get("/{*path}", (req, res) =>
@@ -309,13 +312,18 @@ if (production) {
   const { createServer } = await import("vite");
   const vite = await createServer({
     root,
-    server: { middlewareMode: true },
+    server: { middlewareMode: true, hmr: { server } },
     appType: "spa",
   });
   app.use(vite.middlewares);
 }
-const server = app.listen(Number(process.env.PORT) || 5173, process.env.HOST || (production ? "0.0.0.0" : "127.0.0.1"), () =>
-  console.log(
-    "Lu-See http://127.0.0.1:" + server.address().port,
-  ),
+const port = Number(process.env.PORT) || (production ? 5173 : 5175);
+server.on("error", error => {
+  console.error(error.code === "EADDRINUSE"
+    ? `Port ${port} is already in use. Open http://127.0.0.1:${port} if Lu-See is already running, or choose a different port.`
+    : error.message);
+  process.exit(1);
+});
+server.listen(port, process.env.HOST || (production ? "0.0.0.0" : "127.0.0.1"), () =>
+  console.log(`Lu-See http://127.0.0.1:${port}`),
 );

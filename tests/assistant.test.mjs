@@ -50,9 +50,12 @@ test("text-only request may fall back and must still pass answer validation", as
   process.env.OPENROUTER_API_KEY = "test-only";
   process.env.GROQ_API_KEY = "test-only";
   try {
-    globalThis.fetch = async (url) => {
+    globalThis.fetch = async (url, request) => {
       calls.push(url);
       if (url.includes("openrouter.ai")) throw Error("test primary failure");
+      const body = JSON.parse(request.body);
+      assert.equal(body.tools, undefined);
+      assert.deepEqual(body.response_format, { type: "json_object" });
       return {
         ok: true,
         json: async () => ({

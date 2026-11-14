@@ -34,7 +34,7 @@ function SpokenReply({ speech, details = "", stream, sound }: {
   </RockyBubble>;
 }
 
-export default function Rocky({ snapshot }: { snapshot: () => string }) {
+export default function Rocky({ snapshot, hasInspector }: { snapshot: () => string; hasInspector: boolean }) {
   const state = useScout(),
     [phase, setPhase] = useState<Phase>("IDLE"),
     [draft, setDraft] = useState(""),
@@ -171,11 +171,12 @@ export default function Rocky({ snapshot }: { snapshot: () => string }) {
   useEffect(() => () => controller.current?.abort(), []);
   return <RockyOverlay
     visible={!state.welcome}
+    hasInspector={hasInspector}
     open={phase !== "IDLE"}
     thinking={phase === "THINKING"}
     onChat={() => phase === "IDLE" ? reopen() : close()}
     renderChat={(stream, sound) => (
-      <div className="rocky-panel" onKeyDown={e => {
+      <div id="rocky-chat" className="rocky-panel" onKeyDown={e => {
         if (e.key === "Escape") { e.stopPropagation(); close(); }
       }}>
       <div className="sr-only" role="status">
@@ -228,6 +229,7 @@ export default function Rocky({ snapshot }: { snapshot: () => string }) {
                   <RockyBubble><p>Friend! Pick a place. Rocky helps check Sun, Earth, and terrain. Where we go, question?</p></RockyBubble>
                   <div className="question-chips">
                     {[
+                      "How do I find a landing window?",
                       "When does the Sun set here?",
                       "Why is the lunar south pole difficult?",
                       "Explain the horizon assumptions.",
