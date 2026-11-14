@@ -2,6 +2,8 @@ import { useId, useMemo } from "react";
 import { Compass, Radio, Sun } from "lucide-react";
 import { conditions, horizonAt } from "../engine/index.mjs";
 import { getMask, packetFor, useScout, type Site } from "./store";
+import type { SurfaceImageState } from "./World";
+import { surfaceDetail, surfaceDetailCredit } from "./surfaceDetails";
 
 const cardinals = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
 const compass = (az: number) => cardinals[Math.round(az / 45) % 8];
@@ -10,7 +12,7 @@ const degrees = (angle: number) => `${angle.toFixed(1)}°`;
 export default function HorizonReadout({ site, bearing, imagery, terrainLighting, toggleTerrainLighting, pointAt }: {
   site: Site;
   bearing: number;
-  imagery: "loading" | "ready" | "unavailable";
+  imagery: SurfaceImageState;
   terrainLighting: boolean;
   toggleTerrainLighting: () => void;
   pointAt: (az: number, el: number) => void;
@@ -25,7 +27,16 @@ export default function HorizonReadout({ site, bearing, imagery, terrainLighting
   const sky = useMemo(() => packet ? conditions(packet, time, mask, antenna) : null, [packet, time, mask, antenna]);
   const obstructions = terrain?.obstructions?.[String(mast)];
   const skyline = mask ? horizonAt(mask, bearing) : null;
-  const lookAlongSkyline = (az: number) => pointAt(az, mask ? horizonAt(mask, az) : 0);
+  const closeUp = (imagery === "detail" || imagery === "detail-terrain") ? surfaceDetail(site) : undefined;
+  const lookAlongSkyline = (az: number) => pointAt(az, (mask ? horizonAt(mask, az) : 0) - 11);
+  const lookTowardSurveyor = () => {
+    // Surveyor 3 position from LROC's 2016 spacecraft coordinate catalogue.
+    const rad = Math.PI / 180, lat = site.lat * rad, targetLat = -3.0162 * rad,
+      delta = (-23.418 - site.lon) * rad;
+    const east = Math.sin(delta) * Math.cos(targetLat);
+    const north = Math.cos(lat) * Math.sin(targetLat) - Math.sin(lat) * Math.cos(targetLat) * Math.cos(delta);
+    pointAt((Math.atan2(east, north) / rad + 360) % 360, -7);
+  };
   const distance = (az: number) => {
     if (!obstructions) return null;
     const i = Math.round(az / (terrain?.azStepDeg ?? .5)) % obstructions.distanceM.length;
@@ -51,10 +62,15 @@ export default function HorizonReadout({ site, bearing, imagery, terrainLighting
         {skyline === null ? "Local skyline unavailable" : <>Skyline {degrees(skyline)}{distance(bearing) && ` · terrain ${distance(bearing)} away`}</>}
         <span>{mast} m mast</span>
       </p>
-      {terrain && <div className="horizon-imagery">
-        <span role="status">{imagery === "ready" ? "NASA Moon Trek · LOLA terrain"
+      {(terrain || imagery === "regional" || imagery === "regional-imagery") && <div className="horizon-imagery">
+        <span role="status">{closeUp
+          ? <a href={closeUp.sourceUrl} target="_blank" rel="noreferrer">{surfaceDetailCredit(closeUp, imagery === "detail")}</a>
+          : imagery === "regional-imagery" ? "Moon Trek imagery · SLDEM2015 terrain ~60 m"
+          : imagery === "regional" ? "SLDEM2015 terrain ~60 m"
+          : imagery === "ready" ? `Moon Trek imagery · LOLA terrain ${terrain?.resolutionM} m`
           : imagery === "loading" ? "Loading Moon Trek imagery…" : "LOLA terrain"}</span>
         <button type="button" aria-pressed={!terrainLighting} onClick={toggleTerrainLighting}>Use mission lighting</button>
+        {closeUp && site.id === "apollo12" && <button type="button" onClick={lookTowardSurveyor}>Look toward Surveyor 3</button>}
       </div>}
       {sky && mask && <div className="horizon-targets">
         {(["sun", "earth"] as const).map(body => {

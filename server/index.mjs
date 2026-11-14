@@ -8,7 +8,7 @@ import { z } from "zod";
 import { ephemeris } from "./horizons.mjs";
 import { answerQuestion } from "./assistant.mjs";
 import { solarPacket } from "./solar.mjs";
-import { coordinateTerrainReady, terrainAt } from "./terrain.mjs";
+import { coordinateTerrainReady, surfaceTopography, terrainAt } from "./terrain.mjs";
 import { surfaceImagery } from "./surface-imagery.mjs";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 process.chdir(root);
@@ -125,6 +125,16 @@ app.get("/api/terrain", async (req, res, next) => {
     res.json({ ...terrain, lat, lon });
   } catch (e) {
     next(e);
+  }
+});
+app.get("/api/surface-topography", async (req, res, next) => {
+  try {
+    const { lat, lon } = coords.parse(req.query);
+    const tile = await surfaceTopography(lat, lon);
+    if (!tile) return res.status(204).end();
+    res.set("Cache-Control", "public, max-age=604800").type("json").send(tile);
+  } catch (error) {
+    next(error);
   }
 });
 app.get("/api/surface-imagery", async (req, res, next) => {

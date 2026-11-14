@@ -1,13 +1,14 @@
 import "dotenv/config";
 import { spawn } from "node:child_process";
+import { createConnection } from "node:net";
 import { setTimeout as delay } from "node:timers/promises";
 
-const port = Number(process.env.PORT) || 5175;
-const url = `http://127.0.0.1:${port}`;
+let port = Number(process.env.PORT) || 5175;
+const localUrl = () => `http://127.0.0.1:${port}`;
 
 async function isRunning() {
   try {
-    const response = await fetch(url + "/api/health", { signal: AbortSignal.timeout(750) });
+    const response = await fetch(localUrl() + "/api/health", { signal: AbortSignal.timeout(750) });
     return response.ok && (await response.json()).app === "Lu-See";
   } catch {
     return false;
@@ -15,12 +16,25 @@ async function isRunning() {
 }
 
 function openBrowser() {
+  const url = localUrl();
   console.log(`Open ${url} in your browser.`);
   if (process.env.LUSEE_NO_BROWSER === "1") return;
   const browser = spawn("explorer.exe", [url], { detached: true, stdio: "ignore" });
   browser.on("error", () => {});
   browser.unref();
 }
+
+function portInUse() {
+  return new Promise(resolve => {
+    const socket = createConnection({ port, host: "127.0.0.1" });
+    socket.once("connect", () => { socket.destroy(); resolve(true); });
+    socket.once("error", () => resolve(false));
+  });
+}
+
+const preferredPort = port;
+while (port < preferredPort + 10 && await portInUse() && !await isRunning()) port++;
+if (port !== preferredPort) console.log(`Using port ${port} because port ${preferredPort} is busy.`);
 
 if (await isRunning()) {
   console.log("Lu-See is already running.");

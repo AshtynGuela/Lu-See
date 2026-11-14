@@ -1,0 +1,26 @@
+{
+  "site": "slim",
+  "lat": -13.316,
+  "lon": 25.251,
+  "extentM": 512,
+  "samples": 171,
+  "elevationSpacingM": 3.0,
+  "imagerySpacingM": 0.9,
+  "renderElevationSpacingM": 3.011765,
+  "renderImagerySpacingM": 0.901408,
+  "dtm": {
+    "url": "https://pds.mcp.nasa.gov/data/store/img/lunar_reconnaissance_orbiter/pds4/lroc/lro-l-lroc-5-rdr/LROLRC_2001/DATA/SDP/NAC_DTM/THEOPHILUS/NAC_DTM_THEOPHILUS.TIF"
+  },
+  "terrainSource": "LROC",
+  "orthophoto": {
+    "url": "https://pds.mcp.nasa.gov/data/store/img/lunar_reconnaissance_orbiter/pds4/lroc/lro-l-lroc-5-rdr/LROLRC_2001/EXTRAS/BROWSE/NAC_DTM/THEOPHILUS/NAC_DTM_THEOPHILUS_MOSAIC_90CM.TIF"
+  },
+  "lroc": "https://data.lroc.im-ldi.com/lroc/view_rdr/NAC_DTM_THEOPHILUS",
+  "relief": "int16 little endian, centimetres relative to DTM centre, south to north",
+  "texture": "MOSAIC_90CM, percentile stretch, north at top",
+  "sourceCenterElevationM": -912.591,
+  "meshBytes": 44347,
+  "textureBytes": 47394,
+  "meshSha256": "6a778ecd45d121d23728647cac5364a32b46cd77e5ee72fa977875785f0c7dba",
+  "textureSha256": "c08aa8a1b71cdaf3c4f541eb518601cec29bdfae8d45fd2fa3531d679b9d2f74"
+}

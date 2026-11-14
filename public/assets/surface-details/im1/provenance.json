@@ -1,0 +1,27 @@
+{
+  "site": "im1",
+  "lat": -80.13,
+  "lon": 1.44,
+  "extentM": 512,
+  "samples": 25,
+  "elevationSpacingM": 20.0,
+  "imagerySpacingM": 2.0903205871582,
+  "renderElevationSpacingM": 21.333333,
+  "renderImagerySpacingM": 2.098361,
+  "dtm": {
+    "url": "https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LDEM_80S_20MPP_ADJ.TIF"
+  },
+  "terrainSource": "LOLA",
+  "imagerySource": "Moon Trek NAC",
+  "sourceUrl": "https://pgda.gsfc.nasa.gov/products/90",
+  "orthophoto": {
+    "url": "https://trek.nasa.gov/tiles/Moon/SP/LRO_NAC_Post_Landing_OrthoMosaic_1mpp_IM_1_LandingSite_SP/1.0.0/WMTSCapabilities.xml"
+  },
+  "relief": "int16 little endian, centimetres relative to DTM centre, south to north",
+  "texture": "LRO_NAC_Post_Landing_OrthoMosaic_1mpp_IM_1_LandingSite_SP at level 12, percentile stretch, north at top",
+  "sourceCenterElevationM": 2591.966,
+  "meshBytes": 1249,
+  "textureBytes": 16448,
+  "meshSha256": "96e443e57787a68b1708bf12b259bf7e585057fb95b6ab69fa2cf156336cf59e",
+  "textureSha256": "8a39c534c97f85f8b8312bc0f4237cf451a486368e3bf6a45069ce3f4805f589"
+}

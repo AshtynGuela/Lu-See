@@ -1,0 +1,27 @@
+{
+  "site": "shackleton",
+  "lat": -89.67,
+  "lon": 129.78,
+  "extentM": 1024,
+  "samples": 171,
+  "elevationSpacingM": 6.0,
+  "imagerySpacingM": 1.9,
+  "renderElevationSpacingM": 6.023529,
+  "renderImagerySpacingM": 1.903346,
+  "dtm": {
+    "url": "https://pds.shadowcam.im-ldi.com/derived/dtm/shackleton1_p896s1181/shadowcam_dtm_shackleton1_p896s1181_dtm_6m_cog.tif"
+  },
+  "terrainSource": "ShadowCam stereo",
+  "imagerySource": "ShadowCam",
+  "sourceUrl": "https://pds.shadowcam.im-ldi.com/derived/dtm/shackleton1_p896s1181/",
+  "orthophoto": {
+    "url": "https://pds.shadowcam.im-ldi.com/derived/dtm/shackleton1_p896s1181/shadowcam_dtm_shackleton1_p896s1181_orthomosaic_190cm_cog.tif"
+  },
+  "relief": "int16 little endian, centimetres relative to DTM centre, south to north",
+  "texture": "shadowcam_dtm_shackleton1_p896s1181_orthomosaic_190cm_cog.tif, percentile stretch, north at top",
+  "sourceCenterElevationM": -2788.327,
+  "meshBytes": 44412,
+  "textureBytes": 56864,
+  "meshSha256": "c1ab6ab3ab03938e79b4a2f16e40fe6adc6cd15f1bf2e5a6cc078565f3d05a58",
+  "textureSha256": "5c44ed18e1ea40d93a6defe5e47cf02860b44c0a03ab0c165daecff4f7c4d63a"
+}

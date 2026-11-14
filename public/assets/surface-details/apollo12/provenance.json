@@ -1,0 +1,26 @@
+{
+  "site": "apollo12",
+  "lat": -3.0128,
+  "lon": -23.4219,
+  "extentM": 512,
+  "samples": 257,
+  "elevationSpacingM": 2.0,
+  "imagerySpacingM": 0.5,
+  "renderElevationSpacingM": 2.0,
+  "renderImagerySpacingM": 0.5,
+  "dtm": {
+    "url": "https://pds.mcp.nasa.gov/data/store/img/lunar_reconnaissance_orbiter/pds4/lroc/lro-l-lroc-5-rdr/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO12/NAC_DTM_APOLLO12.TIF"
+  },
+  "orthophoto": {
+    "url": "https://pds.mcp.nasa.gov/data/store/img/lunar_reconnaissance_orbiter/pds4/lroc/lro-l-lroc-5-rdr/LROLRC_2001/EXTRAS/BROWSE/NAC_DTM/APOLLO12/NAC_DTM_APOLLO12_M120005333_50CM.TIF"
+  },
+  "lroc": "https://data.lroc.im-ldi.com/lroc/view_rdr/NAC_DTM_APOLLO12",
+  "relief": "int16 little endian, centimetres relative to DTM centre, south to north",
+  "texture": "M120005333_50CM, percentile stretch, north at top",
+  "sourceCenterElevationM": -1422.198,
+  "meshBytes": 80783,
+  "textureBytes": 144550,
+  "meshSha256": "1c99a008d7dfb4ac93b67df8be0dda6a250d817c5887b53251442bc5e771c363",
+  "textureSha256": "454811c4174de39c7519fe3ab54782fcac5b43d70e2b6b611013322285bdbc33",
+  "surveyor3Coordinates": "https://lroc.im-ldi.com/images/938"
+}

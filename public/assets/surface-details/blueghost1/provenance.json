@@ -1,0 +1,26 @@
+{
+  "site": "blueghost1",
+  "lat": 18.562,
+  "lon": 61.81,
+  "extentM": 512,
+  "samples": 129,
+  "elevationSpacingM": 4.0,
+  "imagerySpacingM": 1.1,
+  "renderElevationSpacingM": 4.0,
+  "renderImagerySpacingM": 1.101075,
+  "dtm": {
+    "url": "https://pds.mcp.nasa.gov/data/store/img/lunar_reconnaissance_orbiter/pds4/lroc/lro-l-lroc-5-rdr/LROLRC_2001/DATA/SDP/NAC_DTM/CRISHORSE/NAC_DTM_CRISHORSE.TIF"
+  },
+  "terrainSource": "LROC",
+  "orthophoto": {
+    "url": "https://pds.mcp.nasa.gov/data/store/img/lunar_reconnaissance_orbiter/pds4/lroc/lro-l-lroc-5-rdr/LROLRC_2001/EXTRAS/BROWSE/NAC_DTM/CRISHORSE/NAC_DTM_CRISHORSE_MOSAIC_110CM.TIF"
+  },
+  "lroc": "https://data.lroc.im-ldi.com/lroc/view_rdr/NAC_DTM_CRISHORSE",
+  "relief": "int16 little endian, centimetres relative to DTM centre, south to north",
+  "texture": "MOSAIC_110CM, percentile stretch, north at top",
+  "sourceCenterElevationM": -3650.023,
+  "meshBytes": 21217,
+  "textureBytes": 45610,
+  "meshSha256": "add16a9523de23f9c7e8a4c74879a3c69bb2cd7ff3a74207f012bbff84490051",
+  "textureSha256": "64873fa9ba7ff4138762ba3c5abe6393157462a063fde60e6eb67c56725b5000"
+}

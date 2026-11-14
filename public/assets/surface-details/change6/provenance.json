@@ -1,0 +1,25 @@
+{
+  "site": "change6",
+  "lat": -41.6385,
+  "lon": -153.9852,
+  "extentM": 512,
+  "samples": 129,
+  "elevationSpacingM": 4.0,
+  "imagerySpacingM": 1.1,
+  "renderElevationSpacingM": 4.0,
+  "renderImagerySpacingM": 1.101075,
+  "dtm": {
+    "url": "https://pds.mcp.nasa.gov/data/store/img/lunar_reconnaissance_orbiter/pds4/lroc/lro-l-lroc-5-rdr/LROLRC_2001/DATA/SDP/NAC_DTM/CHANGE6/NAC_DTM_CHANGE6.TIF"
+  },
+  "orthophoto": {
+    "url": "https://pds.mcp.nasa.gov/data/store/img/lunar_reconnaissance_orbiter/pds4/lroc/lro-l-lroc-5-rdr/LROLRC_2001/EXTRAS/BROWSE/NAC_DTM/CHANGE6/NAC_DTM_CHANGE6_M1487705442_110CM.TIF"
+  },
+  "lroc": "https://data.lroc.im-ldi.com/lroc/view_rdr/NAC_DTM_CHANGE6",
+  "relief": "int16 little endian, centimetres relative to DTM centre, south to north",
+  "texture": "M1487705442_110CM, percentile stretch, north at top",
+  "sourceCenterElevationM": -5253.054,
+  "meshBytes": 20485,
+  "textureBytes": 54680,
+  "meshSha256": "10858927a7af71e84b8e0925cc302f7f38a2d65c17ce006a586b323cc8de95a8",
+  "textureSha256": "fc7aa18cef3dcae625d416d40db98ec018624c7139ef2bd28c10a8fe8abd8afe"
+}

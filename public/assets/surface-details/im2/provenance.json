@@ -1,0 +1,27 @@
+{
+  "site": "im2",
+  "lat": -84.7906,
+  "lon": 29.1957,
+  "extentM": 1024,
+  "samples": 103,
+  "elevationSpacingM": 10.0,
+  "imagerySpacingM": 1.0,
+  "renderElevationSpacingM": 10.039216,
+  "renderImagerySpacingM": 1.0,
+  "dtm": {
+    "url": "https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LDEM_83S_10MPP_ADJ.TIF"
+  },
+  "terrainSource": "LOLA",
+  "imagerySource": "LROC",
+  "sourceUrl": "https://data.lroc.im-ldi.com/lroc/view_rdr/NAC_ROI_MOUTNPLTLO1",
+  "orthophoto": {
+    "url": "https://pds.mcp.nasa.gov/data/store/img/lunar_reconnaissance_orbiter/pds4/lroc/lro-l-lroc-5-rdr/LROLRC_2001/EXTRAS/BROWSE/NAC_ROI/MOUTNPLTLO1/NAC_ROI_MOUTNPLTLO1_P843S0306.PYR.TIF"
+  },
+  "relief": "int16 little endian, centimetres relative to DTM centre, south to north",
+  "texture": "NAC_ROI_MOUTNPLTLO1_P843S0306.PYR.TIF, percentile stretch, north at top",
+  "sourceCenterElevationM": 5321.746,
+  "meshBytes": 16408,
+  "textureBytes": 239284,
+  "meshSha256": "9d6197535f50bb847ea3b960840fa2bbce8935f32ee4be4727981d78fbe21c81",
+  "textureSha256": "881314afaba9d72baff89007f9d6140c240947d412f388e4061f43ec36ae314d"
+}

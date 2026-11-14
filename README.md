@@ -6,7 +6,9 @@ See [BUILD_STATUS.md](BUILD_STATUS.md) for this build's delivered features, comp
 
 ## Run locally
 
-Requires Node 22+, npm and Python 3.11+ with `pip install -r requirements.txt` for custom terrain. Create `.env` from `.env.example` only if it does not already exist; the fork uses port 5175 to coexist with the original prototype. From this directory:
+On Windows, double-click **Launch Lu-See.cmd**. It opens Lu-See in your browser, normally on port 5175, and prints the URL if it uses a different port. Keep the launcher window open while using the app.
+
+Requires Node 22+, npm and Python 3.11+ with `pip install -r requirements.txt` for custom terrain. Create `.env` from `.env.example` if you want to configure Rocky or override the port. To start from a terminal in this directory:
 
 ```text
 npm install
@@ -30,7 +32,7 @@ The supplied D-DIN font and bubble artwork are used across the interface and Roc
 
 Earth-shadow screening uses the real JPL Sun/Earth apparent positions and angular sizes. It tests an opaque circular Earth disc against the solar disc, combines that with the terrain horizon, and feeds the resulting direct-light fraction into mission summaries, timelines, date sweeps and Rocky's numerical tools. The globe applies the corresponding approximate geometry across its surface. Atmospheric red/refracted light is deliberately excluded, so geometric totality renders black. Polar hillshade and statistical rasters remain cartographic/precomputed layers, not eclipse images.
 
-## Scientific data, not sample values
+## Scientific data
 
 - **Sun and Earth:** real [NASA/JPL Horizons observer API](https://ssd-api.jpl.nasa.gov/doc/horizons.html) responses, requested for the selected lunar coordinates and observer altitude. High-precision MEAN_ME frame, east-positive longitude, airless apparent angles, angular diameters and topocentric ranges. Horizons currently reports DE441 in the checked responses. Ten-minute directions are interpolated as normalized unit vectors to handle north-wrap and zenith passages; angular sizes and ranges are interpolated linearly, without extrapolation.
 - **Source records:** responses are stored unchanged under `.cache/horizons/`, along with SHA-256 digests, exact request URLs, retrieval times and returned model/frame metadata. The inspector's Data & methodology dialog links to raw responses. A source failure produces an error and Retry, never invented readings.
@@ -59,18 +61,11 @@ Rocky uses `public/assets/rocky-web.glb`, a 21.8 MB Meshopt export of the origin
 
 ## Rocky keys
 
-Put these in this directory's ignored `.env` file, then restart the server:
-
-```text
-OPENROUTER_API_KEY=your_key_here
-GROQ_API_KEY=your_key_here
-```
-
 Primary: `nvidia/nemotron-3.5-super-vl:free` through OpenRouter. Fallback: `openai/gpt-oss-20b` through Groq. Keys remain server-side.
 
 Image-dependent questions remain pending with a snapshot preview and Retry if Nemotron is unavailable. Retry reuses the original map and time even if you navigate somewhere else or close the chat bubble. Groq handles text-only fallback. Snapshots contain the app's map canvas. The model proposes actions; the user clicks before any action runs. Evidence IDs refer to server-created facts. The model inserts fact placeholders in its prose; the server supplies numerical strings, rejects unsupported numbers/references, and validates action targets and dates. This constrains numerical provenance; it is not proof that every natural-language interpretation is correct.
 
-No hosted AI call is possible until valid keys are configured. A missing key is shown as a configuration error, not a fake assistant answer. Local scene selection and measurements do not require LLM credentials.
+No hosted AI call is possible until valid keys are configured. A missing key is shown as a configuration error. Local scene selection and measurements do not require LLM credentials.
 
 ## Validation
 
@@ -104,6 +99,10 @@ Eclipse validation checks actual JPL geometry at Apollo 11 against broad inside/
 Use **Find better spots nearby** from the inspector or the map context menu. The search samples eight directions within the chosen radius and includes up to two catalogue or saved sites. Each result uses its own LOLA horizon and JPL observer table. The search uses the selected mission date or map clock, the chosen stay duration and the current mast and antenna settings. Sites meeting all configured limits rank first. The remaining score adds sunlight and Earth-contact percentages and subtracts the longest dark period as a percentage of the stay. The results can be placed on the globe as numbered pins or added to a comparison.
 
 In Horizon View and Surface View, **Use mission lighting** enables moving shadows cast by the local LOLA mesh. The render uses the selected time’s Sun direction, Earth occultation and an approximate distant-horizon cutoff. The shadow map covers the loaded terrain patch. Mission metrics continue to use the numerical site horizon and solar-disc model.
+
+All 14 curated sites have local 3D terrain and registered orbital imagery in Horizon and Surface View. The Apollo sites, Chang’e 4 and 6, Chandrayaan-3, Blue Ghost and SLIM use 512 m crops of LROC stereo terrain and associated orthophotos. IM-1 combines adjusted 20 m LOLA terrain with the Moon Trek post-landing orthomosaic. IM-2 combines 10 m LOLA terrain with the 1 m LROC Mons Mouton mosaic. Shackleton uses 6 m ShadowCam stereo terrain and a 1.9 m orthomosaic of the crater interior. The IM-2 and Shackleton crops cover 1,024 m squares. Each site loads only its own compressed height grid and WebP texture. The local relief uses the existing LOLA site elevation as its vertical reference and blends into the surrounding DEM. Numerical skyline and landing analysis use the underlying terrain records. The images preserve lighting from their original acquisition.
+
+Horizon View shows the source sampling for terrain and imagery. Around low- and mid-latitude sites, including custom coordinates, the surrounding 12 km display mesh streams approximately 60 m SLDEM2015 elevations from NASA’s PDS archive. The server requests only the byte ranges needed for that patch and keeps a bounded cache. Outside the SLDEM2015 coverage and when the archive is unavailable, the display uses the existing LOLA surface. Provenance files under `public/assets/surface-details/<site>/provenance.json` record the exact products, export spacing and checksums. Rebuild a crop with Rasterio installed and `python scripts/prepare_surface_details.py apollo12`. Preparation reads only the relevant archived raster windows or Moon Trek tiles.
 
 Run independent direction validation with `python -m pip install spiceypy` followed by `npm run test:spice`. The [report](data/validation/spice.json) covers 216 Sun and Earth directions at nine sites from 1969 to 2039. The largest angular difference is 0.0002022° when rounded up. It records the independent SPICE kernel checksums, Horizons query provenance and residuals for each observation. The original roadmap still includes denser nearby grids, offline packaging and further export and educator features. `PROJECT_BRIEF.md` records decisions and `ORIGINAL_SPECIFICATION.txt` preserves the supplied source.
 

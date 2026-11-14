@@ -1,0 +1,26 @@
+{
+  "site": "chandrayaan3",
+  "lat": -69.3741,
+  "lon": 32.32,
+  "extentM": 512,
+  "samples": 171,
+  "elevationSpacingM": 3.0,
+  "imagerySpacingM": 1.0,
+  "renderElevationSpacingM": 3.011765,
+  "renderImagerySpacingM": 1.0,
+  "dtm": {
+    "url": "https://pds.mcp.nasa.gov/data/store/img/lunar_reconnaissance_orbiter/pds4/lroc/lro-l-lroc-5-rdr/LROLRC_2001/DATA/SDP/NAC_DTM/VIKRAMSITE1/NAC_DTM_VIKRAMSITE1.TIF"
+  },
+  "terrainSource": "LROC",
+  "orthophoto": {
+    "url": "https://pds.mcp.nasa.gov/data/store/img/lunar_reconnaissance_orbiter/pds4/lroc/lro-l-lroc-5-rdr/LROLRC_2001/EXTRAS/BROWSE/NAC_DTM/VIKRAMSITE1/NAC_DTM_VIKRAMSITE1_M1442997156_100CM.TIF"
+  },
+  "lroc": "https://data.lroc.im-ldi.com/lroc/view_rdr/NAC_DTM_VIKRAMSITE1",
+  "relief": "int16 little endian, centimetres relative to DTM centre, south to north",
+  "texture": "M1442997156_100CM, percentile stretch, north at top",
+  "sourceCenterElevationM": 531.907,
+  "meshBytes": 36491,
+  "textureBytes": 49858,
+  "meshSha256": "07b5969f68d158604db5961576aa6213490ef923d624b1837dbb1fa44e1ce69b",
+  "textureSha256": "18a3b45f5159b1bafb94e3522b0df333b47948a47099342c80965e52fef16ded"
+}

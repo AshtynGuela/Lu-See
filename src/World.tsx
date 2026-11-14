@@ -9,6 +9,7 @@ import SolarSystem, { SolarCanvasScene } from "./SolarSystem";
 import SpaceBackdrop from "./SpaceBackdrop";
 import HorizonReadout from "./HorizonReadout";
 import { captureMap } from "./mapSnapshot";
+import { surfaceDetail, surfaceDetailCredit } from "./surfaceDetails";
 import type { RankedSite } from "./NearbySites";
 export const lunarPoint = (lat: number, lon: number, r = 3.5) =>
   new THREE.Vector3(
@@ -165,6 +166,26 @@ function MoonGlobe({
     </mesh>
   );
 }
+type SurfaceTile = { size: number; widthM: number; heightsM: number[] };
+
+function useRegionalTopography(site: Site, width: number | undefined) {
+  const url = (width === 12000 || (!width && site.family === "custom")) && Math.abs(site.lat) < 59.8
+    ? "/api/surface-topography?" + new URLSearchParams({ lat: String(site.lat), lon: String(site.lon) }) : null;
+  const [result, setResult] = useState<{ url: string; tile: SurfaceTile } | null>(null);
+  useEffect(() => {
+    if (!url) return;
+    const request = new AbortController();
+    void fetch(url, { signal: request.signal })
+      .then(response => response.ok && response.status !== 204 ? response.json() : null)
+      .then(tile => {
+        if (tile && !request.signal.aborted) setResult({ url, tile });
+      })
+      .catch(() => {}); // The surrounding LOLA tile stays in view.
+    return () => request.abort();
+  }, [url]);
+  return result?.url === url ? result.tile : null;
+}
+
 const horizonColor = new THREE.Color("#272b31");
 function HorizonSilhouette({ mask, mast }: { mask: number[] | null; mast: number }) {
   const geometry = useMemo(() => {
@@ -262,7 +283,7 @@ function Earth({
     </group>
   );
 }
-type SurfaceImageState = "loading" | "ready" | "unavailable";
+export type SurfaceImageState = "loading" | "ready" | "unavailable" | "detail" | "detail-terrain" | "regional" | "regional-imagery";
 
 function useSurfaceMap(url: string | null, onImageState?: (state: SurfaceImageState) => void) {
   const invalidate = useThree(s => s.invalidate);
@@ -304,6 +325,31 @@ function useSurfaceMap(url: string | null, onImageState?: (state: SurfaceImageSt
   return image?.url === url ? image.texture : null;
 }
 
+function useSurfaceRelief(url: string | null, samples: number) {
+  const [relief, setRelief] = useState<{ url: string; heights: Int16Array } | null>(null);
+  useEffect(() => {
+    if (!url) return;
+    const request = new AbortController();
+    void (async () => {
+      try {
+        const response = await fetch(url, { signal: request.signal });
+        if (!response.ok || !response.body) return;
+        const buffer = await new Response(
+          response.headers.get("Content-Encoding") === "gzip"
+            ? response.body
+            : response.body.pipeThrough(new DecompressionStream("gzip")),
+        ).arrayBuffer();
+        if (!request.signal.aborted && buffer.byteLength === samples ** 2 * 2)
+          setRelief({ url, heights: new Int16Array(buffer) });
+      } catch {
+        // The wide LOLA surface remains available when the close-up fails.
+      }
+    })();
+    return () => request.abort();
+  }, [url, samples]);
+  return relief?.url === url ? relief.heights : null;
+}
+
 function LocalTerrain({ site, onImageState, terrainLighting }: {
   site: Site; onImageState: (state: SurfaceImageState) => void; terrainLighting: boolean;
 }) {
@@ -311,39 +357,77 @@ function LocalTerrain({ site, onImageState, terrainLighting }: {
   const view = useScout(s => s.view);
   const grid = useScout(s => s.grid);
   const loading = useScout(s => s.loading[packetKey(site.id, s.mastM)]);
-  const width = terrain?.tile.widthM;
+  const regional = useRegionalTopography(site, terrain?.tile.widthM);
+  const tile = regional ?? terrain?.tile;
+  const width = tile?.widthM;
+  const detail = surfaceDetail(site);
+  const detailAssets = detail && width ? `/assets/surface-details/${detail.site}` : null;
+  const detailWidth = detail?.extentM ?? 0, detailSamples = detail?.samples ?? 0;
+  const relief = useSurfaceRelief(detailAssets && detailAssets + "/relief.bin", detailSamples);
+  const detailTexture = useSurfaceMap(detailAssets && detailAssets + "/surface.webp");
+  const detailed = !!relief && !!width && detailWidth <= width;
   const nearWidth = width === 12000 ? 1280 : 512;
   const imageryUrl = (extent: number) =>
     "/api/surface-imagery?" + new URLSearchParams({ lat: String(site.lat), lon: String(site.lon), width: String(extent), v: "4" });
-  const map = useSurfaceMap(width ? imageryUrl(width) : null, onImageState);
-  const nearUrl = map && width && view === "horizon" ? imageryUrl(nearWidth) : null;
+  const [imageState, setImageState] = useState<SurfaceImageState>("loading");
+  const map = useSurfaceMap(width ? imageryUrl(width) : null, setImageState);
+  const nearUrl = !detailTexture && map && width && view === "horizon" ? imageryUrl(nearWidth) : null;
   const near = useSurfaceMap(nearUrl);
+  const displayState = detailed ? (detailTexture ? "detail" : "detail-terrain")
+    : regional ? (map ? "regional-imagery" : "regional") : imageState;
+  useEffect(() => onImageState(displayState), [displayState, onImageState]);
+  const surfaceNear = (detailed ? detailTexture : null) ?? near;
+  const surfaceNearWidth = surfaceNear === detailTexture && detailTexture ? detailWidth : nearWidth;
   const geometry = useMemo(() => {
-    if (!terrain) return null;
-    const { size, widthM, heightsM } = terrain.tile,
-      p = new Float32Array(size * size * 3),
-      uv = new Float32Array(size * size * 2),
+    if (!tile) return null;
+    const { size, widthM, heightsM } = tile;
+    const centerHeight = heightsM[(heightsM.length - 1) / 2];
+    const observerHeight = terrain?.elevationM ?? centerHeight;
+    const heightOffset = regional ? observerHeight - centerHeight : 0;
+    const axis = Array.from({ length: size }, (_, i) => (i / (size - 1) - .5) * widthM)
+      .filter(m => !detailed || Math.abs(m) > detailWidth / 2);
+    if (detailed) {
+      for (let i = 0; i < detailSamples; i++)
+        axis.push((i / (detailSamples - 1) - .5) * detailWidth);
+      axis.sort((a, b) => a - b);
+    }
+    const count = axis.length,
+      p = new Float32Array(count * count * 3),
+      uv = new Float32Array(count * count * 2),
       indices = [];
-    for (let row = 0; row < size; row++)
-      for (let col = 0; col < size; col++) {
-        const i = row * size + col,
-          x = (col / (size - 1) - 0.5) * widthM,
-          n = (row / (size - 1) - 0.5) * widthM,
+    for (let row = 0; row < count; row++)
+      for (let col = 0; col < count; col++) {
+        const i = row * count + col, x = axis[col], n = axis[row],
+          u = x / widthM + .5, v = n / widthM + .5,
+          gx = u * (size - 1), gz = v * (size - 1),
+          ix = THREE.MathUtils.clamp(Math.floor(gx), 0, size - 2), iz = THREE.MathUtils.clamp(Math.floor(gz), 0, size - 2),
+          fx = gx - ix, fz = gz - iz,
+          top = THREE.MathUtils.lerp(heightsM[iz * size + ix], heightsM[iz * size + ix + 1], fx),
+          bottom = THREE.MathUtils.lerp(heightsM[(iz + 1) * size + ix], heightsM[(iz + 1) * size + ix + 1], fx),
+          base = THREE.MathUtils.lerp(top, bottom, fz) + heightOffset,
+          edge = Math.max(Math.abs(x), Math.abs(n)),
+          detailBlend = detailed ? 1 - THREE.MathUtils.smoothstep(edge, detailWidth * .4, detailWidth / 2) : 0,
           d = Math.hypot(x, n),
-          radial = 1737400 + heightsM[i],
-          h = radial * Math.cos(d / 1737400) - 1737400 - terrain.elevationM,
+          detailIndex = detailed
+            ? Math.round((n / detailWidth + .5) * (detailSamples - 1)) * detailSamples +
+              Math.round((x / detailWidth + .5) * (detailSamples - 1))
+            : 0,
+          radial = 1737400 + (detailBlend
+            ? THREE.MathUtils.lerp(base, observerHeight + relief![detailIndex] / 100, detailBlend)
+            : base),
+          h = radial * Math.cos(d / 1737400) - 1737400 - observerHeight,
           scale = d ? radial * Math.sin(d / 1737400) / d : 1;
         p[i * 3] = x * scale / 1000;
         p[i * 3 + 1] = h / 1000;
         p[i * 3 + 2] = -n * scale / 1000;
-        uv[i * 2] = col / (size - 1);
-        uv[i * 2 + 1] = row / (size - 1);
+        uv[i * 2] = u;
+        uv[i * 2 + 1] = v;
       }
-    for (let r = 0; r < size - 1; r++)
-      for (let c = 0; c < size - 1; c++) {
-        const a = r * size + c,
+    for (let r = 0; r < count - 1; r++)
+      for (let c = 0; c < count - 1; c++) {
+        const a = r * count + c,
           b = a + 1,
-          d = a + size,
+          d = a + count,
           e = d + 1;
         indices.push(a, b, d, b, e, d);
       }
@@ -353,7 +437,7 @@ function LocalTerrain({ site, onImageState, terrainLighting }: {
     g.setIndex(indices);
     g.computeVertexNormals();
     return g;
-  }, [terrain]);
+  }, [terrain?.elevationM, tile, regional, detailed, relief, detailWidth, detailSamples]);
   useEffect(() => () => geometry?.dispose(), [geometry]);
   if (!geometry)
     return (
@@ -369,9 +453,9 @@ function LocalTerrain({ site, onImageState, terrainLighting }: {
     <group>
       <mesh geometry={geometry} castShadow={!terrainLighting && !grid} receiveShadow={!terrainLighting && !grid}>
         <meshStandardMaterial
-          key={`${view}-${map?.id}-${near?.id}-${terrainLighting}`}
-          customProgramCacheKey={() => `${view}-${!!near}-${terrainLighting && !!map}`}
-          onBeforeCompile={shader => shadeSurface(shader, view === "horizon", near, nearWidth / (width ?? nearWidth), terrainLighting && !!map)}
+          key={`${view}-${map?.id}-${surfaceNear?.id}-${terrainLighting}`}
+          customProgramCacheKey={() => `${view}-${!!surfaceNear}-${terrainLighting && !!(map || surfaceNear)}`}
+          onBeforeCompile={shader => shadeSurface(shader, view === "horizon", surfaceNear, surfaceNearWidth / (width ?? surfaceNearWidth), terrainLighting && !!(map || surfaceNear))}
           map={map}
           color={map ? "#ffffff" : "#97978b"}
           roughness={1}
@@ -1001,6 +1085,7 @@ export default function World(props: {
       (s) => s.id === state.selected,
     );
   const solar = state.view === "solar_system";
+  const closeUp = selected && surfaceDetail(selected);
   return (
     <SolarSystem onSnapshot={props.onSnapshot}>
       <div
@@ -1044,8 +1129,11 @@ export default function World(props: {
         site={selected} bearing={bearing} imagery={surfaceImage} terrainLighting={terrainLighting}
         toggleTerrainLighting={toggleTerrainLighting} pointAt={(az, el) => setTargetBearing({ az, el })}
       />}
-      {state.view === "surface" && selected && state.terrains[selected.id] && <div className="surface-imagery-credit">
-        <span role="status">{surfaceImage === "ready" ? "NASA Moon Trek · LOLA terrain" : surfaceImage === "loading" ? "Loading Moon Trek imagery…" : "LOLA terrain"}</span>
+      {state.view === "surface" && selected && (state.terrains[selected.id] || surfaceImage === "regional" || surfaceImage === "regional-imagery") && <div className="surface-imagery-credit">
+        <span role="status">{(surfaceImage === "detail" || surfaceImage === "detail-terrain") && closeUp ? surfaceDetailCredit(closeUp, surfaceImage === "detail")
+          : surfaceImage === "regional-imagery" ? "Moon Trek imagery · SLDEM2015 terrain ~60 m"
+          : surfaceImage === "regional" ? "SLDEM2015 terrain ~60 m"
+          : surfaceImage === "ready" ? "NASA Moon Trek · LOLA terrain" : surfaceImage === "loading" ? "Loading Moon Trek imagery…" : "LOLA terrain"}</span>
         <button type="button" aria-pressed={!terrainLighting} onClick={toggleTerrainLighting}>Use mission lighting</button>
       </div>}
     </SolarSystem>

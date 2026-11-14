@@ -2,7 +2,8 @@
 
 ## Horizon View
 
-- Extend high-resolution camera coverage beyond the available regional mosaics. Global imagery and relief remain coarser at ground level.
+- Extend high-resolution close-ups to custom coordinates where registered elevation and imaging products overlap.
+- Prefer imagery with corrected acquisition lighting when suitable products are available.
 
 ## Nearby sites
 
