@@ -9,7 +9,7 @@ const localUrl = () => `http://127.0.0.1:${port}`;
 async function isRunning() {
   try {
     const response = await fetch(localUrl() + "/api/health", { signal: AbortSignal.timeout(750) });
-    return response.ok && (await response.json()).app === "Lu-See";
+    return response.ok && (await response.json()).app === "AMAZE-X";
   } catch {
     return false;
   }
@@ -37,7 +37,7 @@ while (port < preferredPort + 10 && await portInUse() && !await isRunning()) por
 if (port !== preferredPort) console.log(`Using port ${port} because port ${preferredPort} is busy.`);
 
 if (await isRunning()) {
-  console.log("Lu-See is already running.");
+  console.log("AMAZE-X is already running.");
   openBrowser();
 } else {
   const server = spawn(process.execPath, ["server/index.mjs"], {

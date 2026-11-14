@@ -14,4 +14,11 @@
 ## Validation
 
 - Compare numerical terrain profiles against an independently sampled elevation service or model.
-- Improve assitant mode for Rocky to enable access and use of all parts of the application.
+- Expand live assistant evaluations across every app tool and multi-step science request, including Nemotron after its provider quota resets.
+
+## Completed in AMAZE-X update
+
+- Renamed the app and added its full expansion.
+- Resizable Rocky and chat width with saved preferences, preserved animations and controls.
+- Shared validated app actions for navigation, settings, planning, ranking, comparisons and exports, with actual outcome feedback.
+- Calculated comparison sentences in hours, with technical metrics and clearer terminology retained.

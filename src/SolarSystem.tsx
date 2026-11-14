@@ -558,8 +558,15 @@ export default function SolarSystem({
       setNav((n) => ({ kind, id, seq: n.seq + 1 })),
     choose = (id: string) => {
       setSelected(id);
+      state.set({selectedBody:id});
       navigate("focus", id);
     };
+  useEffect(() => {
+    if(!state.solarTarget)return;
+    setSelected(state.solarTarget.body);
+    useScout.getState().set({selectedBody:state.solarTarget.body});
+    setNav(n=>({kind:state.solarTarget!.kind,id:state.solarTarget!.body,seq:n.seq+1}));
+  }, [state.solarTarget]);
   const value = {
     packets,
     selected,

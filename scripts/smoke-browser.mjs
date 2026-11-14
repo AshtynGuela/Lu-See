@@ -20,7 +20,7 @@ const response = page.waitForResponse(
 );
 await page.goto("http://127.0.0.1:5175");
 await expect(
-  page.getByRole("heading", { name: "Lu-See." }),
+  page.getByRole("heading", { name: "AMAZE-X." }),
 ).toBeVisible();
 await page.getByRole("button", { name: "Skip introduction" }).click();
 await page.locator("button[aria-label=Moon]").click();

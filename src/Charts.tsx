@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { flightEstimate } from "../engine/mission-history.mjs";
+import { comparisonTakeaway, missionHours, timeAmount } from "../engine/comparison.mjs";
 import {
   conditions,
   interpolate,
@@ -243,7 +244,16 @@ export function TimelineLane({
     </div>
   );
 }
-export function ScenarioColumn({ scenario }: { scenario: Scenario }) {
+export function ComparisonBoard({scenarios}:{scenarios:Scenario[]}) {
+  const a=useMetrics(scenarios[0]),b=useMetrics(scenarios[1]),c=useMetrics(scenarios[2]),d=useMetrics(scenarios[3]);
+  const results=[a,b,c,d];
+  return <>
+    <p className="comparison-takeaway" role="status">{comparisonTakeaway(scenarios.map((scenario,index)=>({...scenario,metrics:results[index]?.metrics,error:results[index]?.error})))}</p>
+    <p className="comparison-explainer">Earth visibility means Earth is above the terrain skyline. Usable contact also needs to meet your antenna's minimum angle.</p>
+    <div className="compare-grid">{scenarios.map((scenario,index)=><ScenarioColumn key={scenario.id} scenario={scenario} analysis={results[index]}/>)}</div>
+  </>;
+}
+export function ScenarioColumn({ scenario,analysis }: { scenario: Scenario;analysis?:any }) {
   const flight = scenario.epoch !== "live" && scenario.flightProfile
     ? flightEstimate(Date.parse(scenario.epoch), scenario.flightProfile)
     : null;
@@ -251,7 +261,8 @@ export function ScenarioColumn({ scenario }: { scenario: Scenario }) {
     site = [...state.sites, ...state.custom].find(
       (s) => s.id === scenario.siteId,
     ),
-    result = useMetrics(scenario),
+    calculated = useMetrics(analysis===undefined?scenario:undefined),
+    result = analysis===undefined?calculated:analysis,
     m = result?.metrics,
     error =
       result?.error || state.errors[packetKey(scenario.siteId, state.mastM)];
@@ -316,24 +327,24 @@ export function ScenarioColumn({ scenario }: { scenario: Scenario }) {
       )}
       <dl className="comparison-values">
         <dt>Mission duration</dt>
-        <dd>{scenario.durationDays} days</dd>
+        <dd>{scenario.durationDays} {scenario.durationDays===1?"day":"days"}</dd>
         {flight && <>
           <dt>Estimated flight</dt>
           <dd>{durationLabel(flight.flightHours * HOUR)}</dd>
           <dt>Estimated departure</dt>
           <dd>{flight.departureUtc.slice(0, 16).replace("T", " ")} UTC</dd>
         </>}
-        <dt>Sunlit</dt>
-        <dd>{m ? m.sunlitPct.toFixed(1) + "%" : "Loading…"}</dd>
-        <dt>Earth visible</dt>
-        <dd>{m ? m.earthVisiblePct.toFixed(1) + "%" : "—"}</dd>
-        <dt>DTE above antenna limit</dt>
-        <dd>{m ? m.earthDtePct.toFixed(1) + "%" : "—"}</dd>
+        <dt>Sunlight during stay</dt>
+        <dd>{m ? `${timeAmount(missionHours(m.sunlitPct,scenario.durationDays))} (${m.sunlitPct.toFixed(1)}%)` : "Loading…"}</dd>
+        <dt>Earth above terrain</dt>
+        <dd>{m ? `${timeAmount(missionHours(m.earthVisiblePct,scenario.durationDays))} (${m.earthVisiblePct.toFixed(1)}%)` : "—"}</dd>
+        <dt>Usable Earth contact (DTE)</dt>
+        <dd>{m ? `${timeAmount(missionHours(m.earthDtePct,scenario.durationDays))} (${m.earthDtePct.toFixed(1)}%)` : "—"}</dd>
         <dt>Longest darkness</dt>
         <dd>{m ? m.longestDarkH.toFixed(1) + " h" : "—"}</dd>
         <dt>Earth-shadow exposure · Sun above terrain</dt>
         <dd>{m ? m.eclipseHours.toFixed(2) + " h" : "—"}</dd>
-        <dt>Mean power index · {scenario.arrayMode || "horizontal"}</dt>
+        <dt>Relative solar power · {scenario.arrayMode || "horizontal"}</dt>
         <dd>{m ? m.meanPowerIndex.toFixed(3) : "—"}</dd>
       </dl>
       {m && (

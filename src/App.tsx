@@ -59,7 +59,10 @@ import {
   ScenarioColumn,
   EventList,
   useMetrics,
+  ComparisonBoard,
 } from "./Charts";
+import { APP_NAME, APP_EXPANSION } from "../engine/app-actions.mjs";
+import { FEATURE_EVENT, type ActionResult } from "./app-actions";
 import { encodeSession, decodeSession } from "./share.mjs";
 import type { NearbyMission, NearbyPoint, RankedSite } from "./NearbySites";
 import {
@@ -137,11 +140,13 @@ export default function App() {
     [rockyStarted, setRockyStarted] = useState(false),
     [help, setHelp] = useState(false),
     [sources, setSources] = useState(false),
-    [nearby, setNearby] = useState<{ center: NearbyPoint; mission: NearbyMission } | null>(null),
+    [nearby, setNearby] = useState<{ center: NearbyPoint; mission: NearbyMission; initial?: {radiusKm:number;autoRun:boolean} } | null>(null),
+    [plannerInitial, setPlannerInitial] = useState<any>(null),
     [ranked, setRanked] = useState<{ center: NearbyPoint; rows: RankedSite[]; mission: NearbyMission } | null>(null),
     snapshot = useRef<() => string>(() => ""),
     menuRef = useRef<HTMLDivElement>(null);
   const sites = useMemo(() => [...state.sites, ...state.custom], [state.sites, state.custom]);
+  const nativeFeature = useRef<(action:any)=>Promise<ActionResult>>(null);
   const
     site = sites.find((s) => s.id === state.selected),
     key = packetKey(state.selected, state.mastM),
@@ -163,7 +168,7 @@ export default function App() {
       [state.selected, Math.floor(state.time / DAY)],
     ),
     analysis = useMetrics(solar ? undefined : activeScenario || probe),
-    probeAnalysis = useMetrics(!solar && activeScenario && (inspector || state.rail === "time") ? probe : undefined),
+    probeAnalysis = useMetrics(!solar && activeScenario && (inspector || state.rail === "clock") ? probe : undefined),
     eventAnalysis = activeScenario ? probeAnalysis : analysis,
     m = analysis?.metrics;
   const filteredSites = sites.filter((s) =>
@@ -294,7 +299,7 @@ export default function App() {
   useEffect(() => {
     const fn = (e: KeyboardEvent) => {
       if (
-        (e.target as HTMLElement).closest("input,textarea,select,[role=dialog]")
+        (e.target as HTMLElement).closest("input,textarea,select,button,a,.rocky-overlay,[role=dialog]")
       )
         return;
       const s = useScout.getState();
@@ -353,23 +358,15 @@ export default function App() {
       rail: state.rail === id ? null : id,
       ...(solar && id !== "clock" ? { view: "globe" as const } : {}),
     });
-  const share = () => {
+  const share = async ():Promise<ActionResult> => {
     try {
-      const value = encodeSession(state);
-      navigator.clipboard
-        .writeText(location.origin + "/?session=" + encodeURIComponent(value))
-        .then(() =>
-          state.message(
-            "Link copied, including scenarios, coordinates and analysis settings.",
-          ),
-        )
-        .catch(() =>
-          state.message("Clipboard is unavailable in this browser."),
-        );
+      const value=encodeSession(useScout.getState());
+      await navigator.clipboard.writeText(location.origin + "/?session=" + encodeURIComponent(value));
+      const message="Share link copied, including saved plans, sites and settings.";
+      state.message(message); return {ok:true,message};
     } catch {
-      state.message(
-        "This session cannot be shared; check its dates and mission durations.",
-      );
+      const message="The link could not be copied. Check browser clipboard access and your saved plan dates.";
+      state.message(message); return {ok:false,message};
     }
   };
   const download = (format: "json" | "csv") => {
@@ -396,7 +393,7 @@ export default function App() {
       });
     } catch (e) {
       state.message(e.message);
-      return;
+      return {ok:false,message:e.message};
     }
     const url = URL.createObjectURL(
         new Blob(
@@ -413,9 +410,10 @@ export default function App() {
       ),
       a = document.createElement("a");
     a.href = url;
-    a.download = "lunar-site-analysis-" + site.id + "." + format;
+    a.download = "amaze-x-analysis-" + site.id + "." + format;
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
+    return {ok:true,message:"Your " + format.toUpperCase() + " download has started."};
   };
   const saveCustom = () => {
     const lat = +customLat,
@@ -490,6 +488,47 @@ export default function App() {
     setRanked(null);
     setNearby(null);
   };
+  nativeFeature.current = async (action) => {
+    const current=useScout.getState();
+    const chosen=sites.find(row=>row.id===(action.siteId??current.selected));
+    const selectedPlan=current.scenarios.find(row=>row.id===current.activeScenarioId&&row.siteId===chosen?.id)??current.scenarios.find(row=>row.siteId===chosen?.id);
+    const needsSite=["fly_to","open_inspector","add_to_compare","plan_landing","rank_nearby","export_report"].includes(action.type);
+    if(needsSite&&!chosen)return {ok:false,message:"Choose a lunar site first. The site list may still be loading."};
+    if(action.siteId){current.select(action.siteId);setInspector(true);}
+    if(action.type==="fly_to"||action.type==="open_inspector") {current.fly(action.siteId);setInspector(true);}
+    else if(action.type==="open_panel") {
+      if(["landing","nearby","date_slip"].includes(action.panel)&&!chosen)return {ok:false,message:"Choose a lunar site first."};
+      if(["sites","time","layers","settings"].includes(action.panel))current.set({rail:action.panel==="time"?"clock":action.panel,...(current.view==="solar_system"&&action.panel!=="time"?{view:"globe"}: {})});
+      else if(action.panel==="comparison")current.set({view:current.view==="solar_system"?"globe":current.view,compare:true});
+      else if(action.panel==="timeline")current.set({view:current.view==="solar_system"?"globe":current.view,timeline:true});
+      else if(action.panel==="landing"){setPlannerInitial(null);current.set({scenarioDialog:true,view:current.view==="solar_system"?"globe":current.view});}
+      else if(action.panel==="nearby")openNearby(chosen!);
+      else if(action.panel==="help")setHelp(true);
+      else if(action.panel==="sources")setSources(true);
+      else if(action.panel==="date_slip"){
+        if(!selectedPlan)return {ok:false,message:"Save a plan with a surface duration before comparing date changes."};
+        setSlip(true);
+      }
+    } else if(action.type==="plan_landing"||action.type==="add_to_compare") {
+      current.set({view:current.view==="solar_system"?"globe":current.view,scenarioDialog:true});
+      setPlannerInitial({...action,requestId:performance.now()});
+    } else if(action.type==="rank_nearby") {
+      const duration=action.durationDays??selectedPlan?.durationDays;
+      if(action.autoRun&&!duration)return {ok:false,message:"Choose a surface-stay duration before starting the nearby search."};
+      setNearby({center:{...chosen!,distanceKm:0},mission:{time:current.time,duration:duration??1,mast:current.mastM,antenna:current.minAntennaEl,profile:selectedPlan?.profile},initial:{radiusKm:action.radiusKm,autoRun:action.autoRun}});
+    } else if(action.type==="export_report")return download(action.format);
+    else if(action.type==="share_session")return await share();
+    return {ok:true,message:"Opened the requested app feature."};
+  };
+  useEffect(() => {
+    const listener=(event:Event)=>{
+      const detail=(event as CustomEvent).detail;
+      detail.accept();
+      Promise.resolve(nativeFeature.current!(detail.action)).then(detail.resolve).catch(error=>detail.resolve({ok:false,message:error.message}));
+    };
+    window.addEventListener(FEATURE_EVENT,listener);
+    return()=>window.removeEventListener(FEATURE_EVENT,listener);
+  }, []);
   const menuItems = menu?.siteId
     ? [
         [
@@ -615,7 +654,7 @@ export default function App() {
         >
           <Orbit size={29} strokeWidth={1.4} />
           <span>
-            <strong>Lu-See</strong>
+            <strong>{APP_NAME}</strong>
           </span>
         </a>
         <div className="top-centre">
@@ -851,9 +890,9 @@ export default function App() {
                 Explore the surface without losing context.
               </p>
               {[
-                ["grid", "Coordinate graticule"],
+                ["grid", "Coordinate grid"],
                 ["markers", "Landing-site markers"],
-                ["terrainLayer", "Surface mesh"],
+                ["lunarTerrain", "3D terrain"],
               ].map(([id, label]) => (
                 <label className="switch-row" key={id}>
                   <span>{label}</span>
@@ -919,15 +958,15 @@ export default function App() {
                 </button>
               </div>
               <p className="data-note">
-                Current globe lighting is geometric. Terrain shadow maps are not
-                yet available.
+                Sunlight follows the selected date. Terrain shadows are shown in
+                the flyover and horizon views.
               </p>
             </>
           )}
           {state.rail === "settings" && (
             <>
               <label>
-                Mast height above DEM
+                Sensor height above ground (mast)
                 <select
                   value={state.mastM}
                   onChange={(e) => state.set({ mastM: +e.target.value })}
@@ -940,7 +979,7 @@ export default function App() {
                 </select>
               </label>
               <label>
-                Minimum antenna elevation · degrees
+                Minimum usable Earth angle · degrees
                 <input
                   type="number"
                   min="0"
@@ -1083,7 +1122,7 @@ export default function App() {
                       ? (mask ? "Terrain blocks the Sun." : "The Sun is below the smooth horizon.")
                       : current.sun.eclipse.state !== "none"
                         ? "Earth's shadow reduces direct sunlight."
-                        : "Sunlight status uses a half-disc visibility threshold."}</small>
+                        : "Counted as sunlit when at least half of the Sun clears the skyline."}</small>
                     <details className="condition-geometry" open={state.mode === "engineer" ? true : undefined}><summary>Position in the sky</summary><dl><dt>Height above level horizon</dt><dd>{deg(current.sun.el)}</dd>
                       <dt>Compass bearing</dt><dd>{deg(current.sun.az)} ({bearing(current.sun.az)})</dd></dl></details>
                   </section>
@@ -1142,7 +1181,7 @@ export default function App() {
                       <dd>{current.earth.distanceKm.toFixed(1)} km</dd>
                       <dt>Mast above DEM / sphere</dt>
                       <dd>{state.mastM} m</dd>
-                      <dt>DTE elevation limit</dt>
+                      <dt>Minimum angle for direct Earth contact</dt>
                       <dd>{state.minAntennaEl}°</dd>
                     </dl>
                     <p className="data-note">
@@ -1168,7 +1207,7 @@ export default function App() {
                   {state.errors[key]
                     ? "Could not reach NASA/JPL"
                     : state.loading[key]
-                      ? "Requesting NASA/JPL ephemerides…"
+                      ? "Loading Sun and Earth positions from NASA/JPL…"
                       : "Choose a site to load scientific data."}
                 </p>
                 {state.errors[key] && (
@@ -1259,7 +1298,7 @@ export default function App() {
                     </strong>
                   </div>
                   <div>
-                    <span>Mean power index</span>
+                    <span>Relative solar power (index)</span>
                     <strong>{m.meanPowerIndex.toFixed(3)}</strong>
                   </div>
                 </div>
@@ -1322,7 +1361,7 @@ export default function App() {
                 } else setSlip(true);
               }}
             >
-              Explore a landing-date slip <ArrowUpRight size={15} />
+              See the effect of a later landing <ArrowUpRight size={15} />
             </button>
           </div>
           <div className="inspector-section site-source">
@@ -1360,7 +1399,7 @@ export default function App() {
         <section className="compare-tray">
           <header>
             <h2>
-              Compare landing scenarios{" "}
+              Compare landing plans{" "}
               <span>{state.scenarios.length} / 4</span>
             </h2>
             <div className="button-row">
@@ -1379,11 +1418,7 @@ export default function App() {
             </div>
           </header>
           {state.scenarios.length ? (
-            <div className="compare-grid">
-              {state.scenarios.map((s) => (
-                <ScenarioColumn key={s.id} scenario={s} />
-              ))}
-            </div>
+            <ComparisonBoard scenarios={state.scenarios} />
           ) : (
             <div className="compare-empty">
               <Columns2 size={25} />
@@ -1550,8 +1585,9 @@ export default function App() {
           <div className="welcome-content">
             <Orbit size={42} strokeWidth={1} />
             <h1>
-              Lu-See<span>.</span>
+              {APP_NAME}<span>.</span>
             </h1>
+            <p className="brand-expansion">{APP_EXPANSION}</p>
             <p>
               A different place. A different date.
               <br />A new window to the Sun and Earth.
@@ -1574,7 +1610,7 @@ export default function App() {
               Enter the Solar System <ArrowUpRight size={19} />
             </button>
             <span className="welcome-caption">
-              Real NASA/JPL ephemerides. Lunar terrain from LOLA.
+              Sun and Earth positions from NASA/JPL. Lunar terrain from LOLA.
             </span>
           </div>
           <div className="welcome-bottom">
@@ -1635,7 +1671,7 @@ export default function App() {
       )}
       {state.scenarioDialog && (
         <Suspense fallback={null}>
-          <ScenarioDialog close={() => state.set({ scenarioDialog: false })} />
+          <ScenarioDialog key={plannerInitial?.requestId??"manual"} initial={plannerInitial} close={() => { setPlannerInitial(null); state.set({ scenarioDialog: false }); }} />
         </Suspense>
       )}
       {nearby && <Suspense fallback={null}>

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  BoundingSphere, CameraEventType, Cartesian2, Cartesian3, Cartographic,
+  ArcType, BoundingSphere, CameraEventType, Cartesian2, Cartesian3, Cartographic,
   CesiumTerrainProvider, Color, Credit, DirectionalLight, DistanceDisplayCondition,
   Ellipsoid, EllipsoidTerrainProvider, Entity, GeographicTilingScheme,
   HeadingPitchRange, HeightReference, JulianDate, KeyboardEventModifier,
@@ -57,13 +57,15 @@ export default function LunarGlobe(props: Props) {
   const [pending, setPending] = useState(0);
   const [error, setError] = useState("");
   const [settings, setSettings] = useState(false);
-  const [showTerrain, setShowTerrain] = useState(true);
-  const [freeAxis, setFreeAxis] = useState(true);
+  const showTerrain = state.lunarTerrain, freeAxis = state.freeCameraAxis;
+  const setShowTerrain = (value:boolean) => state.set({lunarTerrain:value});
+  const setFreeAxis = (value:boolean) => state.set({freeCameraAxis:value});
   const [retry, setRetry] = useState(0);
   const [surfacePending, setSurfacePending] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [measurementHelp, setMeasurementHelp] = useState(false);
-  const [inertialView, setInertialView] = useState(true);
+  const inertialView = state.lunarRotation;
+  const setInertialView = (value:boolean) => state.set({lunarRotation:value});
   const home = useCallback(() => {
     const v = viewer.current;
     if (!v) return;
@@ -165,7 +167,8 @@ export default function LunarGlobe(props: Props) {
     let touchInspection = false;
     let lastHover = 0;
     const hit = (point: Cartesian2) => {
-      if (v.scene.pickPositionSupported) {
+      const overlay=v.scene.pick(point)?.id;
+      if (v.scene.pickPositionSupported && !(overlay instanceof Entity && overlay.id.startsWith("grid-"))) {
         const rendered = v.scene.pickPosition(point);
         if (rendered) return rendered;
       }
@@ -301,8 +304,13 @@ export default function LunarGlobe(props: Props) {
         });
       }
     }
+    if(state.grid && !["surface","horizon"].includes(state.view)) {
+      const line=(id:string,points:Cartesian3[])=>v.entities.add({id:"grid-"+id,polyline:{positions:points,width:1,arcType:ArcType.NONE,material:Color.fromCssColorString("#c9e787").withAlpha(.4)}});
+      for(let lat=-75;lat<=75;lat+=15)line("lat-"+lat,Array.from({length:361},(_,i)=>position(lat,i-180,11000)));
+      for(let lon=-180;lon<180;lon+=15)line("lon-"+lon,Array.from({length:181},(_,i)=>position(i-90,lon,11000)));
+    }
     v.scene.requestRender();
-  }, [ready, state.sites, state.custom, state.selected, state.markers, props.nearbyPins]);
+  }, [ready, state.sites, state.custom, state.selected, state.markers, state.grid, state.view, props.nearbyPins]);
 
   useEffect(() => {
     const v = viewer.current;
@@ -378,6 +386,16 @@ export default function LunarGlobe(props: Props) {
     if (!v) return;
     v.camera.setView({ orientation: { heading: v.camera.heading, pitch, roll: v.camera.roll } });
   }, []);
+  useEffect(() => {
+    const v=viewer.current, command=state.cameraCommand;
+    if(!v||!ready||!command)return;
+    if(command.mode==="whole_moon")home();
+    else if(command.mode==="site")state.set({focusVersion:useScout.getState().focusVersion+1});
+    else if(command.mode==="horizon")look(angle(-3));
+    else if(command.mode==="overhead")look(-Math.PI/2);
+    else v.camera.setView({orientation:{heading:command.mode==="north"?0:angle(command.az??0),pitch:command.el===undefined?v.camera.pitch:angle(command.el),roll:0}});
+    v.scene.requestRender();
+  }, [ready,state.cameraCommand,home,look]);
   const zoom = (factor: number) => {
     const v = viewer.current;
     if (!v) return;
@@ -388,7 +406,7 @@ export default function LunarGlobe(props: Props) {
   useEffect(() => {
     const keys = new Set<string>();
     const down = (event: KeyboardEvent) => {
-      if (event.repeat || (event.target as HTMLElement).closest("input,textarea,select,[role=dialog],[role=menu]")) return;
+      if (event.repeat || (event.target as HTMLElement).closest("input,textarea,select,button,a,.rocky-overlay,[role=dialog],[role=menu]")) return;
       const code = event.code;
       const v = viewer.current;
       if (!v) return;

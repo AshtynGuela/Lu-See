@@ -2,7 +2,7 @@ import { Component, Suspense, useCallback, useEffect, useLayoutEffect, useRef, u
 import { Canvas, useThree } from "@react-three/fiber";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { LoopRepeat, Mesh, MeshPhysicalMaterial, Texture } from "three";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, MoveDiagonal } from "lucide-react";
 import { calmVoice, useDialogueReveal } from "./rocky-voice";
 
 const movements = [
@@ -152,7 +152,15 @@ export default function RockyOverlay({ visible, open, thinking, hasInspector, on
   const [viewport, setViewport] = useState(() => ({ width: innerWidth, height: innerHeight }));
   const [position, setPosition] = useState<Point | null>(null);
   const [docked, setDocked] = useState(false);
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(() => {
+    const saved=Number(localStorage.getItem("lunar-rocky-scale"));
+    return Number.isFinite(saved)&&saved>=.65&&saved<=3?saved:1;
+  });
+  const [chatWidth,setChatWidth]=useState(()=>{
+    const saved=Number(localStorage.getItem("lunar-rocky-chat-width"));
+    return Number.isFinite(saved)&&saved>=280&&saved<=640?Math.round(saved/10)*10:390;
+  });
+  const resizeDrag=useRef<{id:number;x:number;y:number;scale:number}|null>(null);
   const [movement, setMovement] = useState("Random");
   const [randomClip, setRandomClip] = useState("Attentive");
   const [gesture, setGesture] = useState<{ clip: string; id: number } | null>(null);
@@ -200,7 +208,7 @@ export default function RockyOverlay({ visible, open, thinking, hasInspector, on
       ? current : { x: defaultPosition.x, y: defaultPosition.y, ...viewport });
   }, [visible, viewport, defaultPosition.x, defaultPosition.y]);
   const side = at.y + size / 2 > viewport.height * 0.51 ? "above" : "below";
-  const bubbleWidth = Math.min(open ? 386 : 280, viewport.width - 24);
+  const bubbleWidth = Math.min(open ? chatWidth : 280, viewport.width - 24);
   const bubbleX = clamp(at.x + size / 2 - bubbleWidth / 2, 12, viewport.width - bubbleWidth - 12);
   const bubbleY = side === "above" ? viewport.height - at.y + 8 : at.y + size + 8;
   const chatHeight = Math.max(100, viewport.height - bubbleY - 12);
@@ -211,10 +219,37 @@ export default function RockyOverlay({ visible, open, thinking, hasInspector, on
     return () => window.removeEventListener("resize", resize);
   }, []);
   useEffect(() => {
+    const button=mascot.current;if(!button)return;
+    const wheel=(event:WheelEvent)=>{
+      if(!event.ctrlKey&&!event.metaKey&&!event.altKey)return;
+      event.preventDefault();event.stopPropagation();
+      setScale(value=>clamp(value*Math.exp(-event.deltaY*.008),.65,3));
+    };
+    button.addEventListener("wheel",wheel,{passive:false});
+    return()=>button.removeEventListener("wheel",wheel);
+  }, []);
+  useEffect(() => {
     const onVisibility = () => setPageVisible(!document.hidden);
     onVisibility();
     document.addEventListener("visibilitychange", onVisibility);
     return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, []);
+  useEffect(() => {
+    localStorage.setItem("lunar-rocky-scale",String(scale));
+    localStorage.setItem("lunar-rocky-chat-width",String(chatWidth));
+  },[scale,chatWidth]);
+  useEffect(() => {
+    const listener=(event:Event)=>{
+      const options=(event as CustomEvent).detail;
+      if(options.sizePercent!==undefined)setScale(clamp(options.sizePercent/100,.65,3));
+      if(options.animation){setPaused(false);setGesture(null);setMovement(options.animation);}
+      if(options.sound!==undefined)setSound(options.sound);
+      if(options.stream!==undefined)setStream(options.stream);
+      if(options.chatter!==undefined){setChatter(options.chatter);setSpeech(null);}
+      if(options.paused!==undefined)setPaused(options.paused);
+    };
+    window.addEventListener("amaze-x:rocky-options",listener);
+    return()=>window.removeEventListener("amaze-x:rocky-options",listener);
   }, []);
   useEffect(() => {
     for (const [key, on] of Object.entries({ chatter, stream, sound }))
@@ -311,7 +346,7 @@ export default function RockyOverlay({ visible, open, thinking, hasInspector, on
     pointerMap.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
     if (pinch.current) {
       const [a, b] = [...pointerMap.current.values()];
-      if (a && b) setScale(clamp(pinch.current.scale * Math.hypot(a.x - b.x, a.y - b.y) / pinch.current.distance, 0.65, 2.3));
+      if (a && b) setScale(clamp(pinch.current.scale * Math.hypot(a.x - b.x, a.y - b.y) / pinch.current.distance, 0.65, 3));
       return;
     }
     if (!drag.current || (moved.current && menu)) return;
@@ -381,6 +416,16 @@ export default function RockyOverlay({ visible, open, thinking, hasInspector, on
       </Suspense></MascotBoundary></div>
       <span className="rocky-fab-badge" aria-hidden="true"><MessageCircle size={12} /></span>
     </button>
+    <button type="button" className="rocky-resize-handle" aria-label="Resize Rocky" title="Drag to resize Rocky. Arrow keys also change his size."
+      style={{left:at.x+size-17,top:at.y+size-17}}
+      onPointerDown={event=>{event.preventDefault();event.stopPropagation();event.currentTarget.setPointerCapture(event.pointerId);resizeDrag.current={id:event.pointerId,x:event.clientX,y:event.clientY,scale};setDragging(true);setSpeech(null);}}
+      onPointerMove={event=>{const start=resizeDrag.current;if(!start||start.id!==event.pointerId)return;setScale(clamp(start.scale+(event.clientX-start.x+event.clientY-start.y)/(baseSize*2),.65,3));}}
+      onPointerUp={()=>{resizeDrag.current=null;setDragging(false);}}
+      onPointerCancel={()=>{resizeDrag.current=null;setDragging(false);}}
+      onLostPointerCapture={()=>{resizeDrag.current=null;setDragging(false);}}
+      onKeyDown={event=>{if(["ArrowUp","ArrowRight","ArrowDown","ArrowLeft"].includes(event.key)){event.preventDefault();event.stopPropagation();setScale(value=>clamp(value+(["ArrowUp","ArrowRight"].includes(event.key) ? .1 : -.1),.65,3));}}}>
+      <MoveDiagonal size={13}/>
+    </button>
     {visible && (open || (speech && pageVisible && !menu && !dragging)) && <div className={`rocky-conversation ${side}`}
       style={{ left: bubbleX, width: bubbleWidth, [side === "above" ? "bottom" : "top"]: bubbleY,
         "--rocky-tail": `${clamp(at.x + size / 2 - bubbleX, 18, bubbleWidth - 18)}px`,
@@ -400,6 +445,7 @@ export default function RockyOverlay({ visible, open, thinking, hasInspector, on
         }
       }}
       onKeyDown={e => {
+        if((e.target as HTMLElement).closest("input"))return;
         if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(e.key)) return;
         e.preventDefault();
         const buttons = [...e.currentTarget.querySelectorAll("button")];
@@ -408,6 +454,11 @@ export default function RockyOverlay({ visible, open, thinking, hasInspector, on
         buttons[next]?.focus();
       }}>
       <button role="menuitem" onClick={() => menuAction(() => { if (!open) onChat(); })}>Chat with Rocky</button>
+      <div className="rocky-size-settings" role="group" aria-label="Rocky size settings">
+        <label>Rocky size <output>{Math.round(scale*100)}%</output><input aria-label="Rocky size" type="range" min="65" max="300" step="5" value={Math.round(scale*100)} onChange={event=>setScale(Number(event.target.value)/100)}/></label>
+        <label>Chat bubble width <output>{Math.round(chatWidth)} px</output><input aria-label="Chat bubble width" type="range" min="280" max="640" step="10" value={chatWidth} onChange={event=>setChatWidth(Number(event.target.value))}/></label>
+        <p>Drag the corner handle or pinch Rocky. Your preferred sizes are saved.</p>
+      </div>
       <div role="separator" />
       {movements.map(([id, name]) => <button key={id} role="menuitemradio" aria-checked={movement === id}
         onClick={() => menuAction(() => { setMovement(id); setGesture(null); setPaused(false); })}>{name}</button>)}

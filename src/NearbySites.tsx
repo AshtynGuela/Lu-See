@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { DAY } from "../engine/index.mjs";
 import { compareNearby, nearbyPoints } from "../engine/nearby.mjs";
@@ -16,12 +16,13 @@ export type NearbyMission = {
 type Search = { points: NearbyPoint[]; mission: NearbyMission };
 type Evaluation = Pick<RankedSite, "sunlight" | "contact" | "darkness" | "meetsLimits" | "score">;
 
-export default function NearbySites({ center, sites, mission, close, showMap, compare }: {
+export default function NearbySites({ center, sites, mission, close, showMap, compare, initial }: {
   center: NearbyPoint; sites: Site[]; mission: NearbyMission; close: () => void;
   showMap: (rows: RankedSite[], mission: NearbyMission) => void;
   compare: (site: RankedSite, mission: NearbyMission) => void;
+  initial?: {radiusKm:number;autoRun:boolean};
 }) {
-  const [radius, setRadius] = useState("20");
+  const [radius, setRadius] = useState(String(initial?.radiusKm??20));
   const [duration, setDuration] = useState(String(mission.duration));
   const [search, setSearch] = useState<Search | null>(null);
   const [rows, setRows] = useState<RankedSite[]>([]);
@@ -105,6 +106,8 @@ export default function NearbySites({ center, sites, mission, close, showMap, co
     setRows([]); setCompleted(0); setFailed(0); setTotal(points.length); setError("");
     setSearch({ points, mission: { ...mission, duration: days } });
   };
+  const autoStarted=useRef(false);
+  useEffect(()=>{if(initial?.autoRun&&!autoStarted.current){autoStarted.current=true;run();}},[initial]);
   return <div className="modal-backdrop" onMouseDown={e => { if (e.target === e.currentTarget) close(); }}>
     <section className="scenario-dialog landing-planner" role="dialog" aria-modal="true" aria-label="Nearby sites"
       onKeyDown={e => {

@@ -1,6 +1,6 @@
-# Lu-See deployment
+# AMAZE-X deployment
 
-Lu-See is a separate copy of the lunar-scout prototype, with D-DIN body text.
+AMAZE-X is a separate copy of the lunar-scout prototype, with D-DIN body text.
 The production service uses the included Dockerfile: Node 22, Python, NumPy,
 Requests and Pillow. It runs `node server/index.mjs --production`, binds to
 `0.0.0.0:$PORT`, and serves the built browser app and API from one origin.

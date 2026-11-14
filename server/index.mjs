@@ -81,7 +81,7 @@ app.get("/api/health", async (req, res) => {
     heightReady = true;
   } catch {}
   res.json({
-    app: "Lu-See",
+    app: "AMAZE-X",
     ready: true,
     primaryConfigured: !!process.env.OPENROUTER_API_KEY,
     fallbackConfigured: !!process.env.GROQ_API_KEY,
@@ -337,10 +337,10 @@ if (production) {
 const port = Number(process.env.PORT) || (production ? 5173 : 5175);
 server.on("error", error => {
   console.error(error.code === "EADDRINUSE"
-    ? `Port ${port} is already in use. Open http://127.0.0.1:${port} if Lu-See is already running, or choose a different port.`
+    ? `Port ${port} is already in use. Open http://127.0.0.1:${port} if AMAZE-X is already running, or choose a different port.`
     : error.message);
   process.exit(1);
 });
 server.listen(port, process.env.HOST || (production ? "0.0.0.0" : "127.0.0.1"), () =>
-  console.log(`Lu-See http://127.0.0.1:${port}`),
+  console.log(`AMAZE-X http://127.0.0.1:${port}`),
 );

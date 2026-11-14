@@ -1,4 +1,4 @@
-# Lu-See
+# AMAZE-X
 <!-- impeccable:product-schema 1 -->
 ## Platform
 web
@@ -13,7 +13,7 @@ The original challenge and PROJECT_BRIEF.md govern scope. Site, date and mission
 ## Capabilities and Constraints
 No fabricated scientific values. Curated sites need real terrain horizons. Custom sites may explicitly use a smooth horizon without terrain viability. Nemotron primary via OpenRouter, GPT-OSS-20B fallback via Groq only for image-independent requests. Visual requests stay pending for retry on primary failure. No keys in browser code. Mission duration is requested per scenario. Default clock is current UTC. Apollo-era dates through 2040 are required.
 ## Brand Commitments
-Lu-See; Terra Invicta-inspired freedom and strategic analysis, cinematic welcome. Rocky is curious and concise. Solar System overview first with a visible Sun and sampled planetary paths, then Earth–Moon and lunar focus; readable/physical scale modes, shuttle cinematic and surface/horizon choice. Other planets are exploration context only. This opening supersedes the earlier Earth–Moon-first decision at the user's request on 13 November 2026.
+AMAZE-X; Terra Invicta-inspired freedom and strategic analysis, cinematic welcome. Rocky is curious and concise. Solar System overview first with a visible Sun and sampled planetary paths, then Earth–Moon and lunar focus; readable/physical scale modes, shuttle cinematic and surface/horizon choice. Other planets are exploration context only. This opening supersedes the earlier Earth–Moon-first decision at the user's request on 13 November 2026.
 ## Evidence on Hand
 Original technical specification, agreed PROJECT_BRIEF.md, parent Rocky and SolarSystem GLB files. Original NASA challenge URL is retained in the app. API results and actual terrain products must supply every scientific result.
 ## Product Principles

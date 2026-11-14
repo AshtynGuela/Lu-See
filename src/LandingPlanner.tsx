@@ -7,15 +7,15 @@ import { nextWindowSearch, nextWindowChunk } from '../engine/landing-search.mjs'
 
 const dateLabel = (t: number) => new Date(t).toISOString().slice(0,16).replace('T',' ');
 const flightLabel = (hours: number) => `${Math.floor(hours / 24)} d ${hours % 24} h`;
-export default function LandingPlanner({close}: {close: () => void}) {
+export default function LandingPlanner({close,initial}: {close: () => void;initial?:any}) {
   const state = useScout(), site = allSites().find(s => s.id === state.selected)!;
   const [flightProfile, setFlightProfile] = useState(DEFAULT_MISSION_PROFILE);
   const timing = historicalTiming(flightProfile);
-  const [days, setDays] = useState(() => String(timing.surfaceDays)), [manual, setManual] = useState(false);
-  const [epoch, setEpoch] = useState(new Date(state.time).toISOString().slice(0,16));
+  const [days, setDays] = useState(() => String(initial?.durationDays??timing.surfaceDays)), [manual, setManual] = useState(initial?.mode==="manual"||initial?.type==="add_to_compare");
+  const [epoch, setEpoch] = useState((initial?.iso??new Date(state.time).toISOString()).slice(0,16));
   const [startDate, setStartDate] = useState('');
-  const [span, setSpan] = useState(30), [live, setLive] = useState(false);
-  const [profile, setProfile] = useState({minSunlitPct:80, maxDarknessHours:12, minEarthDtePct:60});
+  const [span, setSpan] = useState(initial?.spanDays??30), [live, setLive] = useState(false);
+  const [profile, setProfile] = useState<{minSunlitPct:number;maxDarknessHours:number;minEarthDtePct:number}>(initial?.profile??{minSunlitPct:80, maxDarknessHours:12, minEarthDtePct:60});
   const [arrayMode, setArrayMode] = useState('horizontal'), [arrayAzimuth, setArrayAzimuth] = useState(0);
   const [error, setError] = useState(''), [job, setJob] = useState<any>(null);
   const [result, setResult] = useState<any>(null), [chosen, setChosen] = useState<number | null>(null);
@@ -128,6 +128,12 @@ export default function LandingPlanner({close}: {close: () => void}) {
     } else state.message(`Scenario ${id} added with ${manual && live ? 'a live' : 'a pinned'} landing date.`);
   };
   const networkError = job && state.errors[key];
+  const autoStarted = useRef(false);
+  useEffect(() => {
+    if(autoStarted.current||!initial?.durationDays||!["possible","next"].includes(initial?.mode))return;
+    autoStarted.current=true;
+    if(initial.mode==="next")findNext();else calculate();
+  }, [initial]);
   return <div className="modal-backdrop" onMouseDown={e => {if(e.target===e.currentTarget) close();}}>
     <section className="scenario-dialog landing-planner" role="dialog" aria-modal="true" aria-labelledby="scenario-title"
       onKeyDown={e => {

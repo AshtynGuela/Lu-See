@@ -1,3 +1,17 @@
+# AMAZE-X update — 14 November 2026
+
+AMAZE-X means **Autonomous Moon Approach Zone Exploration - Xplorer**. The app, welcome screen, local launcher and documentation use the new name. The existing repository/folder and hosting addresses are retained.
+
+Rocky now supports a resize handle, keyboard arrows, pinch and right-click size controls (65–300%), plus saved chat width. Animations, Calm blips, gradual replies, context menu and manual dragging remain. Native app actions share validation between server and browser and report actual outcomes. Automatic tool use can be disabled to review buttons first. The assistant can navigate, control time/maps/cameras/observer settings, create sites and plans, compare sites, find landing windows, rank nearby locations, travel, export and share. Science uses the existing real-data calculations; user surface duration and mission limits are retained.
+
+Comparisons lead with a calculated sentence about additional sunlight and Earth visibility, using hours over the chosen stay. Percentages, antenna thresholds and technical terms remain with explanations. The reference image's values are tested as an arithmetic example, never inserted as app results.
+
+Validation: 51 automated tests and production build pass. Browser checks covered branding, keyboard/pointer resizing, preference persistence, desktop/phone layouts, and actual assistant navigation/resizing. A live GPT-OSS comparison of Apollo 12 and IM-1 for 20–21 November 2026 used verified JPL/LOLA results and returned 24 h sunlight and Earth visibility for both; the response completed in approximately 2.4 seconds with cached data. Nemotron currently returns its daily quota limit; visual questions remain pending for Retry and text questions use Groq. Broader live evaluation of every feature and multi-step request remains in TODO.md. Uncached NASA calls can still exceed the assistant deadline and be retried.
+
+Mechanical UI review found advisory palette/type-ramp differences in the existing surfaces; the new 16 px comparison sentence is intentional for legibility. No renderer redesign was made for this copy/assistant update.
+
+The following sections preserve earlier build notes; their counts and provider checks describe their original dates.
+
 # First working build
 
 Prepared 13 November 2026, local time. The governing challenge remains [Lunar Landing Site Navigator](https://www.spaceappschallenge.org/2026/challenges/lunar-landing-site-navigator/).

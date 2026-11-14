@@ -1,4 +1,6 @@
-# Lu-See
+# AMAZE-X
+
+**Autonomous Moon Approach Zone Exploration - Xplorer**
 
 A separate browser app for the [NASA Space Apps Lunar Landing Site Navigator challenge](https://www.spaceappschallenge.org/2026/challenges/lunar-landing-site-navigator/). The core workflow is site + landing date + mission duration → Sun/Earth state, terrain obstruction, events and comparison. The existing Rocky Electron overlay is separate.
 
@@ -6,7 +8,7 @@ See [BUILD_STATUS.md](BUILD_STATUS.md) for this build's delivered features, comp
 
 ## Run locally
 
-On Windows, double-click **Launch Lu-See.cmd**. It opens Lu-See in your browser, normally on port 5175, and prints the URL if it uses a different port. Keep the launcher window open while using the app.
+On Windows, double-click **Launch AMAZE-X.cmd**. It opens AMAZE-X in your browser, normally on port 5175, and prints the URL if it uses a different port. Keep the launcher window open while using the app.
 
 Requires Node 22+, npm and Python 3.11+ with `pip install -r requirements.txt` for custom terrain. Create `.env` from `.env.example` if you want to configure Rocky or override the port. To start from a terminal in this directory:
 
@@ -28,7 +30,9 @@ In lunar views, choose a site and use **Plan landing**. Choose a historical miss
 
 The inspector separates **Sunlight now**, **Earth contact now** and **Over your whole mission**. Status and blockage reasons come first; expand Position in the sky for centre elevation and compass bearing. Engineer mode exposes the detailed measurements. The inspector's JSON and CSV buttons export the current reading and selected mission, with separate UTC epochs, array settings, observer definitions, sources and assumptions. Exports wait for the selected mission calculation; an earlier result is never substituted. CSV preserves numerical precision and treats user site names as text.
 
-Click Rocky’s floating button to chat. The animated model starts near the map’s bottom-right and loops random animations even while chat or the context menu is open. Drag the button or pinch to resize it. Right-click or long-press for animations, corner docking, position reset, idle bubbles, gradual reply text and Calm dialogue blips. Rocky can explain Lu-See controls, discuss space science and handle general questions. Site measurements use verified data. Keyboard shortcuts are in the Controls dialog.
+Click Rocky’s floating button to chat. He loops random animations even with chat or the context menu open. Drag him to move; drag his corner handle, pinch, or use the right-click size slider to resize from 65% to 300%. Focus the handle and use arrow keys for keyboard resizing. Right-click or long-press also offers chat width, animations, corner docking, position reset, idle bubbles, gradual reply text and Calm dialogue blips. Size and chat width survive a reload; Rocky does not roam across the map. Keyboard shortcuts are in the Controls dialog.
+
+Rocky can navigate, change the date and playback, control map/camera/observer settings, open panels, create sites from supplied coordinates, create and inspect plans, search landing windows, rank nearby terrain, compare sites, travel, download reports and copy session links. **Let Rocky use app tools** runs validated native actions automatically; turn it off to review action buttons first. The answer lists actual action outcomes. Scientific answers use calculation tools, not visual guesses. A surface duration must come from the user or a saved plan. Comparisons lead with calculated sunlight/Earth-visibility hours and retain percentages and direct-contact details underneath.
 
 The supplied D-DIN font and bubble artwork are used across the interface and Rocky chat respectively. The three map views use artwork from the supplied space pack. Calm audio is from [Dialogue Blips Free by heyheythere](https://heyheythere.itch.io/dialogue-blips-free), licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
@@ -49,7 +53,7 @@ No orbital periods, made-up orbit animations or placeholder Sun/Earth values dri
 
 ## Optional offline dataset preparation
 
-Normal Lu-See operation reads numeric elevation sections directly from NASA and caches them; deployment does not include the 4 GB source rasters. See [DEPLOYMENT.md](DEPLOYMENT.md). The commands below are only for rebuilding prepared products offline. Full downloads use resumable range requests and memory-mapped processing, with source labels and hashes retained.
+Normal AMAZE-X operation reads numeric elevation sections directly from NASA and caches them; deployment does not include the 4 GB source rasters. See [DEPLOYMENT.md](DEPLOYMENT.md). The commands below are only for rebuilding prepared products offline. Full downloads use resumable range requests and memory-mapped processing, with source labels and hashes retained.
 
 ```text
 python -m pip install -r requirements.txt
@@ -66,7 +70,7 @@ Rocky uses a 3.43 MB floating-button model with 154,164 vertices, eighteen textu
 
 Primary: `nvidia/nemotron-3.5-super-vl:free` through OpenRouter. Fallback: `openai/gpt-oss-20b` through Groq. Keys remain server-side.
 
-Image-dependent questions remain pending with a snapshot preview and Retry if Nemotron is unavailable. Retry reuses the original map and time even if you navigate somewhere else or close the chat bubble. Groq handles text-only fallback. Snapshots contain the app's map canvas. The model proposes actions; the user clicks before any action runs. Evidence IDs refer to server-created facts. The model inserts fact placeholders in its prose; the server supplies numerical strings, rejects unsupported numbers/references, and validates action targets and dates. This constrains numerical provenance; it is not proof that every natural-language interpretation is correct.
+Image-dependent questions remain pending with a snapshot preview and Retry if Nemotron is unavailable. Retry reuses the original map and time even if you navigate somewhere else or close the chat bubble. Groq handles text-only fallback. Snapshots contain the app's map canvas. The model proposes validated native actions; **Let Rocky use app tools** controls automatic execution, and the client reports each result. Evidence IDs refer to server-created facts. The model inserts fact placeholders in its prose; the server supplies numerical strings, rejects unsupported numbers/references, and validates action targets and dates. This constrains numerical provenance; it is not proof that every natural-language interpretation is correct.
 
 No hosted AI call is possible until valid keys are configured. A missing key is shown as a configuration error. Local scene selection and measurements do not require LLM credentials.
 
@@ -118,9 +122,9 @@ Drag to pan, wheel/right-drag to zoom, and middle-drag or Ctrl-drag to tilt. Nav
 
 **Terrain flyover** enters 900 m above sampled terrain at the selected site, looking down across its relief. **Observer horizon** enters at the configured mast height above sampled terrain, with a 2 m camera minimum. Switch between them using the labelled mode control. Free navigation can move the camera away from that observer; the numerical horizon and Sun/Earth controls still refer to the selected site. At widths of 1,000 px or less, the horizon card starts collapsed; expanding it closes the inspector, and opening the inspector collapses the horizon card.
 
-The bottom readout reports latitude, longitude, terrain height above the lunar reference sphere, ground distance per screen pixel, and camera-to-cursor distance from the currently loaded terrain intersection. Click or tap terrain to place a visible measurement pin; mouse movement updates the pointer readout, while touch preserves the tapped reading. **Measurement details** explains the spherical height datum, screen-pixel resolution and source-detail limit. Coarse tiles refine as they load; view resolution is not an assertion of native DEM accuracy, and source imagery limits close-range detail. Right-click a terrain point for Lu-See's existing site menu, or use **Add custom coordinates** and select a point. Site markers, nearby candidates and Rocky's map snapshots use the new renderer too.
+The bottom readout reports latitude, longitude, terrain height above the lunar reference sphere, ground distance per screen pixel, and camera-to-cursor distance from the currently loaded terrain intersection. Click or tap terrain to place a visible measurement pin; mouse movement updates the pointer readout, while touch preserves the tapped reading. **Measurement details** explains the spherical height datum, screen-pixel resolution and source-detail limit. Coarse tiles refine as they load; view resolution is not an assertion of native DEM accuracy, and source imagery limits close-range detail. Right-click a terrain point for AMAZE-X's existing site menu, or use **Add custom coordinates** and select a point. Site markers, nearby candidates and Rocky's map snapshots use the new renderer too.
 
-The local `/api/lunar-terrain-v2/layer.json` (with the original route retained for compatibility) describes the observed geographic tile grid; mesh/image requests go directly to the public source with browser caching. Imagery uses 512-pixel tiles and a zoom index one above the equivalent Cesium terrain level. Public endpoints may change and have no app-specific service guarantee. Attribution links back to [LROC QuickMap](https://quickmap.lroc.im-ldi.com/). Numerical horizon masks, event timing and landing windows continue to use Lu-See's NASA/JPL and LOLA calculation pipeline; the visual mesh does not replace or independently validate those results. Horizon controls refer to the selected site's observer, while free camera navigation can move elsewhere. Recorded imagery lighting remains in the mosaic; **Use mission lighting** adds the selected date's direct-light direction, rather than reconstructing acquisition-neutral imagery.
+The local `/api/lunar-terrain-v2/layer.json` (with the original route retained for compatibility) describes the observed geographic tile grid; mesh/image requests go directly to the public source with browser caching. Imagery uses 512-pixel tiles and a zoom index one above the equivalent Cesium terrain level. Public endpoints may change and have no app-specific service guarantee. Attribution links back to [LROC QuickMap](https://quickmap.lroc.im-ldi.com/). Numerical horizon masks, event timing and landing windows continue to use AMAZE-X's NASA/JPL and LOLA calculation pipeline; the visual mesh does not replace or independently validate those results. Horizon controls refer to the selected site's observer, while free camera navigation can move elsewhere. Recorded imagery lighting remains in the mosaic; **Use mission lighting** adds the selected date's direct-light direction, rather than reconstructing acquisition-neutral imagery.
 
 `npm run build` copies Cesium's worker/runtime assets into `dist/cesium`. The dev server serves these from the installed dependency; production and Docker builds include the copied assets. No Cesium ion account or token is required for this public lunar tile integration.
 
@@ -132,3 +136,10 @@ The Moon follows the existing NASA/JPL PCK orientation model, including its peri
 **Sunlight and terrain shadows** is enabled by default in lunar navigation settings; turn it off to inspect the recorded imagery. Sun direction comes from the real JPL observer ephemerides, corrected from the observer to the lunar centre. The streamed mesh's encoded vertex normals provide relief lighting and the global terminator. Surface and horizon views also cast and receive terrain shadows, using a 20 km maximum shadow range and 2048-pixel maps (1024 on small screens). The global view uses direct lighting without the cost of whole-Moon shadow maps. Dates and playback update both lighting and rotation; idle time does not introduce a second animation loop. In the readable Solar System, the Moon's phase lighting uses the original heliocentric vector rather than the compressed display position.
 
 Recorded shadows in the image mosaic remain; dynamic lighting does not remove acquisition lighting or create sub-pixel terrain detail. The numerical NASA/JPL/LOLA horizon and landing calculations remain separate. Tests cover the inertial/body frame transform, the two renderer axis conventions, solar-centre reconstruction from day and night sites, and heliocentric illumination independent of display compression.
+
+
+## Assistant development
+
+`engine/app-actions.mjs` is the shared validated action protocol and feature guide. `server/app-tools.mjs` supplies app inspection, native feature requests, scientific comparison and landing-window tools. `src/app-actions.ts` revalidates each action and uses the same store and dialogs as manual controls; the App bridge returns actual success/failure. Tool-validated parameters take priority over model prose. Backend credentials stay on the server. Vision requests never fall back to a text-only model.
+
+Terminology: **Sunlight during stay** is time counted as sunlit; **Earth above terrain** is geometric visibility; **usable Earth contact (DTE)** also meets the antenna angle. **Relative solar power** is an incidence index, not generated energy. **Terrain skyline** is the highest surrounding obstruction in each compass direction. Retain technical values under these explanations.

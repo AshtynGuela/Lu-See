@@ -1,4 +1,4 @@
-# Lu-See
+# AMAZE-X
 
 Agreed product brief, recorded from the requirements discussion on 12 November 2026.
 
@@ -14,7 +14,7 @@ Updated 13 November: the user explicitly requested a Sun-centred Solar System ma
 
 ## Experience
 
-- Product name: **Lu-See**.
+- Product name: **AMAZE-X**.
 - A short cinematic introduction leads into free exploration.
 - Start at a Sun-centred Solar System overview, with access to the detailed Earth–Moon and lunar views. This is the user's revised opening on 13 November 2026.
 - Blend cinematic exploration with a detailed, Terra Invicta-inspired strategy interface during lunar analysis.

@@ -98,6 +98,13 @@ type State = {
   grid: boolean;
   markers: boolean;
   terrainLayer: boolean;
+  lunarLighting: boolean;
+  lunarRotation: boolean;
+  lunarTerrain: boolean;
+  freeCameraAxis: boolean;
+  solarTarget: {body:string;kind:string;version:number} | null;
+  selectedBody: string;
+  cameraCommand: {type?:string;mode:string;az?:number;el?:number;version:number} | null;
   statLayer: string | null;
   layerManifest: any;
   epochVersion: number;
@@ -140,6 +147,13 @@ export const useScout = create<State>()(
       grid: false,
       markers: true,
       terrainLayer: false,
+      lunarLighting: true,
+      lunarRotation: true,
+      lunarTerrain: true,
+      freeCameraAxis: true,
+      solarTarget: null,
+      selectedBody: "sun",
+      cameraCommand: null,
       statLayer: null,
       layerManifest: {},
       epochVersion: 0,

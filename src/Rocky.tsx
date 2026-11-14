@@ -7,7 +7,10 @@ import {
   ArrowUpRight,
   Image,
   History,
+  Check,
 } from "lucide-react";
+import { actionLabel } from "../engine/app-actions.mjs";
+import { runAppAction } from "./app-actions";
 import { selectedScenario, useScout, jsonFetch } from "./store";
 import RockyOverlay, { RockyBubble } from "./RockyOverlay";
 import { calmVoice, useDialogueReveal } from "./rocky-voice";
@@ -49,6 +52,8 @@ export default function Rocky({ snapshot, hasInspector }: { snapshot: () => stri
     pending = useRef<PendingQuestion | null>(null);
   const [attachedMap, setAttachedMap] = useState("");
   const [retryVisual, setRetryVisual] = useState(false);
+  const [autoUse,setAutoUse]=useState(()=>localStorage.getItem("amaze-x-rocky-auto")!=="off");
+  useEffect(()=>localStorage.setItem("amaze-x-rocky-auto",autoUse?"on":"off"),[autoUse]);
   const resumePhase = useRef<Phase>("ASKING");
   const [animateReply, setAnimateReply] = useState(true);
   const site = [...state.sites, ...state.custom].find(
@@ -66,10 +71,11 @@ export default function Rocky({ snapshot, hasInspector }: { snapshot: () => stri
   const ask = async (retry = false) => {
     const q = retry ? lastQuestion.current : draft.trim();
     if (!q) return;
+    const wantsImage=image||/\b(?:look at (?:this |the |my )?map|inspect (?:this |the |my )?map|what (?:can you see|is shown)|this (?:image|screenshot)|map looks)\b/i.test(q);
     if (!retry) {
       pending.current = null;
       setAttachedMap("");
-      setRetryVisual(image);
+      setRetryVisual(wantsImage);
     }
     lastQuestion.current = q;
     setAnimateReply(true);
@@ -82,10 +88,10 @@ export default function Rocky({ snapshot, hasInspector }: { snapshot: () => stri
       const mapImage =
         retry && pending.current
           ? pending.current.image
-          : (retry ? retryVisual : image)
+          : (retry ? retryVisual : wantsImage)
             ? snapshot()
             : undefined;
-      if ((retry ? retryVisual : image) && !mapImage)
+      if ((retry ? retryVisual : wantsImage) && !mapImage)
         throw new Error(
           "The map image is not ready. Wait for the scene to load, then retry.",
         );
@@ -105,11 +111,11 @@ export default function Rocky({ snapshot, hasInspector }: { snapshot: () => stri
                 minAntennaEl: state.minAntennaEl,
                 durationDays: scenario?.durationDays,
                 scenarios: state.scenarios,
-                customSites: state.custom.filter(
-                  (s) =>
-                    s.id === state.selected ||
-                    state.scenarios.some((c) => c.siteId === s.id),
-                ),
+                customSites: state.custom,
+                settings: {playing:state.playing,speed:state.speed,trueScale:state.trueScale,grid:state.grid,markers:state.markers,statLayer:state.statLayer,lunarLighting:state.lunarLighting,lunarRotation:state.lunarRotation,lunarTerrain:state.lunarTerrain,freeCameraAxis:state.freeCameraAxis,mastM:state.mastM,minAntennaEl:state.minAntennaEl},
+                solarBody:state.selectedBody,
+                lastActions:history.at(-1)?.answer?.actionResults??[],
+                toolsEnabled:autoUse,
               },
               history: history.slice(-3).flatMap((h) => [
                 { role: "user", content: h.question },
@@ -128,6 +134,13 @@ export default function Rocky({ snapshot, hasInspector }: { snapshot: () => stri
         signal: request.signal,
       });
       if (controller.current !== request || request.signal.aborted) return;
+      result._requestId=crypto.randomUUID();
+      result.actionResults=[];
+      if(autoUse)for(const action of result.actions??[]){
+        if(controller.current!==request||request.signal.aborted)return;
+        result.actionResults.push(await runAppAction(action));
+      }
+      if(controller.current!==request||request.signal.aborted)return;
       setAnswer(result);
       setHistory((h) => [...h, { question: q, answer: result }]);
       setDraft("");
@@ -141,16 +154,13 @@ export default function Rocky({ snapshot, hasInspector }: { snapshot: () => stri
       }
     }
   };
-  const action = (a: any) => {
-    if (a.type === "set_time") state.set({ time: Date.parse(a.iso) });
-    else if (a.type === "set_view") state.set({ view: a.view });
-    else if (a.type === "fly_to" || a.type === "open_inspector")
-      state.fly(a.siteId);
-    else if (a.type === "add_to_compare") {
-      state.select(a.siteId);
-      state.set({ scenarioDialog: true });
-      if (a.iso) state.set({ time: Date.parse(a.iso) });
-    }
+  const action = async (index: number) => {
+    if(!answer||answer.actionResults?.[index]?.ok)return;
+    const result=await runAppAction(answer.actions[index]);
+    const updated={...answer,actionResults:[...(answer.actionResults??[])]};
+    updated.actionResults[index]=result;
+    setAnswer(updated);
+    setHistory(rows=>rows.map(row=>row.answer._requestId===updated._requestId?{...row,answer:updated}:row));
   };
   const close = () => {
     controller.current?.abort();
@@ -226,10 +236,12 @@ export default function Rocky({ snapshot, hasInspector }: { snapshot: () => stri
             <>
               {phase === "ASKING" && (
                 <>
-                  <RockyBubble><p>Friend! Pick a place. Rocky helps check Sun, Earth, and terrain. Where we go, question?</p></RockyBubble>
+                  <RockyBubble><p>Friend! Rocky can explore the map, compare landing plans, and help find a date. Tell Rocky what you want to do. Big science, together.</p></RockyBubble>
                   <div className="question-chips">
                     {[
                       "How do I find a landing window?",
+                      "Open the Moon in terrain flyover.",
+                      "Show me what you can do in AMAZE-X.",
                       "When does the Sun set here?",
                       "Why is the lunar south pole difficult?",
                       "Explain the horizon assumptions.",
@@ -290,17 +302,21 @@ export default function Rocky({ snapshot, hasInspector }: { snapshot: () => stri
                   )}
                   <div className="action-chips">
                     {answer.actions?.map((a: any, i: number) => (
-                      <button key={i} onClick={() => action(a)}>
-                        {a.type.replaceAll("_", " ")}{" "}
-                        {a.siteId || a.view || a.iso}
+                      <button key={i} onClick={() => action(i)} disabled={answer.actionResults?.[i]?.ok} title={answer.actionResults?.[i]?.message}>
+                        {answer.actionResults?.[i]?.ok&&<Check size={13}/>}{actionLabel(a,[...state.sites,...state.custom])}
                       </button>
                     ))}
                     {answer.actions?.length > 1 && (
-                      <button onClick={() => answer.actions.forEach(action)}>
-                        Do all
+                      <button disabled={answer.actions.every((_:any,index:number)=>answer.actionResults?.[index]?.ok)} onClick={async()=>{
+                        const updated={...answer,actionResults:[...(answer.actionResults??[])]};
+                        for(let i=0;i<answer.actions.length;i++)if(!updated.actionResults[i]?.ok)updated.actionResults[i]=await runAppAction(answer.actions[i]);
+                        setAnswer(updated);setHistory(rows=>rows.map(row=>row.answer._requestId===updated._requestId?{...row,answer:updated}:row));
+                      }}>
+                        Use these tools
                       </button>
                     )}
                   </div>
+                  {answer.actionResults?.length>0&&<div className="rocky-action-results" role="status">{answer.actionResults.map((result:any,index:number)=>result&&<p key={index} className={result.ok?"":"assistant-error"}>{result.ok?"Done: ":"Could not finish: "}{result.message}</p>)}</div>}
                   <small className="data-note">
                     {answer.model}
                   </small>
@@ -340,6 +356,8 @@ export default function Rocky({ snapshot, hasInspector }: { snapshot: () => stri
                     />
                     <Image size={13} /> Include current map image
                   </label>
+                  <label className="snapshot-check"><input type="checkbox" checked={autoUse} onChange={event=>setAutoUse(event.target.checked)}/>Let Rocky use app tools</label>
+                  <p className="rocky-tools-hint">Rocky can open views, adjust settings and run your chosen analysis. Completed actions appear below his reply.</p>
                 </form>
               )}
             </>

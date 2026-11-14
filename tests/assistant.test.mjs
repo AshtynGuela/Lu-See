@@ -1,6 +1,19 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { answerQuestion } from "../server/assistant.mjs";
+import { answerQuestion, materializeAnswer, groundExactFactCopies } from "../server/assistant.mjs";
+test("evidence units are inserted once and ungrounded numbers remain rejected",()=>{
+  const facts=[{id:"f1",value:"150",unit:"%"},{id:"f2",value:"3",unit:"h"}];
+  const result=materializeAnswer({speech:"Rocky will resize to {{f1}} percent.",details:"{{f2}} hours more sunlight.",evidenceIds:["f1","f2"],actions:[]},facts);
+  assert.equal(result.speech,"Rocky will resize to 150 %.");
+  assert.equal(result.details,"3 h more sunlight.");
+  assert.throws(()=>materializeAnswer({...result,speech:"Try 800 hours"},facts),/placeholders/);
+  const scienceFacts=[{id:"f1",value:"Apollo 12",unit:""},{id:"f2",value:"24.00",unit:"h"}];
+  const repaired=materializeAnswer(groundExactFactCopies({speech:"Apollo 12 gives 24.00 hours.",details:"",evidenceIds:[],actions:[]},scienceFacts),scienceFacts);
+  assert.equal(repaired.speech,"Apollo 12 gives 24.00 h.");
+  assert.deepEqual(repaired.evidenceIds,["f1","f2"]);
+  assert.equal(materializeAnswer(groundExactFactCopies({speech:"24‑hour contact",details:"",evidenceIds:[],actions:[]},scienceFacts),scienceFacts).speech,"24.00 h contact");
+  assert.throws(()=>materializeAnswer(groundExactFactCopies({speech:"Try 24.001 hours",details:"",evidenceIds:[],actions:[]},scienceFacts),scienceFacts),/placeholders/);
+});
 const dependencies = {
   sites: [],
   loadData: async () => {

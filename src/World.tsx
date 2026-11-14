@@ -714,7 +714,7 @@ function Scene({
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (
-        (e.target as HTMLElement).closest("input,textarea,select,[role=dialog]")
+        (e.target as HTMLElement).closest("input,textarea,select,button,a,.rocky-overlay,[role=dialog]")
       )
         return;
       keys.current.add(e.code);
@@ -943,7 +943,7 @@ function Scene({
             ) : (
               <MoonGlobe
                 radius={radius}
-                displaced={!!state.layerManifest.heightReady}
+                displaced={!!state.layerManifest.heightReady && state.lunarTerrain}
                 wireframe={state.terrainLayer}
                 onContext={context}
                 eclipseMaterial={eclipseMaterial}
@@ -1085,15 +1085,16 @@ export default function World(props: {
 }) {
   const [bearing, setBearing] = useState(0);
   const [surfaceImage, setSurfaceImage] = useState<SurfaceImageState>("loading");
-  const [terrainLighting, setTerrainLighting] = useState(false);
-  const toggleTerrainLighting = () => setTerrainLighting(value => !value);
+  const lunarLighting = useScout(s => s.lunarLighting);
+  const terrainLighting = !lunarLighting;
+  const toggleTerrainLighting = () => useScout.getState().set({lunarLighting:!useScout.getState().lunarLighting});
   const [targetBearing, setTargetBearing] = useState<{ az: number; el: number } | null>(null);
   const state = useScout(),
     selected = [...state.sites, ...state.custom].find(
       (s) => s.id === state.selected,
     );
   const solar = state.view === "solar_system";
-  const lunar = !solar && state.view !== "overview" && !state.travel;
+  const lunar = !solar && state.view !== "overview" && !state.travel && !(state.view === "polar_south" && state.statLayer);
   const closeUp = selected && surfaceDetail(selected);
   return (
     <SolarSystem onSnapshot={props.onSnapshot}>
