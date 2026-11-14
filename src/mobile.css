@@ -1,0 +1,304 @@
+/* Phone layout only. Desktop styling and application behavior stay in their
+   existing components; these overrides also cover short landscape phones. */
+@media (max-width: 760px), (max-width: 960px) and (max-height: 500px) and (orientation: landscape) {
+  .app {
+    --phone-top: calc(56px + env(safe-area-inset-top, 0px));
+    --phone-nav: calc(64px + env(safe-area-inset-bottom, 0px));
+    --phone-bottom: calc(var(--phone-nav) + 56px);
+    --phone-map-top: calc(var(--phone-top) + 56px);
+    height: 100dvh;
+  }
+  .app .topbar {
+    height: var(--phone-top);
+    padding: env(safe-area-inset-top, 0px) max(12px, env(safe-area-inset-right, 0px)) 0 max(12px, env(safe-area-inset-left, 0px));
+    gap: 12px;
+  }
+  .app .brand { min-width: 0; flex: 1; gap: 9px; }
+  .app .brand strong { font-size: 16px; }
+  .app .brand > svg { width: 25px; }
+  .app .top-centre { display: none; }
+  .app .top-actions { gap: 6px; }
+  .app .top-actions > .icon-button { display: inline-flex; }
+  .app .challenge-link { display: none; }
+  .app .mode-toggle { min-height: 44px; font-size: 13px; padding: 8px 12px; }
+  .app .icon-button { width: 44px; height: 44px; min-width: 44px; padding: 10px; }
+
+  .app .instrument-rail {
+    top: auto; bottom: 0; left: 0; right: 0;
+    width: auto; height: var(--phone-nav);
+    flex-direction: row; gap: 0;
+    padding: 4px max(4px, env(safe-area-inset-right, 0px)) calc(4px + env(safe-area-inset-bottom, 0px)) max(4px, env(safe-area-inset-left, 0px));
+    border-right: 0; border-top: 1px solid var(--line);
+    background: var(--panel); z-index: 38;
+  }
+  .app .instrument-rail > button {
+    flex: 1; width: auto; min-width: 44px; height: 56px;
+    padding: 6px 2px; gap: 5px; font-size: 11px;
+  }
+  .app .instrument-rail > button svg { width: 20px; height: 20px; }
+  .app .rail-spacer { display: none; }
+  .app .clockbar {
+    bottom: var(--phone-nav); height: 56px;
+    padding: 0 max(8px, env(safe-area-inset-right, 0px)) 0 max(8px, env(safe-area-inset-left, 0px));
+    gap: 4px; flex-wrap: nowrap; z-index: 38;
+    background: var(--panel);
+  }
+  .app .transport { gap: 0; flex-shrink: 0; }
+  .app .transport > button { width: 36px; height: 44px; padding: 8px; }
+  .app .clock-readout {
+    flex: 1; min-width: 0; min-height: 44px; padding: 3px 4px;
+    display: flex; flex-direction: column; align-items: flex-start;
+    justify-content: center; gap: 2px; font-size: 12px; white-space: nowrap;
+  }
+  .app .clock-readout small { font-size: 10px; }
+  .app .speed-readout { flex-shrink: 0; min-width: 44px; min-height: 44px; font-size: 12px; padding: 6px; }
+  .app .clockbar-spacer, .app .map-status, .app .clockbar > .text-button { display: none; }
+  .app .view-toolbar {
+    top: calc(var(--phone-top) + 8px); left: 8px; right: 8px;
+    transform: none; gap: 0; padding: 0; justify-content: space-evenly;
+    background: var(--panel); z-index: 20;
+  }
+  .app .view-toolbar > button { display: inline-flex; flex: 1; width: auto; min-width: 44px; min-height: 44px; padding: 10px 6px; }
+  .app .view-toolbar button > span { display: none; }
+  .app .world, .app.has-inspector .world { inset: var(--phone-map-top) 0 var(--phone-bottom); }
+  .app .world.lunar-world, .app.has-inspector .world.lunar-world { inset: 0; }
+
+  /* Tools become a wide sheet; the map and its main navigation stay visible. */
+  .app .flyout, .app .compare-tray, .app .timeline-drawer, .app .slip-tray {
+    left: max(8px, env(safe-area-inset-left, 0px)); right: max(8px, env(safe-area-inset-right, 0px));
+    top: auto; bottom: calc(var(--phone-bottom) + 8px); width: auto;
+    max-height: calc(100dvh - var(--phone-map-top) - var(--phone-bottom) - 16px);
+    padding: 16px; overflow: auto; overscroll-behavior: contain;
+    scroll-padding-block: 70px 16px; z-index: 31;
+    background: var(--panel); border-radius: 12px;
+  }
+  .app .flyout > header, .app .compare-tray > header, .app .timeline-drawer > header, .app .slip-tray > header {
+    position: sticky; top: -16px; margin: -1px -1px 16px; padding: 4px 0 10px;
+    z-index: 2; background: var(--panel); border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .app .flyout h2, .app .compare-tray h2, .app .timeline-drawer h2, .app .slip-tray h2 { font-size: 18px; }
+  .app .site-list { max-height: none; }
+  .app .site-text strong { font-size: 15px; }
+  .app .site-text small, .app .site-text > span { font-size: 12px; }
+  .app :is(.flyout, .inspector, .compare-tray, .timeline-drawer, .slip-tray, .scenario-dialog, .info-dialog) button { min-height: 44px; }
+  .app :is(.flyout, .scenario-dialog, .info-dialog) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  .app :is(.flyout, .scenario-dialog, .info-dialog) select { font-size: 16px; min-height: 44px; }
+  .app :is(.flyout, .scenario-dialog, .info-dialog) label { font-size: 14px; line-height: 1.5; }
+  .app :is(.flyout, .scenario-dialog, .info-dialog, .inspector) summary { min-height: 44px; align-content: center; }
+  .app .flyout .muted, .app .flyout .data-note { font-size: 13px; }
+  .app .inspector {
+    top: auto; left: 8px; right: 8px; width: auto;
+    bottom: calc(var(--phone-bottom) + 8px);
+    max-height: min(38dvh, calc(100dvh - var(--phone-map-top) - var(--phone-bottom) - 20px));
+    overscroll-behavior: contain; scroll-padding-top: 94px;
+  }
+  .app:has(.lunar-canvas) .inspector { bottom: calc(var(--phone-bottom) + 84px); max-height: 35dvh; }
+  .app .inspector > header { position: sticky; top: 0; background: var(--panel); z-index: 2; padding: 12px 16px; }
+  .app .inspector h1 { font-size: 21px; }
+  .app .inspector-section { padding: 16px; }
+  .app .inspector .coordinates { flex-wrap: wrap; font-size: 12px; }
+  .app .inspector :is(.data-note, .condition-reading p, .condition-reading > small, .condition-geometry summary) { font-size: 13px; }
+  .app .inspector .button-row { flex-wrap: wrap; }
+  .app .inspector-section > .full-width { margin-top: 12px; }
+  .app .condition-reading > strong { font-size: 20px; }
+  .app .metrics-grid span { font-size: 12px; }
+  .app .compare-tray > header { flex-wrap: wrap; gap: 8px; }
+  .app .compare-tray h2 { flex: 1 1 120px; max-width: none; }
+  .app .compare-tray > header > .button-row { margin-left: auto; flex-shrink: 0; gap: 4px; }
+  .app .compare-tray > header > .button-row > button { display: inline-flex; font-size: 12px; padding: 8px; }
+  .app .compare-grid { grid-auto-flow: row; grid-template-columns: minmax(0, 1fr); grid-auto-columns: auto; overflow: visible; gap: 22px; }
+  .app .compare-column { padding: 0 0 22px; border: 0; border-bottom: 1px solid var(--line); min-width: 0; }
+  .app .compare-heading { gap: 8px; margin-bottom: 12px; }
+  .app .compare-heading strong { font-size: 16px; }
+  .app .compare-heading small { white-space: normal; font-size: 12px; line-height: 1.5; }
+  .app .comparison-values { font-size: 13px; gap: 12px 16px; }
+  .app .comparison-values dt { min-width: 0; overflow-wrap: anywhere; }
+  .app .comparison-values dd { text-align: right; }
+  .app .comparison-takeaway { font-size: 16px; line-height: 1.5; }
+  .app .comparison-explainer { font-size: 13px; }
+  .app .timeline-lane > span, .app .timeline-labels { font-size: 11px; }
+  .app .timeline-track { height: 44px; }
+  .app .timeline-track > button { min-height: 0; }
+  .app .slip-row > div { height: 44px; }
+  .app .slip-row > strong { font-size: 12px; width: 68px; }
+  .app .slip-labels { font-size: 11px; margin-left: 76px; gap: 12px; }
+
+  .app .modal-backdrop {
+    position: fixed; padding: max(8px, env(safe-area-inset-top, 0px)) max(8px, env(safe-area-inset-right, 0px)) max(8px, env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-left, 0px));
+  }
+  .app .scenario-dialog, .app .info-dialog {
+    width: 100%; max-width: 600px; padding: 16px;
+    max-height: calc(100dvh - max(16px, env(safe-area-inset-top, 0px)) - max(16px, env(safe-area-inset-bottom, 0px)));
+    overscroll-behavior: contain; scroll-padding-block: 76px 90px;
+  }
+  .app .scenario-dialog > header, .app .info-dialog > header {
+    position: sticky; top: -16px; padding: 4px 0 12px; z-index: 3; background: var(--panel); border-bottom: 1px solid var(--line);
+  }
+  .app .scenario-dialog h2, .app .info-dialog h2 { font-size: 23px; }
+  .app .scenario-dialog > footer {
+    position: sticky; bottom: -16px; margin: 20px -1px -1px; padding: 12px 0 2px;
+    background: var(--panel); border-top: 1px solid var(--line); flex-direction: column; z-index: 3;
+  }
+  .app .scenario-dialog > footer button { font-size: 14px; }
+  .app .planner-range { grid-template-columns: 1fr; gap: 0; }
+  .app .planner-mode { gap: 8px; }
+  .app .planner-mode button { font-size: 13px; padding: 10px 8px; }
+  .app .landing-requirements label { grid-template-columns: minmax(0, 1fr) 84px; gap: 12px; }
+  .app .landing-candidate > span { font-size: 13px; }
+  .app .landing-candidate strong { font-size: 16px; }
+  .app .nearby-results li { flex-wrap: wrap; gap: 12px; }
+  .app .nearby-results li button { margin-left: auto; }
+  .app .shortcuts { grid-template-columns: minmax(80px, .8fr) minmax(0, 1.4fr); font-size: 13px; }
+
+  /* Lunar controls keep the viewport free instead of stacking a second rail. */
+  .app .lunar-camera, .app.has-inspector .lunar-camera {
+    left: 8px; right: 8px; top: var(--phone-map-top);
+    display: flex; flex-direction: row; gap: 4px; overflow-x: auto; overscroll-behavior-x: contain;
+  }
+  .app .lunar-camera button { width: 44px; height: 44px; min-width: 44px; flex-shrink: 0; }
+  .app .lunar-settings, .app.has-inspector .lunar-settings {
+    left: 8px; right: 8px; top: calc(var(--phone-map-top) + 52px);
+    width: auto; max-height: calc(100dvh - var(--phone-map-top) - var(--phone-bottom) - 64px);
+    font-size: 14px; z-index: 32; overscroll-behavior: contain;
+  }
+  .app .lunar-settings label { min-height: 44px; }
+  .app .lunar-settings > button { min-height: 44px; }
+  .app .lunar-stream-state { left: 8px; right: 8px; top: calc(var(--phone-map-top) + 52px); max-width: none; width: fit-content; font-size: 12px; }
+  .app .lunar-cursor, .app.has-inspector .lunar-cursor {
+    left: 0; right: 0; bottom: var(--phone-bottom); min-height: 76px; padding: 8px 12px;
+    background: var(--panel);
+  }
+  .app .lunar-cursor dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px 12px; width: 100%; }
+  .app .lunar-cursor dt { font-size: 11px; }
+  .app .lunar-cursor dd { font-size: 12px; min-width: 0; white-space: nowrap; }
+  .app .lunar-cursor > a { display: none; }
+  .app .lunar-measurement-help { right: 8px; bottom: 2px; width: 44px; height: 44px; }
+  .app .lunar-measurement-note { width: min(320px, calc(100vw - 24px)); font-size: 13px; }
+  .app .lunar-view-mode { left: 8px; right: 8px; top: calc(var(--phone-map-top) + 100px); width: fit-content; max-width: calc(100vw - 16px); padding: 4px 8px; }
+  .app .lunar-view-mode button { min-height: 44px; font-size: 13px; }
+  .app:has(.lunar-canvas) .horizon-readout {
+    left: 8px; right: 8px; top: calc(var(--phone-map-top) + 156px); bottom: auto;
+    width: auto; max-height: 25dvh; overflow: auto; padding: 12px; overscroll-behavior: contain;
+  }
+  .app .horizon-heading h2 { font-size: 16px; }
+  .app .horizon-readout button { min-height: 44px; }
+  .app .horizon-summary, .app .horizon-targets span, .app .horizon-imagery { font-size: 12px; }
+  .app .horizon-targets strong { font-size: 13px; }
+  .app .lunar-canvas .cesium-viewer-bottom { left: 8px; bottom: calc(var(--phone-bottom) + 82px); max-width: calc(100% - 20px); }
+
+  .app .world.solar-world { inset: var(--phone-map-top) 0 calc(var(--phone-bottom) + 224px) !important; }
+  .app .solar-labels { left: 0; top: var(--phone-map-top); bottom: calc(var(--phone-bottom) + 224px); }
+  .app .solar-catalog {
+    left: 8px; right: 8px; top: var(--phone-map-top); width: auto;
+    display: flex; gap: 4px; max-height: none; padding: 4px; overflow-x: auto; overflow-y: hidden;
+    overscroll-behavior-x: contain;
+  }
+  .app .solar-catalog h2, .app .solar-catalog p, .app .lunar-tag { display: none; }
+  .app .solar-catalog button { width: auto; min-height: 44px; padding: 8px 12px; font-size: 13px; flex-shrink: 0; }
+  .app .solar-controls {
+    top: calc(var(--phone-map-top) + 64px); left: 8px; right: 8px; transform: none;
+    display: flex; flex-wrap: wrap; gap: 4px 12px;
+  }
+  .app .solar-controls button { min-height: 44px; font-size: 12px; padding: 8px; }
+  .app .solar-controls label { min-height: 44px; font-size: 13px; gap: 6px; }
+  .app .solar-controls input { width: 18px; height: 18px; }
+  .app .solar-info {
+    top: auto; left: 8px; right: 8px; bottom: calc(var(--phone-bottom) + 8px); width: auto;
+    max-height: min(216px, 30dvh); padding: 14px; overscroll-behavior: contain;
+  }
+  .app .solar-info h1 { font-size: 23px; min-height: 30px; padding-right: 0; }
+  .app .solar-info .solar-scale { position: static; display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 4px; }
+  .app .solar-scale button { min-height: 44px; font-size: 13px; flex: 1; padding: 8px; }
+  .app .solar-info p, .app .solar-info > .data-note, .app .solar-info details { font-size: 13px; }
+  .app .solar-info > .data-note:first-of-type { display: block; }
+  .app .solar-info > .primary { min-height: 44px; font-size: 14px; flex-shrink: 0; }
+  .app .solar-info summary { min-height: 44px; align-content: center; }
+  .app .solar-label { font-size: 12px; min-height: 28px; }
+
+  /* Rocky keeps his animations and drag/resize behavior. Chat uses a phone sheet
+     so its composer remains reachable regardless of the mascot's position. */
+  .app .rocky-overlay {
+    --phone-rocky-size: min(var(--rocky-size), max(44px, calc(100dvh - var(--phone-map-top) - var(--phone-bottom) - 24px)));
+    --phone-rocky-top: clamp(var(--phone-map-top), var(--rocky-top), calc(100dvh - var(--phone-bottom) - var(--phone-rocky-size) - 8px));
+    --phone-rocky-left: clamp(8px, var(--rocky-left), calc(100vw - var(--phone-rocky-size) - 8px));
+  }
+  .app .rocky-character { left: var(--phone-rocky-left) !important; top: var(--phone-rocky-top) !important; width: var(--phone-rocky-size) !important; height: var(--phone-rocky-size) !important; }
+  .app .rocky-conversation:not(:has(.rocky-panel)) {
+    translate: calc(var(--phone-rocky-left) - var(--rocky-left)) calc(var(--phone-rocky-top) - var(--rocky-top));
+  }
+  .app .rocky-resize-handle { left: calc(var(--phone-rocky-left) + var(--phone-rocky-size) - 28px) !important; top: calc(var(--phone-rocky-top) + var(--phone-rocky-size) - 28px) !important; width: 44px; height: 44px; }
+  .app .rocky-conversation:has(.rocky-panel) {
+    position: fixed; left: max(8px, env(safe-area-inset-left, 0px)) !important; right: max(8px, env(safe-area-inset-right, 0px));
+    top: auto !important; bottom: calc(var(--phone-bottom) + 8px) !important; width: auto !important;
+    --rocky-chat-height: min(68dvh, calc(100dvh - var(--phone-top) - var(--phone-bottom) - 24px)) !important;
+  }
+  .app .rocky-chat-scroll { padding: 12px; scroll-padding-block: 64px 140px; overscroll-behavior: contain; }
+  .app .rocky-chat-scroll > header { position: sticky; top: -12px; z-index: 3; background: var(--panel); margin: 0 -1px; padding: 4px 0 8px; }
+  .app .rocky-chat-scroll > form { position: sticky; bottom: -12px; z-index: 2; background: var(--panel); padding: 12px 0 4px; border-top: 1px solid var(--line); }
+  .app .rocky-chat-scroll button { min-height: 44px; }
+  .app .rocky-chat-scroll .question-chips { gap: 8px; }
+  .app .rocky-chat-scroll .question-chips > button { font-size: 14px; padding: 10px; }
+  .app .rocky-chat-scroll .ask-input input { font-size: 16px; min-height: 48px; }
+  .app .rocky-chat-scroll .snapshot-check { min-height: 36px; font-size: 13px; margin: 4px 0; }
+  .app .rocky-chat-scroll .snapshot-check input { width: 20px; height: 20px; }
+  .app .rocky-chat-scroll .snapshot-check + .rocky-tools-hint { font-size: 12px; }
+  .app .rocky-menu.context-menu {
+    position: fixed; left: max(8px, env(safe-area-inset-left, 0px)) !important; right: max(8px, env(safe-area-inset-right, 0px)); width: auto;
+    top: auto !important; bottom: calc(var(--phone-bottom) + 8px) !important;
+    max-height: calc(100dvh - var(--phone-top) - var(--phone-bottom) - 24px) !important;
+    overscroll-behavior: contain;
+  }
+  .app .rocky-menu button { min-height: 44px; font-size: 14px; }
+  .app .rocky-size-settings label { font-size: 14px; }
+  .app .rocky-size-settings input { min-height: 36px; }
+  .app .welcome { padding: max(24px, env(safe-area-inset-top, 0px)) 24px max(104px, env(safe-area-inset-bottom, 0px)); overflow-y: auto; }
+  .app .welcome h1 { font-size: clamp(38px, 11vw, 60px); }
+  .app .welcome .brand-expansion { font-size: 15px; }
+  .app .welcome-caption { font-size: 12px; line-height: 1.6; }
+  .app .welcome-enter { min-height: 48px; font-size: 14px; }
+  .app .welcome-bottom { left: 24px; right: 24px; bottom: max(16px, env(safe-area-inset-bottom, 0px)); gap: 12px; }
+  .app .welcome-bottom a { font-size: 11px; }
+  .app .welcome-bottom > button { min-height: 44px; font-size: 13px; }
+  .app .coordinate-picker { left: 8px; right: 8px; bottom: calc(var(--phone-bottom) + 8px); width: auto; transform: none; flex-wrap: wrap; }
+  .app .coordinate-picker button { min-height: 44px; }
+  .app .layer-legend { left: 8px; top: calc(var(--phone-map-top) + 52px); max-width: calc(100vw - 24px); }
+  .app .travel-banner { top: calc(var(--phone-map-top) + 52px); left: 8px; right: 8px; transform: none; }
+  .app .landing-choice { width: calc(100% - 24px); left: 50%; max-height: calc(100dvh - var(--phone-top) - var(--phone-bottom)); overflow: auto; }
+  .app .toast { bottom: calc(var(--phone-bottom) + 16px); left: 12px; right: 12px; width: auto; transform: none; font-size: 13px; }
+  .app .webgl-error, .app .scene-loading { inset: var(--phone-map-top) 16px calc(var(--phone-bottom) + 30dvh); }
+}
+
+@media (max-width: 760px) and (min-height: 501px) {
+  .app:has(.solar-info) .rocky-overlay:not([data-positioned]) {
+    --phone-rocky-top: clamp(var(--phone-map-top), var(--rocky-top), calc(100dvh - var(--phone-bottom) - 232px - var(--phone-rocky-size)));
+  }
+  .app.has-inspector:has(.lunar-canvas) .rocky-overlay:not([data-positioned]) {
+    --phone-rocky-top: clamp(var(--phone-map-top), var(--rocky-top), calc(100dvh - var(--phone-bottom) - 35dvh - 92px - var(--phone-rocky-size)));
+  }
+}
+
+@media (max-width: 960px) and (max-height: 500px) and (orientation: landscape) {
+  .app { --phone-top: calc(48px + env(safe-area-inset-top, 0px)); --phone-nav: calc(52px + env(safe-area-inset-bottom, 0px)); --phone-bottom: calc(var(--phone-nav) + 48px); }
+  .app .instrument-rail { padding-block: 0 env(safe-area-inset-bottom, 0px); }
+  .app .instrument-rail > button { height: 48px; flex-direction: row; gap: 8px; }
+  .app .clockbar { height: 48px; }
+  .app .clock-readout { flex-direction: row; align-items: center; gap: 8px; }
+  .app .inspector, .app:has(.lunar-canvas) .inspector { top: var(--phone-map-top); bottom: calc(var(--phone-bottom) + 8px); left: auto; right: 8px; width: min(42vw, 350px); max-height: none; }
+  .app .lunar-camera, .app.has-inspector .lunar-camera { right: calc(42vw + 16px); flex-wrap: wrap; overflow: visible; }
+  .app .lunar-cursor { display: flex; min-height: 0; padding: 4px 12px; }
+  .app .lunar-cursor dl { display: flex; flex-wrap: nowrap; gap: 16px; padding-right: 44px; }
+  .app.has-inspector .lunar-cursor { right: calc(42vw + 16px); }
+  .app .lunar-cursor dt { font-size: 10px; }
+  .app .lunar-cursor dd { font-size: 11px; }
+  .app .lunar-cursor .lunar-measurement-help { width: 36px; height: 36px; }
+  .app .world.solar-world { inset: var(--phone-map-top) 0 var(--phone-bottom) !important; }
+  .app .solar-labels { inset: var(--phone-map-top) 0 var(--phone-bottom); }
+  .app .solar-info { top: var(--phone-map-top); bottom: calc(var(--phone-bottom) + 8px); left: auto; right: 8px; width: min(40vw, 320px); max-height: none; }
+  .app .solar-catalog, .app .solar-controls { right: calc(40vw + 24px); }
+  .app .rocky-conversation:has(.rocky-panel) { left: auto !important; width: min(420px, calc(100vw - 16px)) !important; }
+  .app .welcome { align-items: flex-start; padding: 24px 32px 80px; }
+  .app .welcome-content > svg { display: none; }
+  .app .welcome h1 { font-size: 38px; }
+  .app .welcome p { margin-block: 12px; }
+}

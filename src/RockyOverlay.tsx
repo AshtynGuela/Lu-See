@@ -378,6 +378,8 @@ export default function RockyOverlay({ visible, open, thinking, hasInspector, on
   }
   const clip = gesture?.clip ?? (movement === "Random" ? (thinking ? "Question" : randomClip) : movement);
   return <aside className="rocky-overlay" aria-label="Rocky assistant" hidden={!visible}
+    data-positioned={position!==null||docked ? "true" : undefined}
+    style={{"--rocky-left":`${at.x}px`, "--rocky-top":`${at.y}px`, "--rocky-size":`${size}px`} as React.CSSProperties}
     onKeyDown={e => {
       if (e.key === "Escape" && menu) {
         e.stopPropagation();
