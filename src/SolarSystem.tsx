@@ -29,6 +29,7 @@ import {
 } from "../engine/solar.mjs";
 import { useScout, jsonFetch } from "./store";
 import { planetOrientation } from "../engine/planetOrientation.mjs";
+import { lunarModelSunDirection } from "../engine/lunar-scene.mjs";
 import { EarthGlobe, useEarthOrientation } from "./EarthGlobe";
 const SolarContext = createContext<any>(null);
 export function SolarCanvasScene() {
@@ -37,12 +38,22 @@ export function SolarCanvasScene() {
 const monthlyCache = new Map<string, Record<string, any>>();
 const solarLoadOrder = ["earth", "moon", ...SOLAR_BODIES.map(body => body.id)
   .filter(id => id !== "earth" && id !== "moon")];
-function MoonModel({ radius }: { radius: number }) {
-  const texture = useTexture("/data/moon-trek-wac.jpg");
+function MoonModel({ radius, sunDirection }: { radius: number; sunDirection: THREE.Vector3 }) {
+  const texture = useTexture("/data/moon-trek-wac.jpg", map => { map.colorSpace = THREE.SRGBColorSpace; });
+  const invalidate = useThree(s => s.invalidate);
+  const lighting = useMemo(() => ({ value: new THREE.Vector3() }), []);
+  useEffect(() => { lighting.value.copy(sunDirection); invalidate(); }, [sunDirection, lighting, invalidate]);
+  const shade = useMemo(() => (shader: THREE.WebGLProgramParametersWithUniforms) => {
+    shader.uniforms.lunarSun = lighting;
+    shader.vertexShader = shader.vertexShader.replace("#include <common>", "#include <common>\nvarying vec3 lunarNormal;")
+      .replace("#include <begin_vertex>", "#include <begin_vertex>\nlunarNormal = normal;");
+    shader.fragmentShader = shader.fragmentShader.replace("#include <common>", "#include <common>\nvarying vec3 lunarNormal;\nuniform vec3 lunarSun;")
+      .replace("#include <opaque_fragment>", "outgoingLight *= max(dot(normalize(lunarNormal), normalize(lunarSun)), 0.0);\n#include <opaque_fragment>");
+  }, [lighting]);
   return (
     <mesh>
       <sphereGeometry args={[radius, 48, 32]} />
-      <meshStandardMaterial map={texture} roughness={1} />
+      <meshBasicMaterial map={texture} onBeforeCompile={shade} customProgramCacheKey={() => "lunar-solar-direction-v1"} />
     </mesh>
   );
 }
@@ -449,7 +460,7 @@ function SolarScene({
                 }
               >
                 {body.id === "moon" ? (
-                  <MoonModel radius={r} />
+                  <MoonModel radius={r} sunDirection={lunarModelSunDirection(p, state.time)!} />
                 ) : body.id === "earth" ? (
                   <EarthGlobe radius={r} />
                 ) : (

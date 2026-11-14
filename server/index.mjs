@@ -130,7 +130,7 @@ app.get("/api/terrain", async (req, res, next) => {
     next(e);
   }
 });
-app.get("/api/lunar-terrain/layer.json", (req, res) => {
+app.get(["/api/lunar-terrain/layer.json", "/api/lunar-terrain-v2/layer.json"], (req, res) => {
   res.set("Cache-Control", "public, max-age=86400").json(lunarTerrainLayer);
 });
 app.use("/cesium", express.static(path.join(root, "node_modules/cesium/Build/Cesium")));

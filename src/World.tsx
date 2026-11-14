@@ -10,6 +10,7 @@ import SpaceBackdrop from "./SpaceBackdrop";
 import HorizonReadout from "./HorizonReadout";
 import { captureMap } from "./mapSnapshot";
 import { planetOrientation } from "../engine/planetOrientation.mjs";
+import { lunarCameraDelta } from "../engine/lunar-scene.mjs";
 import { EarthGlobe, useEarthOrientation } from "./EarthGlobe";
 import { surfaceDetail, surfaceDetailCredit } from "./surfaceDetails";
 import type { RankedSite } from "./NearbySites";
@@ -555,6 +556,19 @@ function Scene({
     site = [...state.sites, ...state.custom].find(
       (s) => s.id === state.selected,
     );
+  const previousRotationTime = useRef(state.time);
+  useEffect(() => {
+    const before = previousRotationTime.current;
+    previousRotationTime.current = state.time;
+    if (state.view !== "overview" || state.travel || move.current || before === state.time) return;
+    const rotation = lunarCameraDelta(before, state.time);
+    camera.position.applyQuaternion(rotation);
+    camera.up.applyQuaternion(rotation);
+    camera.quaternion.premultiply(rotation);
+    controls.current?.target.applyQuaternion(rotation);
+    controls.current?.update();
+    invalidate();
+  }, [state.time, state.view, state.travel, camera, invalidate]);
   const packet = packetFor(state, state.selected),
     terrain = state.terrains[state.selected],
     mask = getMask(terrain, state.mastM);
@@ -1071,7 +1085,7 @@ export default function World(props: {
 }) {
   const [bearing, setBearing] = useState(0);
   const [surfaceImage, setSurfaceImage] = useState<SurfaceImageState>("loading");
-  const [terrainLighting, setTerrainLighting] = useState(true);
+  const [terrainLighting, setTerrainLighting] = useState(false);
   const toggleTerrainLighting = () => setTerrainLighting(value => !value);
   const [targetBearing, setTargetBearing] = useState<{ az: number; el: number } | null>(null);
   const state = useScout(),
@@ -1088,7 +1102,7 @@ export default function World(props: {
         aria-label={lunar ? "Interactive lunar terrain. Drag to pan, middle-drag to tilt, wheel to zoom." : "Interactive Earth–Moon map. Drag to orbit, wheel to zoom, W A S D to fly, Q and E to move vertically."}
       >
         {lunar ? <Suspense fallback={<div className="scene-loading">Loading lunar navigation…</div>}>
-          <LunarGlobe {...props} onBearing={setBearing} targetBearing={targetBearing} terrainLighting={terrainLighting} />
+          <LunarGlobe {...props} onBearing={setBearing} targetBearing={targetBearing} terrainLighting={terrainLighting} onToggleLighting={toggleTerrainLighting} />
         </Suspense> : (
         <Canvas
           frameloop="demand"

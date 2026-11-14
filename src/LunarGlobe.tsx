@@ -4,11 +4,12 @@ import {
   CesiumTerrainProvider, Color, Credit, DirectionalLight, DistanceDisplayCondition,
   Ellipsoid, EllipsoidTerrainProvider, Entity, GeographicTilingScheme,
   HeadingPitchRange, HeightReference, JulianDate, KeyboardEventModifier,
-  Math as CesiumMath, ScreenSpaceEventHandler, ScreenSpaceEventType,
+  Math as CesiumMath, Matrix3, Quaternion as CesiumQuaternion, ScreenSpaceEventHandler, ScreenSpaceEventType, ShadowMode,
   UrlTemplateImageryProvider, Viewer, sampleTerrain,
 } from "cesium";
 import { ArrowDown, ArrowUp, Compass, Globe2, Info, Minus, Mountain, Plus, Settings2, X } from "lucide-react";
 import { conditions } from "../engine/index.mjs";
+import { lunarCameraDelta, lunarSunPosition } from "../engine/lunar-scene.mjs";
 import { LUNAR_RADIUS_M, LUNAR_IMAGERY_URL, LUNAR_MAP_CREDIT, LUNAR_MAP_SOURCE } from "../engine/lunar-map.mjs";
 import { getMask, packetFor, useScout } from "./store";
 import { captureMap } from "./mapSnapshot";
@@ -26,6 +27,7 @@ type Props = {
   onBearing: (bearing: number) => void;
   targetBearing: { az: number; el: number } | null;
   terrainLighting: boolean;
+  onToggleLighting: () => void;
   nearbyPins?: RankedSite[];
   nearbyCenter?: { lat: number; lon: number };
   onNearbyPin: (site: RankedSite) => void;
@@ -44,6 +46,8 @@ export default function LunarGlobe(props: Props) {
   const host = useRef<HTMLDivElement>(null);
   const viewer = useRef<Viewer | null>(null);
   const terrain = useRef<CesiumTerrainProvider | null>(null);
+  const previousTime = useRef(useScout.getState().time);
+  const cameraFlying = useRef(false);
   const latest = useRef(props);
   latest.current = props;
   const state = useScout();
@@ -59,13 +63,18 @@ export default function LunarGlobe(props: Props) {
   const [surfacePending, setSurfacePending] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [measurementHelp, setMeasurementHelp] = useState(false);
+  const [inertialView, setInertialView] = useState(true);
   const home = useCallback(() => {
     const v = viewer.current;
     if (!v) return;
+    v.camera.cancelFlight();
+    cameraFlying.current = true;
     v.camera.flyTo({
       destination: position(8, 0, LUNAR_RADIUS_M * 2),
       orientation: { heading: 0, pitch: -Math.PI / 2, roll: 0 },
       duration: reducedMotion() ? 0 : 1,
+      complete: () => { cameraFlying.current = false; },
+      cancel: () => { cameraFlying.current = false; },
     });
   }, []);
 
@@ -87,6 +96,7 @@ export default function LunarGlobe(props: Props) {
       contextOptions: { webgl: { alpha: false, antialias: true, preserveDrawingBuffer: true } },
     });
     viewer.current = v;
+    previousTime.current = useScout.getState().time;
     v.resolutionScale = Math.min(devicePixelRatio, 1.5) / devicePixelRatio;
     v.scene.backgroundColor = Color.fromCssColorString("#080d12");
     v.scene.fog.enabled = false;
@@ -99,6 +109,15 @@ export default function LunarGlobe(props: Props) {
     v.scene.globe.tileCacheSize = 160;
     v.scene.globe.preloadAncestors = true;
     v.scene.globe.preloadSiblings = false;
+    // Moon lighting must not fade to full brightness near the surface.
+    v.scene.globe.lightingFadeOutDistance = 0;
+    v.scene.globe.lightingFadeInDistance = 1;
+    v.scene.globe.lambertDiffuseMultiplier = 1;
+    v.scene.globe.vertexShadowDarkness = 0;
+    v.shadowMap.size = innerWidth <= 760 ? 1024 : 2048;
+    v.shadowMap.maximumDistance = 20000;
+    v.shadowMap.softShadows = true;
+    v.shadowMap.darkness = 0.05;
     const controls = v.scene.screenSpaceCameraController;
     controls.minimumZoomDistance = 0.5;
     controls.maximumZoomDistance = LUNAR_RADIUS_M * 12;
@@ -129,7 +148,7 @@ export default function LunarGlobe(props: Props) {
     v.imageryLayers.addImageryProvider(imagery);
     home();
 
-    CesiumTerrainProvider.fromUrl("/api/lunar-terrain/", { ellipsoid: moon }).then(provider => {
+    CesiumTerrainProvider.fromUrl("/api/lunar-terrain-v2/", { ellipsoid: moon, requestVertexNormals: true }).then(provider => {
       if (!alive) return;
       terrain.current = provider;
       provider.errorEvent.addEventListener(event => {
@@ -229,6 +248,20 @@ export default function LunarGlobe(props: Props) {
   }, [home, retry]);
 
   useEffect(() => {
+    const before = previousTime.current;
+    previousTime.current = state.time;
+    const v = viewer.current;
+    if (!v || !ready || !inertialView || cameraFlying.current || state.view !== "globe" || state.pickingSite || before === state.time) return;
+    const q = lunarCameraDelta(before, state.time, true);
+    const rotation = Matrix3.fromQuaternion(new CesiumQuaternion(q.x, q.y, q.z, q.w));
+    const transform = (p: Cartesian3) => Matrix3.multiplyByVector(rotation, p, new Cartesian3());
+    v.camera.cancelFlight();
+    v.camera.setView({ destination: transform(v.camera.positionWC), orientation: {
+      direction: transform(v.camera.directionWC), up: transform(v.camera.upWC),
+    }});
+    v.scene.requestRender();
+  }, [ready, state.time, state.view, state.pickingSite, inertialView]);
+  useEffect(() => {
     const v = viewer.current;
     if (!v || !ready) return;
     v.terrainProvider = showTerrain && terrain.current ? terrain.current : new EllipsoidTerrainProvider({ ellipsoid: moon });
@@ -282,9 +315,13 @@ export default function LunarGlobe(props: Props) {
     const destination = polar ? { lat: state.view === "polar_south" ? -90 : 90, lon: 0 } : selected!;
     const fly = (height: number, pitch: number) => {
       if (!active) return;
+      v.camera.cancelFlight();
+      cameraFlying.current = true;
       v.camera.flyTo({
         destination: position(destination.lat, destination.lon, height),
         orientation: { heading: 0, pitch, roll: 0 }, duration: reducedMotion() ? 0 : 1,
+        complete: () => { cameraFlying.current = false; },
+        cancel: () => { cameraFlying.current = false; },
       });
     };
     if (isGround && terrain.current) {
@@ -318,23 +355,23 @@ export default function LunarGlobe(props: Props) {
     const packet = packetFor(state, state.selected);
     const terrainRecord = state.terrains[state.selected];
     const sky = packet && conditions(packet, state.time, getMask(terrainRecord, state.mastM), state.minAntennaEl);
-    const missionLighting = !props.terrainLighting && !!sky && !!selected;
+    const sunPosition = sky && packet && lunarSunPosition(sky.sun, {
+      ...packet.observer, elevationM: (packet.observer.elevationM ?? 0) + state.mastM,
+    });
+    const missionLighting = !props.terrainLighting && !!sunPosition;
+    const local = state.view === "surface" || state.view === "horizon";
     v.scene.globe.enableLighting = missionLighting;
-    if (missionLighting && sky && selected) {
-      const lat = angle(selected.lat), lon = angle(selected.lon);
-      const az = angle(sky.sun.az), el = angle(sky.sun.el);
-      const east = new Cartesian3(-Math.sin(lon), Math.cos(lon), 0);
-      const north = new Cartesian3(-Math.sin(lat)*Math.cos(lon), -Math.sin(lat)*Math.sin(lon), Math.cos(lat));
-      const up = Cartesian3.normalize(position(selected.lat,selected.lon),new Cartesian3());
-      const light = Cartesian3.add(
-        Cartesian3.multiplyByScalar(east,Math.sin(az)*Math.cos(el),new Cartesian3()),
-        Cartesian3.multiplyByScalar(north,Math.cos(az)*Math.cos(el),new Cartesian3()),new Cartesian3());
-      Cartesian3.add(light,Cartesian3.multiplyByScalar(up,Math.sin(el),new Cartesian3()),light);
-      v.scene.light = new DirectionalLight({ direction: Cartesian3.negate(light,light),
-        color: Color.WHITE, intensity: 2 * sky.sun.visibleFraction });
+    v.shadows = missionLighting && local && showTerrain;
+    v.scene.globe.shadows = v.shadows ? ShadowMode.ENABLED : ShadowMode.DISABLED;
+    if (missionLighting && sunPosition && sky) {
+      sunPosition.normalize().negate();
+      v.scene.light = new DirectionalLight({ direction: new Cartesian3(sunPosition.x, sunPosition.y, sunPosition.z),
+        color: Color.WHITE, intensity: 2 * (local ? sky.sun.eclipse.transmission : 1) });
     }
+    host.current?.setAttribute("data-lighting", missionLighting ? "sunlight" : "imagery");
+    host.current?.setAttribute("data-terrain-shadows", String(v.shadows));
     v.scene.requestRender();
-  }, [ready, state.time, state.selected, state.packets, state.terrains, state.mastM, state.minAntennaEl, props.terrainLighting]);
+  }, [ready, state.time, state.view, state.selected, state.packets, state.terrains, state.mastM, state.minAntennaEl, props.terrainLighting, showTerrain]);
 
   const look = useCallback((pitch: number) => {
     const v = viewer.current;
@@ -423,6 +460,8 @@ export default function LunarGlobe(props: Props) {
       <header><strong>Navigation</strong><button className="icon-button" aria-label="Close lunar settings" onClick={()=>setSettings(false)}><X size={15}/></button></header>
       <label><input type="checkbox" checked={showTerrain} onChange={e=>setShowTerrain(e.target.checked)}/>3D terrain</label>
       <label><input type="checkbox" checked={freeAxis} onChange={e=>setFreeAxis(e.target.checked)}/>Unlock camera Z-axis</label>
+      <label><input type="checkbox" checked={inertialView} onChange={e=>setInertialView(e.target.checked)}/>Show lunar rotation in globe view</label>
+      <label><input type="checkbox" checked={!props.terrainLighting} onChange={props.onToggleLighting}/>Sunlight and terrain shadows</label>
       <button type="button" aria-expanded={showHelp} onClick={()=>setShowHelp(value=>!value)}>Camera controls</button>
       {showHelp && <div className="lunar-control-help">
         <p>Drag to pan. Wheel or right-drag to zoom. Middle-drag or Ctrl-drag to tilt. Pinch and drag with two fingers on touchscreens.</p>

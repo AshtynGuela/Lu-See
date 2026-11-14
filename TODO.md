@@ -4,8 +4,7 @@
 
 - Extend high-resolution close-ups to custom coordinates where registered elevation and imaging products overlap.
 - Prefer imagery with corrected acquisition lighting when suitable products are available.
-- [x] Integrate streamed QuickMap terrain and LROC imagery into the lunar globe, horizon and surface navigation, with unlocked Z-axis and cursor measurements.
-- Validate visual terrain elevations against independent lunar products and confirm provider usage limits before scaling public traffic.
+- Integrate quickmap instead, try embed maybe?
 
 ## Nearby sites
 
@@ -15,3 +14,4 @@
 ## Validation
 
 - Compare numerical terrain profiles against an independently sampled elevation service or model.
+- Improve assitant mode for Rocky to enable access and use of all parts of the application.

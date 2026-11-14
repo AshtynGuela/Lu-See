@@ -9,6 +9,7 @@ export const lunarTerrainLayer = {
   name: "Lunar terrain from ACT QuickMap",
   version: "1.0.0",
   format: "quantized-mesh-1.0",
+  extensions: ["octvertexnormals"],
   scheme: "slippyMap",
   projection: "EPSG:4326",
   bounds: [-180, -90, 180, 90],
