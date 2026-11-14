@@ -136,27 +136,29 @@ function StatisticalLayer({
 }
 function MoonGlobe({
   radius,
-  texture,
+  displaced,
   wireframe,
   onContext,
   onClick,
   eclipseMaterial,
 }: {
   radius: number;
-  texture: any;
+  displaced: boolean;
   wireframe: boolean;
   onContext: any;
   onClick: any;
   eclipseMaterial: any;
 }) {
-  const height = useTexture("/data/moon-height.png");
+  const [texture, height] = useTexture(displaced
+    ? ["/data/moon-trek-wac.jpg", "/data/moon-height.png"]
+    : ["/data/moon-trek-wac.jpg"]);
   return (
     <mesh onContextMenu={onContext} onClick={onClick}>
-      <sphereGeometry args={[radius, 384, 192]} />
+      <sphereGeometry args={[radius, displaced ? 384 : 192, displaced ? 192 : 96]} />
       <meshStandardMaterial
         map={texture}
         onBeforeCompile={eclipseMaterial}
-        displacementMap={height}
+        displacementMap={height ?? null}
         displacementScale={(radius * 24) / 1737.4}
         displacementBias={(-radius * 12) / 1737.4}
         roughness={1}
@@ -168,21 +170,27 @@ function MoonGlobe({
 }
 type SurfaceTile = { size: number; widthM: number; heightsM: number[] };
 
-function useRegionalTopography(site: Site, width: number | undefined) {
-  const url = (width === 12000 || (!width && site.family === "custom")) && Math.abs(site.lat) < 59.8
-    ? "/api/surface-topography?" + new URLSearchParams({ lat: String(site.lat), lon: String(site.lon) }) : null;
+function useRegionalTopography(site: Site, width: number | undefined, detailFolder: string | null) {
+  const covered = (width === 12000 || (!width && (detailFolder || site.family === "custom"))) && Math.abs(site.lat) < 59.8;
+  const url = !covered ? null : detailFolder ? detailFolder + "/surroundings-terrain.bin"
+    : "/api/surface-topography?" + new URLSearchParams({ lat: String(site.lat), lon: String(site.lon) });
   const [result, setResult] = useState<{ url: string; tile: SurfaceTile } | null>(null);
   useEffect(() => {
     if (!url) return;
     const request = new AbortController();
     void fetch(url, { signal: request.signal })
-      .then(response => response.ok && response.status !== 204 ? response.json() : null)
+      .then(response => {
+        if (!response.ok || !response.body) return null;
+        const body = detailFolder && response.headers.get("Content-Encoding") !== "gzip"
+          ? response.body.pipeThrough(new DecompressionStream("gzip")) : response.body;
+        return new Response(body).json();
+      })
       .then(tile => {
         if (tile && !request.signal.aborted) setResult({ url, tile });
       })
       .catch(() => {}); // The surrounding LOLA tile stays in view.
     return () => request.abort();
-  }, [url]);
+  }, [url, detailFolder]);
   return result?.url === url ? result.tile : null;
 }
 
@@ -357,24 +365,31 @@ function LocalTerrain({ site, onImageState, terrainLighting }: {
   const view = useScout(s => s.view);
   const grid = useScout(s => s.grid);
   const loading = useScout(s => s.loading[packetKey(site.id, s.mastM)]);
-  const regional = useRegionalTopography(site, terrain?.tile.widthM);
+  const detail = surfaceDetail(site);
+  const detailAssets = detail ? `/assets/surface-details/${detail.site}` : null;
+  const regional = useRegionalTopography(site, terrain?.tile.widthM, detailAssets);
   const tile = regional ?? terrain?.tile;
   const width = tile?.widthM;
-  const detail = surfaceDetail(site);
-  const detailAssets = detail && width ? `/assets/surface-details/${detail.site}` : null;
   const detailWidth = detail?.extentM ?? 0, detailSamples = detail?.samples ?? 0;
   const relief = useSurfaceRelief(detailAssets && detailAssets + "/relief.bin", detailSamples);
-  const detailTexture = useSurfaceMap(detailAssets && detailAssets + "/surface.webp");
   const detailed = !!relief && !!width && detailWidth <= width;
   const nearWidth = width === 12000 ? 1280 : 512;
   const imageryUrl = (extent: number) =>
     "/api/surface-imagery?" + new URLSearchParams({ lat: String(site.lat), lon: String(site.lon), width: String(extent), v: "4" });
   const [imageState, setImageState] = useState<SurfaceImageState>("loading");
-  const map = useSurfaceMap(width ? imageryUrl(width) : null, setImageState);
-  const nearUrl = !detailTexture && map && width && view === "horizon" ? imageryUrl(nearWidth) : null;
+  const [detailImageState, setDetailImageState] = useState<SurfaceImageState>("loading");
+  const detailTexture = useSurfaceMap(detailAssets && detailAssets + "/surface.webp", setDetailImageState);
+  const mapUrl = !width ? null : detailAssets && width === 12000 ? detailAssets + "/surroundings-12000.jpg" : imageryUrl(width);
+  const map = useSurfaceMap(mapUrl, setImageState);
+  const alternateMap = useSurfaceMap(
+    imageState === "unavailable" && width && detailAssets && width === 12000 ? imageryUrl(width) : null,
+  );
+  const surfaceMap = map ?? alternateMap;
+  const nearUrl = (!detailAssets || detailImageState === "unavailable") && surfaceMap && width && view === "horizon"
+    ? imageryUrl(nearWidth) : null;
   const near = useSurfaceMap(nearUrl);
   const displayState = detailed ? (detailTexture ? "detail" : "detail-terrain")
-    : regional ? (map ? "regional-imagery" : "regional") : imageState;
+    : regional ? (surfaceMap ? "regional-imagery" : "regional") : surfaceMap ? "ready" : imageState;
   useEffect(() => onImageState(displayState), [displayState, onImageState]);
   const surfaceNear = (detailed ? detailTexture : null) ?? near;
   const surfaceNearWidth = surfaceNear === detailTexture && detailTexture ? detailWidth : nearWidth;
@@ -394,24 +409,26 @@ function LocalTerrain({ site, onImageState, terrainLighting }: {
     const count = axis.length,
       p = new Float32Array(count * count * 3),
       uv = new Float32Array(count * count * 2),
-      indices = [];
+      indices = new (count * count > 65536 ? Uint32Array : Uint16Array)((count - 1) ** 2 * 6);
+    const samples = axis.map(meters => {
+      const uv = meters / widthM + .5;
+      const fractional = uv * (size - 1);
+      const index = THREE.MathUtils.clamp(Math.floor(fractional), 0, size - 2);
+      return { uv, index, fraction: fractional - index,
+        detailIndex: detailed ? Math.round((meters / detailWidth + .5) * (detailSamples - 1)) : 0 };
+    });
     for (let row = 0; row < count; row++)
       for (let col = 0; col < count; col++) {
         const i = row * count + col, x = axis[col], n = axis[row],
-          u = x / widthM + .5, v = n / widthM + .5,
-          gx = u * (size - 1), gz = v * (size - 1),
-          ix = THREE.MathUtils.clamp(Math.floor(gx), 0, size - 2), iz = THREE.MathUtils.clamp(Math.floor(gz), 0, size - 2),
-          fx = gx - ix, fz = gz - iz,
+          { uv: u, index: ix, fraction: fx, detailIndex: rx } = samples[col],
+          { uv: v, index: iz, fraction: fz, detailIndex: rz } = samples[row],
           top = THREE.MathUtils.lerp(heightsM[iz * size + ix], heightsM[iz * size + ix + 1], fx),
           bottom = THREE.MathUtils.lerp(heightsM[(iz + 1) * size + ix], heightsM[(iz + 1) * size + ix + 1], fx),
           base = THREE.MathUtils.lerp(top, bottom, fz) + heightOffset,
           edge = Math.max(Math.abs(x), Math.abs(n)),
           detailBlend = detailed ? 1 - THREE.MathUtils.smoothstep(edge, detailWidth * .4, detailWidth / 2) : 0,
           d = Math.hypot(x, n),
-          detailIndex = detailed
-            ? Math.round((n / detailWidth + .5) * (detailSamples - 1)) * detailSamples +
-              Math.round((x / detailWidth + .5) * (detailSamples - 1))
-            : 0,
+          detailIndex = rz * detailSamples + rx,
           radial = 1737400 + (detailBlend
             ? THREE.MathUtils.lerp(base, observerHeight + relief![detailIndex] / 100, detailBlend)
             : base),
@@ -423,18 +440,24 @@ function LocalTerrain({ site, onImageState, terrainLighting }: {
         uv[i * 2] = u;
         uv[i * 2 + 1] = v;
       }
+    let offset = 0;
     for (let r = 0; r < count - 1; r++)
       for (let c = 0; c < count - 1; c++) {
         const a = r * count + c,
           b = a + 1,
           d = a + count,
           e = d + 1;
-        indices.push(a, b, d, b, e, d);
+        indices[offset++] = a;
+        indices[offset++] = b;
+        indices[offset++] = d;
+        indices[offset++] = b;
+        indices[offset++] = e;
+        indices[offset++] = d;
       }
     const g = new THREE.BufferGeometry();
     g.setAttribute("position", new THREE.BufferAttribute(p, 3));
     g.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
-    g.setIndex(indices);
+    g.setIndex(new THREE.BufferAttribute(indices, 1));
     g.computeVertexNormals();
     return g;
   }, [terrain?.elevationM, tile, regional, detailed, relief, detailWidth, detailSamples]);
@@ -453,11 +476,11 @@ function LocalTerrain({ site, onImageState, terrainLighting }: {
     <group>
       <mesh geometry={geometry} castShadow={!terrainLighting && !grid} receiveShadow={!terrainLighting && !grid}>
         <meshStandardMaterial
-          key={`${view}-${map?.id}-${surfaceNear?.id}-${terrainLighting}`}
-          customProgramCacheKey={() => `${view}-${!!surfaceNear}-${terrainLighting && !!(map || surfaceNear)}`}
-          onBeforeCompile={shader => shadeSurface(shader, view === "horizon", surfaceNear, surfaceNearWidth / (width ?? surfaceNearWidth), terrainLighting && !!(map || surfaceNear))}
-          map={map}
-          color={map ? "#ffffff" : "#97978b"}
+          key={`${view}-${surfaceMap?.id}-${surfaceNear?.id}-${terrainLighting}`}
+          customProgramCacheKey={() => `${view}-${!!surfaceNear}-${terrainLighting && !!(surfaceMap || surfaceNear)}`}
+          onBeforeCompile={shader => shadeSurface(shader, view === "horizon", surfaceNear, surfaceNearWidth / (width ?? surfaceNearWidth), terrainLighting && !!(surfaceMap || surfaceNear))}
+          map={surfaceMap}
+          color={surfaceMap ? "#ffffff" : "#97978b"}
           roughness={1}
           side={THREE.DoubleSide}
           wireframe={grid}
@@ -529,7 +552,6 @@ function Scene({
   const state = useScout(),
     { camera, gl, size, invalidate } = useThree(),
     controls = useRef<any>(null),
-    moon = useRef<THREE.Mesh>(null),
     sunLight = useRef<THREE.DirectionalLight>(null),
     move = useRef<any>(null),
     keys = useRef(new Set<string>()),
@@ -537,8 +559,7 @@ function Scene({
     route = useRef<THREE.QuadraticBezierCurve3 | null>(null),
     look = useRef({ yaw: 0, pitch: 0 }),
     previousBearing = useRef(-1);
-  const texture = useTexture("/data/moon-trek-wac.jpg"),
-    radius = state.trueScale ? 0.17374 : 3.5,
+  const radius = state.trueScale ? 0.17374 : 3.5,
     site = [...state.sites, ...state.custom].find(
       (s) => s.id === state.selected,
     );
@@ -877,7 +898,7 @@ function Scene({
       />
       {local ? (
         <>
-          <LocalTerrain site={site} onImageState={onImageState} terrainLighting={terrainLighting} />
+          <LocalTerrain key={site.id} site={site} onImageState={onImageState} terrainLighting={terrainLighting} />
           {state.view === "horizon" && <HorizonSilhouette mask={mask} mast={state.mastM} />}
           {c &&
             (["sun", "earth"] as const).map((body) => {
@@ -910,17 +931,18 @@ function Scene({
         </>
       ) : (
         <>
-          {polar ? (
-            <PolarMap north={north} radius={radius} onContext={context} />
-          ) : state.layerManifest.heightReady ? (
-            <Suspense fallback={null}>
+          <Suspense fallback={null}>
+            {polar ? (
+              <PolarMap north={north} radius={radius} onContext={context} />
+            ) : (
               <MoonGlobe
                 radius={radius}
-                texture={texture}
+                displaced={!!state.layerManifest.heightReady}
                 wireframe={state.terrainLayer}
                 onContext={context}
                 eclipseMaterial={eclipseMaterial}
-                onClick={(e) => {
+                onClick={(e: ThreeEvent<MouseEvent>) => {
+                  e.stopPropagation();
                   if (state.pickingSite) {
                     if (e.delta <= 5) context(e);
                     return;
@@ -928,30 +950,8 @@ function Scene({
                   if (state.view === "overview") state.set({ view: "globe" });
                 }}
               />
-            </Suspense>
-          ) : (
-            <mesh
-              ref={moon}
-              onContextMenu={context}
-              onClick={(e) => {
-                e.stopPropagation();
-                if (state.pickingSite) {
-                  if (e.delta <= 5) context(e);
-                  return;
-                }
-                if (state.view === "overview") state.set({ view: "globe" });
-              }}
-            >
-              <sphereGeometry args={[radius, 192, 96]} />
-              <meshStandardMaterial
-                map={texture}
-                onBeforeCompile={eclipseMaterial}
-                roughness={1}
-                color="#e6e3d9"
-                wireframe={state.terrainLayer}
-              />
-            </mesh>
-          )}
+            )}
+          </Suspense>
           {polar &&
             !north &&
             state.statLayer &&

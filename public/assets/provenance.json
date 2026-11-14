@@ -13,8 +13,8 @@
     "jointCount": 21,
     "animationCount": 8,
     "servedAsset": "/assets/rocky-web.glb",
-    "preparation": "Meshopt with high-precision quantization; no mesh simplification or texture recompression",
-    "sha256": "a61e1bb8663bf4f540e01ba5a1d0399f1a6a4b45243040bf8d2b2d0e4191dbab",
+    "preparation": "Rig-preserving mesh simplification, 512 px source texture maps, and high-precision Meshopt",
+    "sha256": "4b4030fa620919b5fafcf0302e4447c59cfafd45171749960fb9731d88dec031",
     "bytes": 21840552,
     "vertices": 866045,
     "textureSize": [

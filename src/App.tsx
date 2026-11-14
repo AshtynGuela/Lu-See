@@ -170,7 +170,13 @@ export default function App() {
     (s.name + " " + s.region).toLowerCase().includes(siteFilter.toLowerCase()),
   );
   useEffect(() => {
-    if (!state.welcome) setRockyStarted(true);
+    if (state.welcome) return;
+    if (typeof window.requestIdleCallback === "function") {
+      const id = window.requestIdleCallback(() => setRockyStarted(true), { timeout: 800 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const timer = setTimeout(() => setRockyStarted(true), 250);
+    return () => clearTimeout(timer);
   }, [state.welcome]);
   useEffect(() => {
     jsonFetch("/layers/manifest.json")

@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from "express";
+import compression from "compression";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { createServer as createHttpServer } from "node:http";
@@ -17,6 +18,7 @@ const app = express(),
     await fs.readFile(path.join(root, "data/sites.json"), "utf8"),
   );
 app.disable("x-powered-by");
+app.use(compression({ level: 4 }));
 app.use(express.json({ limit: "3mb" }));
 app.use("/api", (req, res, next) => {
   const origin = req.get("origin");

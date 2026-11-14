@@ -1013,7 +1013,6 @@ a svg {
   color: #18251c;
   pointer-events: none;
 }
-.rocky-character.roaming { transition: left 1.8s ease-in-out, top 1.8s ease-in-out; }
 .rocky-conversation { position: absolute; }
 .rocky-speech-bubble {
   position: relative;

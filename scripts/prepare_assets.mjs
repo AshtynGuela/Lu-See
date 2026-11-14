@@ -2,16 +2,25 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs/promises";
 import { createHash } from "node:crypto";
 await fs.mkdir("public/assets", { recursive: true });
-// Compress Rocky's buffers while retaining every vertex and original texture.
 const rockySource = "../Rocky/Rocky-Rigged.glb";
 const rockyTarget = "public/assets/rocky-web.glb";
-execFileSync(
+const rockyCache = ".cache/rocky-opt";
+await fs.mkdir(rockyCache, { recursive: true });
+const gltf = (args) => execFileSync(
   process.platform === "win32" ? "npx.cmd" : "npx",
-  ["--yes", "@gltf-transform/cli@4.4.0", "meshopt", rockySource, rockyTarget,
-    "--quantize-position", "16", "--quantize-texcoord", "14",
-    "--quantize-normal", "12", "--quantize-weight", "12"],
+  ["--yes", "@gltf-transform/cli@4.4.0", ...args],
   { stdio: "inherit", shell: process.platform === "win32" },
 );
+const precision = ["--quantize-position", "16", "--quantize-texcoord", "14",
+  "--quantize-normal", "12", "--quantize-weight", "12"];
+const meshopt = (source, target) => gltf(["meshopt", source, target, ...precision]);
+meshopt(rockySource, rockyCache + "/original-quantized.glb");
+gltf(["simplify", rockyCache + "/original-quantized.glb", rockyCache + "/simplified.glb",
+  "--ratio", "0.10", "--error", "0.003", "--lock-border", "true"]);
+execFileSync(process.env.LUNAR_TERRAIN_PYTHON || "python",
+  ["scripts/resize_glb_textures.py", rockyCache + "/simplified.glb", rockyCache + "/resized.glb", "512"],
+  { stdio: "inherit" });
+meshopt(rockyCache + "/resized.glb", rockyTarget);
 const rockyHash = createHash("sha256").update(await fs.readFile(rockyTarget)).digest("hex");
 for (const [source, target, ratio, size] of [
   [
@@ -67,7 +76,7 @@ await fs.writeFile(
       rocky: {
         source: "User-supplied Rocky/Rocky-Rigged.glb",
         servedAsset: "/assets/rocky-web.glb",
-        preparation: "Meshopt with high-precision quantization; no mesh simplification or texture recompression",
+        preparation: "Rig-preserving mesh simplification, 512 px source texture maps, and high-precision Meshopt",
         sha256: rockyHash,
         note: "Fan character asset; configurable for replacement before public release",
       },

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 const browser=await chromium.launch({headless:true});
-const page=await browser.newPage({viewport:{width:1440,height:1000},reducedMotion:'reduce'}),errors=[];
+const page=await browser.newPage({viewport:{width:1440,height:1000},reducedMotion:'no-preference'}),errors=[];
 page.on('pageerror',e=>errors.push(e.message));
 const hash=buffer=>createHash('sha256').update(buffer).digest('hex');
 try {
@@ -30,7 +30,7 @@ try {
   console.log('Animated FAB ready; page visibility:',await page.evaluate(()=>document.visibilityState));
   await expect.poll(()=>rocky.getAttribute('data-animation'),{timeout:30000}).not.toBe('Attentive');
   // Clip selection alone does not prove the render loop advances. Compare
-  // actual isolated WebGL pixels while reduced-motion suppresses map roaming.
+  // actual isolated WebGL pixels while the FAB stays in place.
   const canvas=rocky.locator('canvas');
   await expect(canvas).toBeVisible({timeout:120000});
   await page.waitForTimeout(600);
@@ -42,7 +42,14 @@ try {
   await page.waitForTimeout(450);
   const second=hash(await page.screenshot({clip:bounds,animations:'allow',timeout:120000}));
   assert.notEqual(first,second,'Rocky geometry keeps animating');
-  // Rendering the full original mesh through a software GPU is expensive.
+  // The old Scuttle timer moved the FAB after 4.2 seconds.
+  await rocky.click({button:'right'});
+  await page.getByRole('menuitemradio',{name:'Scuttle',exact:true}).click();
+  await page.waitForTimeout(4700);
+  assert.deepEqual(await rocky.boundingBox(),position,'Scuttle animates in place');
+  await rocky.click({button:'right'});
+  await page.getByRole('menuitemradio',{name:'Random animations',exact:true}).click();
+  // The software GPU is expensive during control checks.
   // After checking actual moving pixels, test the controls independently.
   await canvas.evaluate(el=>el.getContext('webgl2').getExtension('WEBGL_lose_context')?.loseContext());
   await rocky.click();
@@ -79,7 +86,7 @@ try {
   const mobile=await rocky.boundingBox();
   assert.ok(mobile.x>=0&&mobile.x+mobile.width<=390&&mobile.y>600&&mobile.y+mobile.height<844-55);
   assert.deepEqual(errors,[]);
-  const report={testedUtc:new Date().toISOString(),originalModel:true,greeting:true,continuousWebGLMotion:first!==second,renderingSuspendedDuringControlChecks:true,randomDuringChat:true,randomDuringMenu:true,position,reset,mobile,errors};
+  const report={testedUtc:new Date().toISOString(),riggedModel:true,greeting:true,continuousWebGLMotion:first!==second,renderingSuspendedDuringControlChecks:true,scuttleStaysInPlace:true,randomDuringChat:true,randomDuringMenu:true,position,reset,mobile,errors};
   if (process.env.LUSEE_TEST_REPORT)
     await fs.writeFile(process.env.LUSEE_TEST_REPORT,JSON.stringify(report,null,2));
   console.log(JSON.stringify(report,null,2));

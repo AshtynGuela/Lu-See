@@ -47,7 +47,6 @@ const phrases = [
 const introduction = "Left or Right Click Me for Features! I help you. Statement.";
 const randomClips = ["Attentive", "Question", "RockyDance", "JazzHands", "ClawGrip", "Scuttle", "FistBump", "Celebration"];
 const clamp = (x: number, min: number, max: number) => Math.min(Math.max(x, min), Math.max(min, max));
-const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const readSetting = (name: string) => localStorage.getItem(`lunar-rocky-${name}`) !== "off";
 type Point = { x: number; y: number };
 const opaqueMaps = new WeakMap<Texture, boolean>();
@@ -165,7 +164,6 @@ export default function RockyOverlay({ visible, open, thinking, hasInspector, on
   const clearSpeech = useCallback(() => setSpeech(null), []);
   const [menu, setMenu] = useState<Point | null>(null);
   const [dragging, setDragging] = useState(false);
-  const [roaming, setRoaming] = useState(false);
   const [pageVisible, setPageVisible] = useState(() => !document.hidden);
   const [modelReady, setModelReady] = useState(false);
   const modelLoaded = useCallback(() => setModelReady(true), []);
@@ -188,11 +186,19 @@ export default function RockyOverlay({ visible, open, thinking, hasInspector, on
   const dock = { x: viewport.width - size, y: viewport.height - size };
   const inspectorWidth = viewport.width <= 1200 ? 324 : viewport.width >= 1600 ? 390 : 370;
   // Dock near the map's bottom-right, outside the clock and inspector.
-  const home = {
+  const [home, setHome] = useState<(Point & { width: number; height: number }) | null>(null);
+  const defaultPosition = {
     x: dock.x - (hasInspector && !compact ? inspectorWidth : 0) - 16,
     y: dock.y - (compact && hasInspector ? viewport.height * .43 + 78 : 68),
   };
-  const at = docked ? dock : { x: clamp(position?.x ?? home.x, 0, dock.x), y: clamp(position?.y ?? home.y, 0, dock.y) };
+  const homeFits = home?.width === viewport.width && home.height === viewport.height;
+  const anchor = position ?? (homeFits ? home : defaultPosition);
+  const at = docked ? dock : { x: clamp(anchor.x, 0, dock.x), y: clamp(anchor.y, 0, dock.y) };
+  useEffect(() => {
+    if (!visible) return;
+    setHome(current => current?.width === viewport.width && current.height === viewport.height
+      ? current : { x: defaultPosition.x, y: defaultPosition.y, ...viewport });
+  }, [visible, viewport, defaultPosition.x, defaultPosition.y]);
   const side = at.y + size / 2 > viewport.height * 0.51 ? "above" : "below";
   const bubbleWidth = Math.min(open ? 386 : 280, viewport.width - 24);
   const bubbleX = clamp(at.x + size / 2 - bubbleWidth / 2, 12, viewport.width - bubbleWidth - 12);
@@ -252,29 +258,6 @@ export default function RockyOverlay({ visible, open, thinking, hasInspector, on
     }, 3000 + Math.random() * 3000);
     return () => clearTimeout(timer);
   }, [movement, visible, pageVisible, paused, gesture, randomClip]);
-  useEffect(() => {
-    if ((movement !== "Random" && movement !== "Scuttle") || !idle || docked || reducedMotion()) return;
-    const timer = setInterval(() => {
-      if (document.hidden) return;
-      setRoaming(true);
-      setRandomClip("Scuttle");
-      setPosition(current => {
-        const here = current ?? home;
-        const x = clamp(here.x, 0, dock.x), y = clamp(here.y, 0, dock.y);
-        const left = x > dock.x * 0.55;
-        return {
-          x: clamp(x + (left ? -1 : 1) * (size * 0.75 + Math.random() * size), 0, dock.x),
-          y: clamp(y + (y > dock.y * 0.7 ? -1 : 1) * size * 0.45, 0, dock.y),
-        };
-      });
-    }, movement === "Scuttle" ? 4200 : 11500);
-    return () => clearInterval(timer);
-  }, [movement, idle, docked, dock.x, dock.y, home.x, home.y, size]);
-  useEffect(() => {
-    if (!roaming) return;
-    const timer = setTimeout(() => setRoaming(false), 1900);
-    return () => clearTimeout(timer);
-  }, [roaming, position]);
 
   function saySomething() {
     const choices = phrases.filter(text => text !== lastPhrase.current);
@@ -299,7 +282,6 @@ export default function RockyOverlay({ visible, open, thinking, hasInspector, on
   function showMenu(point: Point) {
     setMenu(point);
     setSpeech(null);
-    setRoaming(false);
   }
   function pointerDown(e: PointerEvent<HTMLButtonElement>) {
     if (e.button !== 0) return;
@@ -313,7 +295,6 @@ export default function RockyOverlay({ visible, open, thinking, hasInspector, on
       const rect = e.currentTarget.getBoundingClientRect();
       drag.current = { start: point, origin: { x: rect.left, y: rect.top } };
       setDragging(true);
-      setRoaming(false);
       if (e.pointerType === "touch") longPress.current = setTimeout(() => {
         moved.current = true;
         heldForMenu.current = true;
@@ -370,7 +351,7 @@ export default function RockyOverlay({ visible, open, thinking, hasInspector, on
         e.stopPropagation();
       }
     }}>
-    <button ref={mascot} type="button" className={`rocky-character rocky-fab${roaming ? " roaming" : ""}`}
+    <button ref={mascot} type="button" className="rocky-character rocky-fab"
       style={{ left: at.x, top: at.y, width: size, height: size }}
       aria-label={open ? "Close Rocky chat" : "Ask Rocky"} aria-expanded={open}
       aria-controls={open ? "rocky-chat" : undefined}
@@ -440,7 +421,7 @@ export default function RockyOverlay({ visible, open, thinking, hasInspector, on
       <button role="menuitemcheckbox" aria-checked={sound} onClick={() => menuAction(() => { if (!sound) void calmVoice.unlock(); setSound(!sound); })}>Calm dialogue blips</button>
       <button role="menuitem" onClick={() => menuAction(() => { if (sound) void calmVoice.unlock(); saySomething(); })}>Say something</button>
       <button role="menuitem" onClick={() => menuAction(() => setScale(1))}>Reset size</button>
-      <button role="menuitem" onClick={() => menuAction(() => { setDocked(false); setPosition(null); })}>Reset position</button>
+      <button role="menuitem" onClick={() => menuAction(() => { setDocked(false); setHome({ ...defaultPosition, ...viewport }); setPosition(null); })}>Reset position</button>
       <button role="menuitem" onClick={() => menuAction(() => setDocked(true))}>Move to corner</button>
     </div>}
   </aside>;

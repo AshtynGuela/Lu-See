@@ -10,7 +10,8 @@ from PIL import Image
 import rasterio
 
 from lunar_terrain import RADIUS, bilinear, forward
-from surface_imagery import BASE, LAYERS, sample
+from surface_imagery import BASE, LAYERS, sample, texture
+from surface_topography import surface_tile
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "public/assets/surface-details"
@@ -208,12 +209,30 @@ def write_patch(site_id, site, elevations, elevation_spacing, pixels, image_spac
     print(f"{site_id}: {size}x{size} samples, {mesh.stat().st_size + texture.stat().st_size:,} bytes", flush=True)
 
 
+def prepare_surroundings(site_id):
+    site = json.loads((ROOT / f"public/data/{site_id}.json").read_text())
+    folder = OUT / site_id
+    folder.mkdir(parents=True, exist_ok=True)
+    tile_cache = ROOT / ".cache/surface-imagery-v4/tiles"
+    tile_cache.mkdir(parents=True, exist_ok=True)
+    lat, lon = site["lat"], site["lon"]
+    texture(lat, lon, 12000, tile_cache).save(folder / "surroundings-12000.jpg", "JPEG", quality=88, optimize=True)
+    if abs(lat) < 59.8:
+        heights = json.dumps(surface_tile(lat, lon), separators=(",", ":"), allow_nan=False)
+        (folder / "surroundings-terrain.bin").write_bytes(gzip.compress(heights.encode(), mtime=0))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("sites", nargs="+", choices=(*PRODUCTS, *POLAR_PRODUCTS))
+    parser.add_argument("--surroundings", action="store_true", help="Build the surrounding imagery and elevation assets")
+    args = parser.parse_args()
     with rasterio.Env(GDAL_HTTP_TIMEOUT=35, GDAL_HTTP_MAX_RETRY=2, GDAL_DISABLE_READDIR_ON_OPEN="EMPTY_DIR"):
-        for site_id in parser.parse_args().sites:
-            prepare(site_id)
+        for site_id in args.sites:
+            if args.surroundings:
+                prepare_surroundings(site_id)
+            else:
+                prepare(site_id)
     catalogue = [json.loads(path.read_text()) for path in sorted(OUT.glob("*/provenance.json"))]
     keys = ("site", "lat", "lon", "extentM", "samples", "elevationSpacingM", "imagerySpacingM",
             "terrainSource", "imagerySource", "sourceUrl")

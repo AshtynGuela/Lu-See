@@ -265,7 +265,10 @@ export async function ensureData(
     errors: { ...state.errors, [key]: "" },
   });
   try {
-    const terrain = await ensureTerrain(site);
+    // The curated ephemeris endpoint already reads the height for the observer.
+    // Fetch the terrain and sky together so either can appear independently.
+    const terrainRequest = ensureTerrain(site);
+    if (site.family === "custom") await terrainRequest;
     const q = new URLSearchParams({
       siteId: site.id,
       lat: String(site.lat),
@@ -274,7 +277,7 @@ export async function ensureData(
       start: new Date(start).toISOString(),
       days: String(days),
     });
-    if (!terrain) q.set("includeTerrain", "1");
+    if (!site.terrainReady && !useScout.getState().terrains[site.id]) q.set("includeTerrain", "1");
     const { terrain: recovered, ...p } = await jsonFetch("/api/ephemeris?" + q);
     useScout.setState((s) => ({
       ...(recovered ? { terrains: { ...s.terrains, [site.id]: { ...recovered, siteId: site.id } } } : {}),

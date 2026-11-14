@@ -33,6 +33,8 @@ export function SolarCanvasScene() {
   return <SolarScene {...useContext(SolarContext)} />;
 }
 const monthlyCache = new Map<string, Record<string, any>>();
+const solarLoadOrder = ["earth", "moon", ...SOLAR_BODIES.map(body => body.id)
+  .filter(id => id !== "earth" && id !== "moon")];
 function MoonModel({ radius }: { radius: number }) {
   const texture = useTexture("/data/moon-trek-wac.jpg");
   return (
@@ -491,21 +493,21 @@ export default function SolarSystem({
       errors: any = {};
     setLoad({ month, packets: { ...packets }, errors: {}, loading: true });
     (async () => {
-      for (const body of SOLAR_BODIES) {
+      for (const id of solarLoadOrder) {
         if (!alive) break;
-        if (packets[body.id]) continue;
+        if (packets[id]) continue;
         try {
           const p = await jsonFetch(
             "/api/solar/" +
-              body.id +
+              id +
               "?time=" +
               encodeURIComponent(month + "-01T00:00:00.000Z"),
           );
           if (!alive) break;
-          packets[body.id] = p;
+          packets[id] = p;
           monthlyCache.set(month, { ...packets });
         } catch (e) {
-          errors[body.id] = e.message;
+          errors[id] = e.message;
         }
         if (alive)
           setLoad({
